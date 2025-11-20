@@ -50,7 +50,8 @@ MODELS = {
     'model-037': {'name': 'OpenAI: GPT-5 Image Mini High', 'filename': 'gpt-5-image-mini-high', 'open_source': False},
     'model-038': {'name': 'OpenAI: GPT-5 Image Mini Low', 'filename': 'gpt-5-image-mini-low', 'open_source': False},
     'model-039': {'name': 'OpenAI: GPT-5 Image Mini Medium', 'filename': 'gpt-5-image-mini-medium', 'open_source': False},
-    'model-040': {'name': 'Microsoft: MAI-Image-1', 'filename': 'mai-image-1', 'open_source': False}
+    'model-040': {'name': 'Microsoft: MAI-Image-1', 'filename': 'mai-image-1', 'open_source': False},
+    'model-041': {'name': 'Google Nano Banana Pro (Nano Banana 2)', 'filename': 'nanobananapro-4k', 'open_source': False}
 }
 
 # Engedélyezett képkiterjesztések listája

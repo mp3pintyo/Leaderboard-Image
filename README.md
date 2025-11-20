@@ -159,6 +159,7 @@ MODELS = {
 - OpenAI: GPT-5 Image Mini Low
 - OpenAI: GPT-5 Image Mini Medium
 - Microsoft: MAI-Image-1
+- Google Nano Banana Pro (Nano Banana 2)
 
 ## 🗄️ Adatbázis struktúra
 
