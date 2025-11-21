@@ -17,6 +17,45 @@ const sbsImage3 = document.getElementById('sbs-image3');
 const sbsModel1Container = document.getElementById('sbs-model1-img-container');
 const sbsModel2Container = document.getElementById('sbs-model2-img-container');
 
+// Helper function to dynamically adjust image max-height
+function adjustImageHeight() {
+    const navbar = document.querySelector('.navbar');
+    const title = sbsModeDiv.querySelector('h2');
+    const controlsRow = sbsModeDiv.querySelector('.row.mb-3');
+    const prompt = sbsPrompt;
+    
+    if (!navbar || !title || !controlsRow || !prompt) return;
+
+    const windowHeight = window.innerHeight;
+    const navbarHeight = navbar.offsetHeight;
+    const titleHeight = title.offsetHeight;
+    const controlsHeight = controlsRow.offsetHeight;
+    const promptHeight = prompt.offsetHeight;
+    
+    // Calculate available height: Window - (Navbar + Title + Controls + Prompt + Margins/Padding)
+    // Margins/Padding estimation: 
+    // Navbar margin-bottom: 1.5rem (~24px)
+    // Title margin-bottom: 1rem (~16px)
+    // Controls margin-bottom: 1rem (~16px)
+    // Prompt margin-bottom: 1.5rem (~24px)
+    // Image container margin-bottom: 1rem (~16px)
+    // Body padding-top: 56px (already included in navbar calculation if fixed, but let's be safe)
+    // Extra buffer: ~40px
+    
+    const usedHeight = navbarHeight + titleHeight + controlsHeight + promptHeight + 100; 
+    const availableHeight = windowHeight - usedHeight;
+
+    // Ensure a minimum reasonable height
+    const finalHeight = Math.max(200, availableHeight);
+    
+    const images = [sbsImage1, sbsImage2, sbsImage3];
+    images.forEach(img => {
+        if (img) {
+            img.style.maxHeight = `${finalHeight}px`;
+        }
+    });
+}
+
 // Helper function to adjust column sizes based on number of models
 function adjustColumnSizes(numModels) {
     if (!sbsModel1Container || !sbsModel2Container || !sbsModel3Container) {
@@ -174,7 +213,14 @@ async function loadSideBySideData() {
         }
     }
     sbsLoadBtn.disabled = false;
+
+    // Adjust height after images are set (and potentially loaded, though src set is usually enough for layout flow if dimensions aren't intrinsic yet, but prompt text is key here)
+    // We use setTimeout to allow the DOM to update the prompt text height first
+    setTimeout(adjustImageHeight, 0);
 }
+
+// Add resize listener
+window.addEventListener('resize', adjustImageHeight);
 
 async function loadNextPromptData() {
     const promptListData = await fetchData('/api/prompt_ids');
@@ -252,6 +298,9 @@ async function loadNextPromptData() {
         sbsImage3.src = '';
         adjustColumnSizes(2);
     }
+
+    // Adjust height after images are set and prompt text is updated
+    setTimeout(adjustImageHeight, 0);
 }
 
 export function initSideBySideMode() {
@@ -290,6 +339,9 @@ export function initSideBySideMode() {
             sbsImage3.src = '';
             sbsModel3Name.textContent = 'Modell 3';
         }
+        
+        // Recalculate height in case layout changed (e.g. 3rd model toggled)
+        setTimeout(adjustImageHeight, 0);
     };
 
     sbsModel1Select.addEventListener('change', (e) => handleModelChange(e.target, e.target.value, 1));

@@ -24,6 +24,52 @@ body {
 }
 
 /* Side-by-side módban nagyobb képek */
+#side-by-side-mode .arena-image {
+    /* max-height: calc(100vh - 380px);  Removed: handled by JS */
+    width: auto;
+    max-width: 100%;
+    object-fit: contain; /* Megtartja az arányokat */
+}
+
+#battle-prompt {
+    max-height: 15vh;
+    overflow-y: auto;
+    padding: 0.5rem;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    background-color: #fff;
+}
+
+/* Arena Battle módban is JS kezeli a magasságot */
+#battle-mode .arena-image {
+    width: auto;
+    max-width: 100%;
+    /* max-height: 100%;  Handled inline now */
+    min-height: 0 !important; /* Felülírjuk a globális min-height-et */
+    object-fit: contain;
+}
+
+/* Címek egységesítése az igazítás miatt */
+#battle-mode h4 {
+    min-height: 1.5em;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Tömörebb elrendezés a side-by-side módban, hogy több hely maradjon a képeknek */
+#side-by-side-mode h2 {
+    margin-bottom: 0.5rem !important;
+    margin-top: 0.5rem !important;
+}
+#side-by-side-mode .row.mb-3 {
+    margin-bottom: 0.5rem !important;
+}
+#side-by-side-mode #sbs-prompt {
+    margin-bottom: 0.5rem !important;
+}
+
 .sbs-image {
     max-height: 80vh; /* A képernyő magasságának 80%-a maximum */
     height: auto;

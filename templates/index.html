@@ -27,6 +27,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#" data-mode="elo-history">ELO Fejlődés</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-mode="settings">Beállítások</a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -38,33 +41,52 @@
         </div>
     </div>
 
-    <div class="container">
-        <!-- Arena Battle Mode -->
-        <div id="battle-mode" class="arena-mode">
-            <h2 class="text-center mb-3">Arena Battle: Melyik kép a jobb?</h2>
-            <p class="text-center mb-4 fst-italic" id="battle-prompt">Prompt betöltése...</p>
-            <div class="row justify-content-center">
-                <div class="col-md-5 text-center mb-3">
-                    <h4 id="battle-model1-name">Modell A</h4>
-                    <img id="battle-image1" src="" alt="Modell A képe" class="img-fluid rounded arena-image mb-2">
-                    <button id="vote-btn1" class="btn btn-success w-100">Ez tetszik jobban</button>
+    <!-- Arena Battle Mode -->
+    <div id="battle-mode" class="container-fluid h-100 arena-mode">
+        <div class="d-flex flex-column" style="height: calc(100vh - 70px);">
+                <!-- Header Section -->
+                <div class="flex-shrink-0">
+                    <h2 class="text-center mb-2">Arena Battle: Melyik kép a jobb?</h2>
+                    <p class="text-center mb-2 fst-italic" id="battle-prompt">Prompt betöltése...</p>
                 </div>
-                <div class="col-md-5 text-center mb-3">
-                    <h4 id="battle-model2-name">Modell B</h4>
-                    <img id="battle-image2" src="" alt="Modell B képe" class="img-fluid rounded arena-image mb-2">
-                    <button id="vote-btn2" class="btn btn-success w-100">Ez tetszik jobban</button>
-                 </div>
+
+                <!-- Images Section -->
+                <div class="row flex-grow-1 align-items-center justify-content-center overflow-hidden w-100 mx-0">
+                    <div class="col-md-5 h-100 d-flex flex-column">
+                        <h4 id="battle-model1-name" class="text-center flex-shrink-0">Modell A</h4>
+                        <div id="battle-image1-wrapper" class="flex-grow-1 d-flex align-items-center justify-content-center" style="min-height: 0;">
+                            <img id="battle-image1" src="" alt="Modell A képe" class="img-fluid rounded arena-image" style="max-height: 100%; max-width: 100%; object-fit: contain;">
+                        </div>
+                    </div>
+                    <div class="col-md-5 h-100 d-flex flex-column">
+                        <h4 id="battle-model2-name" class="text-center flex-shrink-0">Modell B</h4>
+                        <div id="battle-image2-wrapper" class="flex-grow-1 d-flex align-items-center justify-content-center" style="min-height: 0;">
+                            <img id="battle-image2" src="" alt="Modell B képe" class="img-fluid rounded arena-image" style="max-height: 100%; max-width: 100%; object-fit: contain;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Buttons Section -->
+                <div class="flex-shrink-0 mt-2 pb-2">
+                    <div class="row justify-content-center mb-2 w-100 mx-0">
+                        <div class="col-md-5 text-center">
+                            <button id="vote-btn1" class="btn btn-success w-100">Ez tetszik jobban (A)</button>
+                        </div>
+                        <div class="col-md-5 text-center">
+                            <button id="vote-btn2" class="btn btn-success w-100">Ez tetszik jobban (B)</button>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center w-100 mx-0">
+                        <div class="col-md-5 text-center">
+                            <button id="tie-btn" class="btn btn-secondary w-100">Döntetlen / Egyik sem tetszik</button>
+                        </div>
+                        <div class="col-md-5 text-center">
+                            <button id="skip-btn" class="btn btn-warning w-100">Következő prompt (kihagyás)</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-             <div class="row justify-content-center mt-2">
-                 <div class="col-md-5 text-center">
-                     <button id="tie-btn" class="btn btn-secondary w-100">Döntetlen / Egyik sem tetszik</button>
-                 </div>
-                 <div class="col-md-5 text-center">
-                    <button id="skip-btn" class="btn btn-warning w-100">Következő prompt (kihagyás)</button>
-                 </div>
-             </div>
         </div>
-    </div>
 
     <!-- Side-by-Side Mode -->
     <div class="container-fluid">
@@ -193,6 +215,32 @@
             </div>
             <div class="text-center mt-3">
                 <button id="refresh-history-btn" class="btn btn-info">Grafikon frissítése</button>
+            </div>
+        </div>
+
+        <!-- Settings Mode -->
+        <div id="settings-mode" class="arena-mode" style="display: none;">
+            <h2 class="text-center mb-4">Beállítások</h2>
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Arena Battle Beállítások</h5>
+                            <div class="mb-3">
+                                <label for="battle-model-limit" class="form-label">Utolsó N modell versenyezzen:</label>
+                                <input type="range" class="form-range" id="battle-model-limit" min="2" max="{{ models|length }}" step="1">
+                                <div class="text-center mt-2">
+                                    <span id="battle-model-limit-value" class="fw-bold fs-4">Mind</span>
+                                    <span class="text-muted"> (Összesen {{ models|length }} modell)</span>
+                                </div>
+                                <p class="form-text text-muted mt-2">
+                                    Itt állíthatod be, hogy csak a legújabb modellek kerüljenek be a véletlenszerű sorsolásba az Arena Battle módban. 
+                                    Ha csökkented az értéket, gyakrabban fogsz találkozni az újabb modellekkel.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -1,15 +1,18 @@
 // filepath: d:\AI\Leaderboard-Image\static\js\battle.js
 import { fetchData } from './api.js';
 import { getRevealDelayMs } from './config.js';
+import { getBattleModelLimit } from './settings.js';
 
 // DOM elemek
 const battleModeDiv = document.getElementById('battle-mode');
 const battlePrompt = document.getElementById('battle-prompt');
 const battleModel1Name = document.getElementById('battle-model1-name');
 const battleImage1 = document.getElementById('battle-image1');
+const battleImage1Wrapper = document.getElementById('battle-image1-wrapper');
 const voteBtn1 = document.getElementById('vote-btn1');
 const battleModel2Name = document.getElementById('battle-model2-name');
 const battleImage2 = document.getElementById('battle-image2');
+const battleImage2Wrapper = document.getElementById('battle-image2-wrapper');
 const voteBtn2 = document.getElementById('vote-btn2');
 const tieBtn = document.getElementById('tie-btn');
 const skipBtn = document.getElementById('skip-btn');
@@ -31,6 +34,15 @@ function disableVoting(disabled) {
     skipBtn.disabled = disabled;
 }
 
+// Helper function to dynamically adjust image max-height
+function adjustImageHeight() {
+    // No-op: Layout is now handled by CSS Flexbox
+    return;
+}
+
+// Add resize listener
+// window.addEventListener('resize', adjustImageHeight);
+
 export async function loadBattleData() {
     battleImage1.src = "";
     battleImage2.src = "";
@@ -39,7 +51,9 @@ export async function loadBattleData() {
     battleModel1Name.textContent = "Modell A";
     battleModel2Name.textContent = "Modell B";
     disableVoting(true);
-    const data = await fetchData('/api/battle_data');
+    
+    const limit = getBattleModelLimit();
+    const data = await fetchData(`/api/battle_data?limit=${limit}`);
     if (data) {
         currentBattleData = data;
         battlePrompt.textContent = `Prompt: "${data.prompt_text}" (ID: ${data.prompt_id})`;
@@ -47,6 +61,9 @@ export async function loadBattleData() {
         battleImage1.src = data.model1.image_url;
         battleImage2.src = data.model2.image_url;
         disableVoting(false);
+        
+        // Adjust height after images are set
+        // setTimeout(adjustImageHeight, 0);
     } else {
         battlePrompt.textContent = "Hiba a prompt betöltése közben.";
     }
@@ -143,4 +160,17 @@ export function initBattleMode() {
                 break;
         }
     });
+
+    // Add resize listener
+    window.addEventListener('resize', adjustImageHeight);
+    
+    // Initial adjustment
+    // adjustImageHeight();
+}
+
+// Ensure adjustImageHeight is called when the module loads (if DOM is ready)
+if (document.readyState === 'loading') {
+    // document.addEventListener('DOMContentLoaded', adjustImageHeight);
+} else {
+    // adjustImageHeight();
 }
