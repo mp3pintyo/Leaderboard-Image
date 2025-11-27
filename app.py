@@ -161,17 +161,7 @@ def get_battle_data():
         return jsonify({"error": f"Prompt file not found for ID: {prompt_id}"}), 500
     except Exception as e:
          return jsonify({"error": f"Error reading prompt file: {e}"}), 500    # Válassz két KÜLÖNBÖZŐ modellt véletlenszerűen
-    
-    # Szűrés a limit alapján
-    limit = request.args.get('limit', type=int)
-    all_model_ids = sorted(list(MODELS.keys())) # Rendezés ID szerint
-    
-    if limit and limit > 1:
-        # Csak az utolsó N modellt vesszük figyelembe
-        model_ids = all_model_ids[-limit:]
-    else:
-        model_ids = all_model_ids
-
+    model_ids = list(MODELS.keys())
     if len(model_ids) < 2:
         return jsonify({"error": "Not enough models defined for battle"}), 500
     model1_id, model2_id = random.sample(model_ids, 2)

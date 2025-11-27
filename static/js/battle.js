@@ -1,7 +1,6 @@
 // filepath: d:\AI\Leaderboard-Image\static\js\battle.js
 import { fetchData } from './api.js';
 import { getRevealDelayMs } from './config.js';
-import { getBattleModelLimit } from './settings.js';
 
 // DOM elemek
 const battleModeDiv = document.getElementById('battle-mode');
@@ -51,9 +50,7 @@ export async function loadBattleData() {
     battleModel1Name.textContent = "Modell A";
     battleModel2Name.textContent = "Modell B";
     disableVoting(true);
-    
-    const limit = getBattleModelLimit();
-    const data = await fetchData(`/api/battle_data?limit=${limit}`);
+    const data = await fetchData('/api/battle_data');
     if (data) {
         currentBattleData = data;
         battlePrompt.textContent = `Prompt: "${data.prompt_text}" (ID: ${data.prompt_id})`;

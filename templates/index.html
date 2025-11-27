@@ -27,9 +27,6 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#" data-mode="elo-history">ELO Fejlődés</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" data-mode="settings">Beállítások</a>
-                    </li>
                 </ul>
             </div>
         </div>
@@ -218,31 +215,6 @@
             </div>
         </div>
 
-        <!-- Settings Mode -->
-        <div id="settings-mode" class="arena-mode" style="display: none;">
-            <h2 class="text-center mb-4">Beállítások</h2>
-            <div class="row justify-content-center">
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Arena Battle Beállítások</h5>
-                            <div class="mb-3">
-                                <label for="battle-model-limit" class="form-label">Utolsó N modell versenyezzen:</label>
-                                <input type="range" class="form-range" id="battle-model-limit" min="2" max="{{ models|length }}" step="1">
-                                <div class="text-center mt-2">
-                                    <span id="battle-model-limit-value" class="fw-bold fs-4">Mind</span>
-                                    <span class="text-muted"> (Összesen {{ models|length }} modell)</span>
-                                </div>
-                                <p class="form-text text-muted mt-2">
-                                    Itt állíthatod be, hogy csak a legújabb modellek kerüljenek be a véletlenszerű sorsolásba az Arena Battle módban. 
-                                    Ha csökkented az értéket, gyakrabban fogsz találkozni az újabb modellekkel.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <script>
