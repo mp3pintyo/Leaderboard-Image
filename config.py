@@ -54,6 +54,7 @@ MODELS = {
     'model-041': {'name': 'Google Nano Banana Pro (Nano Banana 2, Gemini 3 Pro Image)', 'filename': 'nanobananapro-4k', 'open_source': False},
     'model-042': {'name': 'Z Image Turbo', 'filename': 'z-image-turbo', 'open_source': True},
     'model-043': {'name': 'Black Forest Labs FLUX.2 [pro]', 'filename': 'flux2-pro-2k', 'open_source': False},
+    'model-044': {'name': 'Black Forest Labs FLUX.2 [dev]', 'filename': 'flux2-dev', 'open_source': True}
 }
 
 # Engedélyezett képkiterjesztések listája

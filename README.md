@@ -162,6 +162,7 @@ MODELS = {
 - Google Nano Banana Pro (Nano Banana 2, Gemini 3 Pro Image)
 - Z Image Turbo
 - Black Forest Labs FLUX.2 [pro]
+- Black Forest Labs FLUX.2 [dev]
 
 ## 🗄️ Adatbázis struktúra
 
