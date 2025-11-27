@@ -161,6 +161,7 @@ MODELS = {
 - Microsoft: MAI-Image-1
 - Google Nano Banana Pro (Nano Banana 2, Gemini 3 Pro Image)
 - Z Image Turbo
+- Black Forest Labs FLUX.2 [pro]
 
 ## 🗄️ Adatbázis struktúra
 

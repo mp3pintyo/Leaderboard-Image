@@ -52,7 +52,8 @@ MODELS = {
     'model-039': {'name': 'OpenAI: GPT-5 Image Mini Medium', 'filename': 'gpt-5-image-mini-medium', 'open_source': False},
     'model-040': {'name': 'Microsoft: MAI-Image-1', 'filename': 'mai-image-1', 'open_source': False},
     'model-041': {'name': 'Google Nano Banana Pro (Nano Banana 2, Gemini 3 Pro Image)', 'filename': 'nanobananapro-4k', 'open_source': False},
-    'model-042': {'name': 'Z Image Turbo', 'filename': 'z-image-turbo', 'open_source': True}
+    'model-042': {'name': 'Z Image Turbo', 'filename': 'z-image-turbo', 'open_source': True},
+    'model-043': {'name': 'Black Forest Labs FLUX.2 [pro]', 'filename': 'flux2-pro-2k', 'open_source': False},
 }
 
 # Engedélyezett képkiterjesztések listája
@@ -64,3 +65,8 @@ K_FACTOR = 32       # K-faktor - a magasabb érték nagyobb változást eredmén
 
 # Felhasználói élmény beállítások
 REVEAL_DELAY_MS = 2500  # Szavazás után a modellek neveinek megjelenítési ideje milliszekundumban
+
+# Befagyasztott modellek beállítások
+# Az alkalmazás indításakor a leaderboard alsó N modellje "befagyasztásra" kerül.
+# A befagyasztott modellek nem vesznek részt az Arena Battle-ben, de a Side-by-Side-ban láthatók.
+FROZEN_BOTTOM_COUNT = 10  # Hány modellt fagyasszunk be az aljáról (0 = kikapcsolva)

@@ -6,7 +6,7 @@ import glob
 import datetime
 from flask import Flask, render_template, jsonify, request, send_from_directory, abort
 from database import get_db, init_db, get_prompt_ids, update_elo
-from config import DATA_DIR, ALLOWED_EXTENSIONS, DEFAULT_ELO, MODELS, REVEAL_DELAY_MS
+from config import DATA_DIR, ALLOWED_EXTENSIONS, DEFAULT_ELO, MODELS, REVEAL_DELAY_MS, FROZEN_BOTTOM_COUNT
 
 app = Flask(__name__)
 app.config['DATA_DIR'] = DATA_DIR # Flask konfigurációban is tároljuk
@@ -34,6 +34,41 @@ def update_available_prompts():
     AVAILABLE_PROMPTS = get_prompt_ids()
     if not AVAILABLE_PROMPTS:
         print("Warning: No valid prompts found in data directory!")
+
+def update_frozen_models():
+    """Befagyasztja a leaderboard alsó FROZEN_BOTTOM_COUNT modelljét.
+    
+    A befagyasztott modellek nem vesznek részt az Arena Battle-ben,
+    de továbbra is láthatók a Side-by-Side módban és a Leaderboard-on.
+    """
+    if not FROZEN_BOTTOM_COUNT or FROZEN_BOTTOM_COUNT <= 0:
+        print("Frozen models feature is disabled (FROZEN_BOTTOM_COUNT = 0)")
+        return
+    
+    try:
+        db = get_db()
+        # Modellek lekérdezése ELO szerint növekvő sorrendben (legrosszabbak elöl)
+        rows = db.execute("SELECT model, elo FROM model_elo ORDER BY elo ASC").fetchall()
+        models_ordered = [r['model'] for r in rows]
+        
+        # Az alsó N modell befagyasztása
+        bottom_n = models_ordered[:FROZEN_BOTTOM_COUNT]
+        
+        with db:
+            # Először minden modellt feloldunk
+            db.execute("UPDATE model_elo SET frozen = 0")
+            # Majd befagyasztjuk az alsó N-et
+            for m in bottom_n:
+                db.execute("UPDATE model_elo SET frozen = 1 WHERE model = ?", (m,))
+            db.commit()
+        
+        print(f"Frozen {len(bottom_n)} models at the bottom of the leaderboard: {bottom_n}")
+    except sqlite3.Error as e:
+        print(f"Error updating frozen models: {e}")
+
+# Befagyasztott modellek frissítése indításkor (a függvény definíciója után)
+with app.app_context():
+    update_frozen_models()
 
 # Új segédfüggvény a fájlok megtalálásához, ami nem veszi figyelembe a kiterjesztést
 def find_model_file(prompt_id, model_base_name):
@@ -88,8 +123,8 @@ def reset_votes():
             # ELO történeti adatok törlése
             db.execute('DELETE FROM elo_history')
             
-            # ELO pontszámok visszaállítása az alapértelmezettre
-            db.execute('UPDATE model_elo SET elo = ?', (DEFAULT_ELO,))
+            # ELO pontszámok visszaállítása az alapértelmezettre és frozen flag törlése
+            db.execute('UPDATE model_elo SET elo = ?, frozen = 0', (DEFAULT_ELO,))
             
             # Kezdeti ELO értékek rögzítése a historikus táblában is
             current_timestamp = datetime.datetime.now()
@@ -160,8 +195,20 @@ def get_battle_data():
     except FileNotFoundError:
         return jsonify({"error": f"Prompt file not found for ID: {prompt_id}"}), 500
     except Exception as e:
-         return jsonify({"error": f"Error reading prompt file: {e}"}), 500    # Válassz két KÜLÖNBÖZŐ modellt véletlenszerűen
-    model_ids = list(MODELS.keys())
+         return jsonify({"error": f"Error reading prompt file: {e}"}), 500
+    
+    # Válassz két KÜLÖNBÖZŐ modellt véletlenszerűen (befagyasztott modellek kizárásával)
+    db = get_db()
+    non_frozen_rows = db.execute("SELECT model FROM model_elo WHERE COALESCE(frozen, 0) = 0").fetchall()
+    non_frozen_models = [r['model'] for r in non_frozen_rows]
+    
+    # Ha nincs elég nem befagyasztott modell, használjuk az összeset
+    if len(non_frozen_models) < 2:
+        model_ids = list(MODELS.keys())
+    else:
+        # Csak azokat a modelleket használjuk, amik a MODELS-ben is szerepelnek
+        model_ids = [m for m in non_frozen_models if m in MODELS]
+    
     if len(model_ids) < 2:
         return jsonify({"error": "Not enough models defined for battle"}), 500
     model1_id, model2_id = random.sample(model_ids, 2)
@@ -333,8 +380,8 @@ def get_leaderboard():
             )
             GROUP BY model''')
         total_matches = {row['model']: row['match_count'] for row in total_matches_cursor.fetchall()}
-        elo_cursor = db.execute('SELECT model, elo FROM model_elo')
-        elo_ratings = {row['model']: row['elo'] for row in elo_cursor.fetchall()}
+        elo_cursor = db.execute('SELECT model, elo, COALESCE(frozen, 0) as frozen FROM model_elo')
+        elo_data = {row['model']: {'elo': row['elo'], 'frozen': bool(row['frozen'])} for row in elo_cursor.fetchall()}
 
         leaderboard = []
         for model_id, model in MODELS.items():
@@ -345,15 +392,16 @@ def get_leaderboard():
             model_wins = wins.get(model_id, 0)
             model_matches = total_matches.get(model_id, 0)
             win_rate = (model_wins / model_matches * 100) if model_matches > 0 else 0
-            elo = elo_ratings.get(model_id, DEFAULT_ELO)
+            model_elo_data = elo_data.get(model_id, {'elo': DEFAULT_ELO, 'frozen': False})
             leaderboard.append({
                 "id": model_id,
                 "name": model['name'],
                 "wins": model_wins,
                 "matches": model_matches,
                 "win_rate": round(win_rate, 2),
-                "elo": round(elo, 1),
-                "open_source": is_open_source
+                "elo": round(model_elo_data['elo'], 1),
+                "open_source": is_open_source,
+                "frozen": model_elo_data['frozen']
             })
         leaderboard.sort(key=lambda x: x['elo'], reverse=True)
         return jsonify(leaderboard)

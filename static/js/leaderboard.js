@@ -21,14 +21,24 @@ export async function loadLeaderboardData() {
         } else {
             data.forEach((row, index) => {
                 const tr = document.createElement('tr');
+                
+                // Befagyasztott modellek jelölése
+                if (row.frozen) {
+                    tr.classList.add('frozen-model');
+                }
+                
                 // Modell típus kijelzése: open source vagy zárt
                 const modelType = row.open_source ? 
                     '<span class="badge bg-success">Open Source</span>' : 
                     '<span class="badge bg-warning text-dark">Zárt forrású</span>';
                 
+                // Befagyasztott állapot jelölése
+                const frozenBadge = row.frozen ? 
+                    ' <span class="badge bg-secondary" title="Ez a modell jelenleg ki van zárva az Arena Battle-ből">Befagyasztva</span>' : '';
+                
                 tr.innerHTML = `
                     <td>${index + 1}</td>
-                    <td>${row.name}</td>
+                    <td>${row.name}${frozenBadge}</td>
                     <td><strong>${row.elo}</strong></td>
                     <td>${row.wins}</td>
                     <td>${row.matches}</td>

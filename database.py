@@ -71,6 +71,15 @@ def get_db():
     db.row_factory = sqlite3.Row # Sorok szótárként való eléréséhez
     return db
 
+def ensure_frozen_column(db):
+    """Ellenőrzi és hozzáadja a 'frozen' oszlopot a model_elo táblához, ha még nem létezik."""
+    cur = db.execute("PRAGMA table_info('model_elo')")
+    cols = [row['name'] for row in cur.fetchall()]
+    if 'frozen' not in cols:
+        print("Adding 'frozen' column to model_elo table...")
+        db.execute("ALTER TABLE model_elo ADD COLUMN frozen INTEGER DEFAULT 0")
+        db.commit()
+
 def init_db():
     """Adatbázis séma inicializálása (ha még nem létezik)."""
     db = get_db()
@@ -110,6 +119,9 @@ def init_db():
             for model in MODELS.keys():
                  db.execute('INSERT OR IGNORE INTO model_elo (model, elo) VALUES (?, ?)', 
                            (model, DEFAULT_ELO))
+        
+        # Frozen oszlop hozzáadása, ha még nem létezik
+        ensure_frozen_column(db)
 
         if 'elo_history' not in table_names:
             print("Creating elo_history table...")

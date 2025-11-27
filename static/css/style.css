@@ -3,6 +3,15 @@ body {
     background-color: #f8f9fa;
 }
 
+/* Befagyasztott modellek jelölése a leaderboard-on */
+.frozen-model {
+    background-color: rgba(255, 200, 200, 0.35) !important; /* Halvány piros háttér */
+}
+
+.frozen-model:hover {
+    background-color: rgba(255, 180, 180, 0.5) !important;
+}
+
 /* Fixált navigációs sáv */
 .navbar {
     position: fixed;
