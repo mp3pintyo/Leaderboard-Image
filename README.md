@@ -163,6 +163,7 @@ MODELS = {
 - Z Image Turbo
 - Black Forest Labs FLUX.2 [pro]
 - Black Forest Labs FLUX.2 [dev]
+- Kling AI Omni Image 1.0
 
 ## 🗄️ Adatbázis struktúra
 

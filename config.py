@@ -54,7 +54,9 @@ MODELS = {
     'model-041': {'name': 'Google Nano Banana Pro (Nano Banana 2, Gemini 3 Pro Image)', 'filename': 'nanobananapro-4k', 'open_source': False},
     'model-042': {'name': 'Z Image Turbo', 'filename': 'z-image-turbo', 'open_source': True},
     'model-043': {'name': 'Black Forest Labs FLUX.2 [pro]', 'filename': 'flux2-pro-2k', 'open_source': False},
-    'model-044': {'name': 'Black Forest Labs FLUX.2 [dev]', 'filename': 'flux2-dev', 'open_source': True}
+    'model-044': {'name': 'Black Forest Labs FLUX.2 [dev]', 'filename': 'flux2-dev', 'open_source': True},
+    'model-045': {'name': 'Kling AI Omni Image 1.0', 'filename': 'klingai-omni-image-1.0', 'open_source': False}
+
 }
 
 # Engedélyezett képkiterjesztések listája
@@ -65,7 +67,7 @@ DEFAULT_ELO = 1500  # Alapértelmezett ELO érték új modellekhez
 K_FACTOR = 32       # K-faktor - a magasabb érték nagyobb változást eredményez győzelemkor/vereségkor
 
 # Felhasználói élmény beállítások
-REVEAL_DELAY_MS = 2500  # Szavazás után a modellek neveinek megjelenítési ideje milliszekundumban
+REVEAL_DELAY_MS = 2000  # Szavazás után a modellek neveinek megjelenítési ideje milliszekundumban
 
 # Befagyasztott modellek beállítások
 # Az alkalmazás indításakor a leaderboard alsó N modellje "befagyasztásra" kerül.
