@@ -164,6 +164,7 @@ MODELS = {
 - Black Forest Labs FLUX.2 [pro]
 - Black Forest Labs FLUX.2 [dev]
 - Kling AI Omni Image 1.0
+- Black Forest Labs FLUX.2 [flex]
 
 ## 🗄️ Adatbázis struktúra
 
