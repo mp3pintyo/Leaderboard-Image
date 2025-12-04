@@ -56,7 +56,8 @@ MODELS = {
     'model-043': {'name': 'Black Forest Labs FLUX.2 [pro]', 'filename': 'flux2-pro-2k', 'open_source': False},
     'model-044': {'name': 'Black Forest Labs FLUX.2 [dev]', 'filename': 'flux2-dev', 'open_source': True},
     'model-045': {'name': 'Kling AI Omni Image 1.0', 'filename': 'klingai-omni-image-1.0', 'open_source': False},
-    'model-046': {'name': 'Black Forest Labs FLUX.2 [flex]', 'filename': 'flux2-flex-2k', 'open_source': False}
+    'model-046': {'name': 'Black Forest Labs FLUX.2 [flex]', 'filename': 'flux2-flex-2k', 'open_source': False},
+    'model-047': {'name': 'ByteDance Seedream 4.5 4k', 'filename': 'seedream-4.5-4k', 'open_source': False}
 
 }
 
