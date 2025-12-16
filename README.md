@@ -166,6 +166,7 @@ MODELS = {
 - Kling AI Omni Image 1.0
 - Black Forest Labs FLUX.2 [flex]
 - ByteDance Seedream 4.5 4k
+- OpenAI GPT Image 1.5
 
 ## 🗄️ Adatbázis struktúra
 
