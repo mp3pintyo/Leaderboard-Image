@@ -167,6 +167,7 @@ MODELS = {
 - Black Forest Labs FLUX.2 [flex]
 - ByteDance Seedream 4.5 4k
 - OpenAI GPT Image 1.5
+- Alibaba Qwen-Image-2512
 
 ## 🗄️ Adatbázis struktúra
 
