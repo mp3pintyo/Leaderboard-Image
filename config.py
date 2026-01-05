@@ -76,4 +76,4 @@ REVEAL_DELAY_MS = 2000  # Szavazás után a modellek neveinek megjelenítési id
 # Befagyasztott modellek beállítások
 # Az alkalmazás indításakor a leaderboard alsó N modellje "befagyasztásra" kerül.
 # A befagyasztott modellek nem vesznek részt az Arena Battle-ben, de a Side-by-Side-ban láthatók.
-FROZEN_BOTTOM_COUNT = 10  # Hány modellt fagyasszunk be az aljáról (0 = kikapcsolva)
+FROZEN_BOTTOM_COUNT = 0  # Hány modellt fagyasszunk be az aljáról (0 = kikapcsolva)

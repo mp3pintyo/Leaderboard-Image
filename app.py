@@ -41,12 +41,16 @@ def update_frozen_models():
     A befagyasztott modellek nem vesznek részt az Arena Battle-ben,
     de továbbra is láthatók a Side-by-Side módban és a Leaderboard-on.
     """
-    if not FROZEN_BOTTOM_COUNT or FROZEN_BOTTOM_COUNT <= 0:
-        print("Frozen models feature is disabled (FROZEN_BOTTOM_COUNT = 0)")
-        return
-    
     try:
         db = get_db()
+        
+        if not FROZEN_BOTTOM_COUNT or FROZEN_BOTTOM_COUNT <= 0:
+            print("Frozen models feature is disabled (FROZEN_BOTTOM_COUNT = 0). Unfreezing all models.")
+            with db:
+                db.execute("UPDATE model_elo SET frozen = 0")
+                db.commit()
+            return
+
         # Modellek lekérdezése ELO szerint növekvő sorrendben (legrosszabbak elöl)
         rows = db.execute("SELECT model, elo FROM model_elo ORDER BY elo ASC").fetchall()
         models_ordered = [r['model'] for r in rows]
