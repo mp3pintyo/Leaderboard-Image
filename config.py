@@ -60,7 +60,7 @@ MODELS = {
     'model-047': {'name': 'ByteDance: Seedream 4.5 4k', 'filename': 'seedream-4.5-4k', 'open_source': False},
     'model-048': {'name': 'OpenAI: GPT Image 1.5', 'filename': 'gpt-image-1.5', 'open_source': False},
     'model-049': {'name': 'Alibaba: Qwen-Image-2512', 'filename': 'qwen-image-2512', 'open_source': True},
-    'model-050': {'name': 'GLM-Image', 'filename': 'Z.ai', 'open_source': True},
+    'model-050': {'name': 'Z.ai: GLM-Image', 'filename': 'glm-image', 'open_source': True},
 
 }
 
