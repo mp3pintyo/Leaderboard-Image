@@ -160,14 +160,15 @@ MODELS = {
 - OpenAI: GPT-5 Image Mini Medium
 - Microsoft: MAI-Image-1
 - Google Nano Banana Pro (Nano Banana 2, Gemini 3 Pro Image)
-- Z Image Turbo
-- Black Forest Labs FLUX.2 [pro]
-- Black Forest Labs FLUX.2 [dev]
-- Kling AI Omni Image 1.0
-- Black Forest Labs FLUX.2 [flex]
-- ByteDance Seedream 4.5 4k
-- OpenAI GPT Image 1.5
-- Alibaba Qwen-Image-2512
+- Alibaba: Z Image Turbo
+- Black Forest Labs: FLUX.2 [pro]
+- Black Forest Labs: FLUX.2 [dev]
+- Kling AI: Omni Image 1.0
+- Black Forest Labs: FLUX.2 [flex]
+- ByteDance: Seedream 4.5 4k
+- OpenAI: GPT Image 1.5
+- Alibaba: Qwen-Image-2512
+- Z.ai: GLM-Image
 
 ## 🗄️ Adatbázis struktúra
 
