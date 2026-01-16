@@ -61,6 +61,8 @@ MODELS = {
     'model-048': {'name': 'OpenAI: GPT Image 1.5', 'filename': 'gpt-image-1.5', 'open_source': False},
     'model-049': {'name': 'Alibaba: Qwen-Image-2512', 'filename': 'qwen-image-2512', 'open_source': True},
     'model-050': {'name': 'Z.ai: GLM-Image', 'filename': 'glm-image', 'open_source': True},
+    'model-051': {'name': 'Black Forest Labs: FLUX.2 [klein base] 9B', 'filename': 'flux2-klein-base-9b', 'open_source': True},
+    'model-052': {'name': 'Black Forest Labs: FLUX.2 [klein distilled] 9B', 'filename': 'flux2-klein-9b', 'open_source': True},
 
 }
 

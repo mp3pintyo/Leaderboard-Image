@@ -169,6 +169,8 @@ MODELS = {
 - OpenAI: GPT Image 1.5
 - Alibaba: Qwen-Image-2512
 - Z.ai: GLM-Image
+- Black Forest Labs: FLUX.2 [klein base] 9B
+- Black Forest Labs: FLUX.2 [klein distilled] 9B
 
 ## 🗄️ Adatbázis struktúra
 
