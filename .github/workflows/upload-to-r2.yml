@@ -1,0 +1,35 @@
+name: Upload Data to Cloudflare R2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  upload-to-r2:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Verify AWS CLI installation
+        run: aws --version
+
+      - name: Configure AWS credentials for R2
+        run: |
+          aws configure set aws_access_key_id ${{ secrets.UPLOAD_R2_ACCESS_KEY }}
+          aws configure set aws_secret_access_key ${{ secrets.UPLOAD_R2_SECRET_KEY }}
+          aws configure set default.region auto
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.UPLOAD_R2_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.UPLOAD_R2_SECRET_KEY }}
+
+      - name: Upload data folder to R2
+        run: |
+          aws s3 sync ./data/ s3://${{ secrets.UPLOAD_R2_BUCKET }}/ --endpoint-url https://${{ secrets.UPLOAD_R2_ACCOUNT_ID }}.r2.cloudflarestorage.com --delete
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.UPLOAD_R2_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.UPLOAD_R2_SECRET_KEY }}
+          R2_ACCOUNT_ID: ${{ secrets.UPLOAD_R2_ACCOUNT_ID }}
+          R2_BUCKET: ${{ secrets.UPLOAD_R2_BUCKET }}
