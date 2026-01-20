@@ -63,7 +63,8 @@ MODELS = {
     'model-050': {'name': 'Z.ai: GLM-Image', 'filename': 'glm-image', 'open_source': True},
     'model-051': {'name': 'Black Forest Labs: FLUX.2 [klein base] 9B', 'filename': 'flux2-klein-base-9b', 'open_source': True},
     'model-052': {'name': 'Black Forest Labs: FLUX.2 [klein distilled] 9B', 'filename': 'flux2-klein-9b', 'open_source': True},
-
+    'model-053': {'name': 'Black Forest Labs: FLUX.2 [klein base] 4B', 'filename': 'flux2-klein-base-4b', 'open_source': True},
+    'model-054': {'name': 'Black Forest Labs: FLUX.2 [klein distilled] 4B', 'filename': 'flux2-klein-4b', 'open_source': True},
 }
 
 # Engedélyezett képkiterjesztések listája

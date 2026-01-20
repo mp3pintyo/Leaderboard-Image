@@ -171,6 +171,8 @@ MODELS = {
 - Z.ai: GLM-Image
 - Black Forest Labs: FLUX.2 [klein base] 9B
 - Black Forest Labs: FLUX.2 [klein distilled] 9B
+- Black Forest Labs: FLUX.2 [klein base] 4B
+- Black Forest Labs: FLUX.2 [klein distilled] 4B
 
 ## 🗄️ Adatbázis struktúra
 
