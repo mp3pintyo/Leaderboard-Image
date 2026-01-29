@@ -173,6 +173,7 @@ MODELS = {
 - Black Forest Labs: FLUX.2 [klein distilled] 9B
 - Black Forest Labs: FLUX.2 [klein base] 4B
 - Black Forest Labs: FLUX.2 [klein distilled] 4B
+- Alibaba: Z Image Base
 
 ## 🗄️ Adatbázis struktúra
 
