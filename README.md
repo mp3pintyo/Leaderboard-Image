@@ -175,6 +175,7 @@ MODELS = {
 - Black Forest Labs: FLUX.2 [klein distilled] 4B
 - Alibaba: Z Image Base
 - Grok Imagine Image 20260201
+- Alibaba: Qwen Image 2.0
 
 ## 🗄️ Adatbázis struktúra
 
