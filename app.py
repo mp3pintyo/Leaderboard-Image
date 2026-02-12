@@ -11,6 +11,9 @@ from config import DATA_DIR, ALLOWED_EXTENSIONS, DEFAULT_ELO, MODELS, REVEAL_DEL
 app = Flask(__name__)
 app.config['DATA_DIR'] = DATA_DIR # Flask konfigurációban is tároljuk
 
+# Check if DATA_MODE is set for remote image loading
+DATA_MODE = os.environ.get('DATA_MODE')
+
 @app.route('/static/js/<path:filename>')
 def serve_js(filename):
     """Serve JavaScript files with proper MIME type for ES modules."""
@@ -103,6 +106,17 @@ def find_model_file(prompt_id, model_base_name):
             return os.path.basename(file)
     
     return None
+
+
+def get_image_url(prompt_id, filename):
+    """
+    Get the full URL for an image file.
+    Returns remote URL if DATA_MODE is set, otherwise local path.
+    """
+    if DATA_MODE:
+        return f"{DATA_MODE}/{prompt_id}/{filename}"
+    else:
+        return f"/images/{prompt_id}/{filename}"
 
 
 @app.before_request
@@ -230,12 +244,12 @@ def get_battle_data():
         "model1": {
             "id": model1_id,
             "name": MODELS[model1_id]['name'],
-            "image_url": f"/images/{prompt_id}/{model1_file}"
+            "image_url": get_image_url(prompt_id, model1_file)
         },
         "model2": {
             "id": model2_id,
             "name": MODELS[model2_id]['name'],
-            "image_url": f"/images/{prompt_id}/{model2_file}"
+            "image_url": get_image_url(prompt_id, model2_file)
         },
         "reveal_models": False
     }
@@ -287,12 +301,12 @@ def get_side_by_side_data():
         "model1": {
             "id": model1_id,
             "name": MODELS[model1_id]['name'],
-            "image_url": f"/images/{prompt_id}/{model1_file}"
+            "image_url": get_image_url(prompt_id, model1_file)
         },
         "model2": {
             "id": model2_id,
             "name": MODELS[model2_id]['name'],
-            "image_url": f"/images/{prompt_id}/{model2_file}"
+            "image_url": get_image_url(prompt_id, model2_file)
         }
     }
     
@@ -304,7 +318,7 @@ def get_side_by_side_data():
         data["model3"] = {
             "id": model3_id,
             "name": MODELS[model3_id]['name'],
-            "image_url": f"/images/{prompt_id}/{model3_file}"
+            "image_url": get_image_url(prompt_id, model3_file)
         }
     
     return jsonify(data)
@@ -331,7 +345,7 @@ def get_image_for_model():
     if not image_file:
         print(f"Image file not found for model '{model_id}' (base: '{model_filename_base}') in prompt '{prompt_id}'")
         return jsonify({"error": f"Image for model {model_id} not found in prompt {prompt_id}"}), 404
-    image_url = f"/images/{prompt_id}/{image_file}"
+    image_url = get_image_url(prompt_id, image_file)
     return jsonify({"image_url": image_url})
 
 
