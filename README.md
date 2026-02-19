@@ -176,6 +176,7 @@ MODELS = {
 - Alibaba: Z Image Base
 - Grok Imagine Image 20260201
 - Alibaba: Qwen Image 2.0
+- ByteDance: BitDance
 
 ## 🗄️ Adatbázis struktúra
 

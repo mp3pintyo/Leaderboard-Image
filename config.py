@@ -68,6 +68,7 @@ MODELS = {
     'model-055': {'name': 'Alibaba: Z-Image Base', 'filename': 'z-image-base', 'open_source': True},
     'model-056': {'name': 'Grok Imagine Image 20260201', 'filename': 'grok-imagine-image-20260201', 'open_source': False},
     'model-057': {'name': 'Alibaba: Qwen-Image 2.0', 'filename': 'qwen-image-2.0', 'open_source': False},
+    'model-058': {'name': 'ByteDance: BitDance', 'filename': 'bitdance', 'open_source': True},
 }
 
 # Engedélyezett képkiterjesztések listája
