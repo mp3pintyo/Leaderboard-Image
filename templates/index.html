@@ -85,11 +85,9 @@
         </div>
 
     <!-- Side-by-Side Mode -->
-    <div class="container-fluid">
-        <div id="side-by-side-mode" class="arena-mode" style="display: none;">
-            <h2 class="text-center mb-3">Side-by-Side Összehasonlítás</h2>
-            <div class="row mb-3 justify-content-center">
-                <div class="col-md-3">
+    <div id="side-by-side-mode" class="container-fluid arena-mode flex-column" style="display: none;">
+        <div class="row mb-2 justify-content-center flex-shrink-0">
+            <div class="col-md-3">
                     <label for="sbs-model1-select" class="form-label">Válassz modellt 1:</label>
                     <select id="sbs-model1-select" class="form-select">
                         {% for model_item in models %}
@@ -122,28 +120,39 @@
                          {% endfor %}
                     </select>
                 </div>
-                <div class="col-md-2 align-self-end d-flex flex-column gap-2">
-                    <button id="sbs-load-btn" class="btn btn-primary w-100">Betöltés / Új Prompt</button>
-                    <button id="sbs-next-btn" class="btn btn-warning w-100">Következő prompt</button>
+                <div class="col-md-2 align-self-end d-flex flex-column gap-1">
+                    <button id="sbs-load-btn" class="btn btn-primary btn-sm w-100">Betöltés / Új Prompt</button>
+                    <button id="sbs-next-btn" class="btn btn-warning btn-sm w-100">Következő prompt</button>
                 </div>
             </div>
-            <p class="text-center mb-4 fst-italic" id="sbs-prompt">Válassz modelleket és kattints a Betöltés gombra...</p>
-            <div class="row justify-content-center">
-                <div id="sbs-model1-img-container" class="col-md-4 text-center mb-3">
-                    <h4 id="sbs-model1-name">Modell 1</h4>
-                    <img id="sbs-image1" src="" alt="Modell 1 képe" class="img-fluid rounded arena-image">
+            <div class="row mb-2 justify-content-center flex-shrink-0">
+                <div class="col-md-10">
+                    <div id="sbs-prompt-wrapper" class="text-center">
+                        <p id="sbs-prompt" class="fst-italic border rounded p-2 bg-white mb-0">Válassz modelleket és kattints a Betöltés gombra...</p>
+                    </div>
                 </div>
-                <div id="sbs-model2-img-container" class="col-md-4 text-center mb-3">
-                    <h4 id="sbs-model2-name">Modell 2</h4>
-                    <img id="sbs-image2" src="" alt="Modell 2 képe" class="img-fluid rounded arena-image">
+            </div>
+            <div class="row justify-content-center flex-grow-1 align-items-center overflow-hidden w-100 mx-0">
+                <div id="sbs-model1-img-container" class="col-md-6 h-100 d-flex flex-column text-center px-2">
+                    <h4 id="sbs-model1-name" class="flex-shrink-0">Modell 1</h4>
+                    <div class="sbs-image-wrapper flex-grow-1 d-flex align-items-center justify-content-center" style="min-height: 0;">
+                        <img id="sbs-image1" src="" alt="Modell 1 képe" class="img-fluid rounded arena-image" style="max-height: 100%; max-width: 100%; object-fit: contain;">
+                    </div>
                 </div>
-                <div id="sbs-model3-container" class="col-md-4 text-center mb-3" style="display: none;">
-                    <h4 id="sbs-model3-name">Modell 3</h4>
-                    <img id="sbs-image3" src="" alt="Modell 3 képe" class="img-fluid rounded arena-image">
+                <div id="sbs-model2-img-container" class="col-md-6 h-100 d-flex flex-column text-center px-2">
+                    <h4 id="sbs-model2-name" class="flex-shrink-0">Modell 2</h4>
+                    <div class="sbs-image-wrapper flex-grow-1 d-flex align-items-center justify-content-center" style="min-height: 0;">
+                        <img id="sbs-image2" src="" alt="Modell 2 képe" class="img-fluid rounded arena-image" style="max-height: 100%; max-width: 100%; object-fit: contain;">
+                    </div>
+                </div>
+                <div id="sbs-model3-container" class="col-md-4 h-100 d-flex flex-column text-center px-2" style="display: none;">
+                    <h4 id="sbs-model3-name" class="flex-shrink-0">Modell 3</h4>
+                    <div class="sbs-image-wrapper flex-grow-1 d-flex align-items-center justify-content-center" style="min-height: 0;">
+                        <img id="sbs-image3" src="" alt="Modell 3 képe" class="img-fluid rounded arena-image" style="max-height: 100%; max-width: 100%; object-fit: contain;">
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
     <div class="container">
         <!-- Leaderboard Mode -->

@@ -18,42 +18,15 @@ const sbsModel1Container = document.getElementById('sbs-model1-img-container');
 const sbsModel2Container = document.getElementById('sbs-model2-img-container');
 
 // Helper function to dynamically adjust image max-height
-function adjustImageHeight() {
-    const navbar = document.querySelector('.navbar');
-    const title = sbsModeDiv.querySelector('h2');
-    const controlsRow = sbsModeDiv.querySelector('.row.mb-3');
-    const prompt = sbsPrompt;
-    
-    if (!navbar || !title || !controlsRow || !prompt) return;
+export function adjustImageHeight() {
+    if (!sbsModeDiv || sbsModeDiv.offsetParent === null) {
+        return;
+    }
 
-    const windowHeight = window.innerHeight;
-    const navbarHeight = navbar.offsetHeight;
-    const titleHeight = title.offsetHeight;
-    const controlsHeight = controlsRow.offsetHeight;
-    const promptHeight = prompt.offsetHeight;
-    
-    // Calculate available height: Window - (Navbar + Title + Controls + Prompt + Margins/Padding)
-    // Margins/Padding estimation: 
-    // Navbar margin-bottom: 1.5rem (~24px)
-    // Title margin-bottom: 1rem (~16px)
-    // Controls margin-bottom: 1rem (~16px)
-    // Prompt margin-bottom: 1.5rem (~24px)
-    // Image container margin-bottom: 1rem (~16px)
-    // Body padding-top: 56px (already included in navbar calculation if fixed, but let's be safe)
-    // Extra buffer: ~40px
-    
-    const usedHeight = navbarHeight + titleHeight + controlsHeight + promptHeight + 100; 
-    const availableHeight = windowHeight - usedHeight;
-
-    // Ensure a minimum reasonable height
-    const finalHeight = Math.max(200, availableHeight);
-    
-    const images = [sbsImage1, sbsImage2, sbsImage3];
-    images.forEach(img => {
-        if (img) {
-            img.style.maxHeight = `${finalHeight}px`;
-        }
-    });
+    // Fit side-by-side exactly into visible viewport space under the fixed navbar.
+    const topOffset = sbsModeDiv.getBoundingClientRect().top;
+    const availableHeight = Math.floor(window.innerHeight - topOffset - 4);
+    sbsModeDiv.style.height = `${Math.max(280, availableHeight)}px`;
 }
 
 // Helper function to adjust column sizes based on number of models
@@ -63,15 +36,14 @@ function adjustColumnSizes(numModels) {
         return;
     }
     
+    const baseClasses = 'h-100 d-flex flex-column text-center px-2';
     if (numModels === 2) {
-        // Two models: each takes 50% on large screens, 100% on medium screens
-        sbsModel1Container.className = 'col-md-6 col-lg-6 text-center mb-3';
-        sbsModel2Container.className = 'col-md-6 col-lg-6 text-center mb-3';
+        sbsModel1Container.className = `col-md-6 ${baseClasses}`;
+        sbsModel2Container.className = `col-md-6 ${baseClasses}`;
     } else if (numModels === 3) {
-        // Three models: each takes 33% on large screens
-        sbsModel1Container.className = 'col-md-6 col-lg-4 text-center mb-3';
-        sbsModel2Container.className = 'col-md-6 col-lg-4 text-center mb-3';
-        sbsModel3Container.className = 'col-md-6 col-lg-4 text-center mb-3';
+        sbsModel1Container.className = `col-md-4 ${baseClasses}`;
+        sbsModel2Container.className = `col-md-4 ${baseClasses}`;
+        sbsModel3Container.className = `col-md-4 ${baseClasses}`;
     }
 }
 

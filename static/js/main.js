@@ -1,5 +1,5 @@
 import { initBattleMode, loadBattleData } from './battle.js';
-import { initSideBySideMode } from './sideBySide.js';
+import { initSideBySideMode, adjustImageHeight as adjustSbsHeight } from './sideBySide.js';
 import { initLeaderboardMode, loadLeaderboardData } from './leaderboard.js';
 import { initEloHistoryMode, loadEloHistoryData } from './eloHistory.js';
 
@@ -12,7 +12,11 @@ function showMode(modeToShow) {
     modes.forEach(mode => {
         const element = document.getElementById(`${mode}-mode`);
         if (element) {
-            element.style.display = mode === modeToShow ? 'block' : 'none';
+            if (mode === modeToShow) {
+                element.style.display = mode === 'side-by-side' ? 'flex' : 'block';
+            } else {
+                element.style.display = 'none';
+            }
         }
     });
     
@@ -23,6 +27,10 @@ function showMode(modeToShow) {
             link.classList.remove('active');
         }
     });
+
+    if (modeToShow === 'side-by-side') {
+        setTimeout(adjustSbsHeight, 0);
+    }
 }
 
 // Inicializáció
