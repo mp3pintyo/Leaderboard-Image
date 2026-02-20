@@ -177,6 +177,7 @@ MODELS = {
 - Grok Imagine Image 20260201
 - Alibaba: Qwen Image 2.0
 - ByteDance: BitDance
+- Recraft V4
 
 ## 🗄️ Adatbázis struktúra
 
