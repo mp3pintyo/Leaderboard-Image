@@ -178,6 +178,7 @@ MODELS = {
 - Alibaba: Qwen Image 2.0
 - ByteDance: BitDance
 - Recraft V4
+- ByteDance: Seedream 5.0 lite 3k
 
 ## 🗄️ Adatbázis struktúra
 

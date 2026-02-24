@@ -70,6 +70,7 @@ MODELS = {
     'model-057': {'name': 'Alibaba: Qwen-Image 2.0', 'filename': 'qwen-image-2.0', 'open_source': False},
     'model-058': {'name': 'ByteDance: BitDance', 'filename': 'bitdance', 'open_source': True},
     'model-059': {'name': 'Recraft V4', 'filename': 'recraft-v4', 'open_source': False},
+    'model-060': {'name': 'ByteDance: Seedream 5.0 lite 3k', 'filename': 'seedream-5.0-lite', 'open_source': False},
 }
 
 # Engedélyezett képkiterjesztések listája
