@@ -180,7 +180,6 @@ MODELS = {
 - Recraft V4
 - ByteDance: Seedream 5.0 lite 3k
 - Google: Nano Banana 2 4k
--
 
 ## 🗄️ Adatbázis struktúra
 
