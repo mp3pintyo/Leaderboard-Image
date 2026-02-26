@@ -71,7 +71,7 @@ MODELS = {
     'model-058': {'name': 'ByteDance: BitDance', 'filename': 'bitdance', 'open_source': True},
     'model-059': {'name': 'Recraft V4', 'filename': 'recraft-v4', 'open_source': False},
     'model-060': {'name': 'ByteDance: Seedream 5.0 lite 3k', 'filename': 'seedream-5.0-lite', 'open_source': False},
-    'model-061': {'name': 'Google: Nano Banana 2', 'filename': 'nano-banana-2', 'open_source': False},
+    'model-061': {'name': 'Google: Nano Banana 2', 'filename': 'nanobanana-2-4k', 'open_source': False},
 }
 
 # Engedélyezett képkiterjesztések listája
