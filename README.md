@@ -149,7 +149,7 @@ MODELS = {
 - Ernie 4.5 Turbo
 - Google Imagen 4 Ultra
 - Qwen-Image
-- Gemini 2.5 Flash Image Preview
+- Google Gemini 2.5 Flash Image Preview
 - FLUX.1 Krea
 - Tencent Hunyuan Image 2.1
 - ByteDance Seedream 4.0 4k
@@ -159,7 +159,7 @@ MODELS = {
 - OpenAI: GPT-5 Image Mini Low
 - OpenAI: GPT-5 Image Mini Medium
 - Microsoft: MAI-Image-1
-- Google Nano Banana Pro (Nano Banana 2, Gemini 3 Pro Image)
+- Google Nano Banana Pro (Gemini 3 Pro Image)
 - Alibaba: Z Image Turbo
 - Black Forest Labs: FLUX.2 [pro]
 - Black Forest Labs: FLUX.2 [dev]
@@ -179,6 +179,7 @@ MODELS = {
 - ByteDance: BitDance
 - Recraft V4
 - ByteDance: Seedream 5.0 lite 3k
+- Google: Nano Banana 2
 
 ## 🗄️ Adatbázis struktúra
 

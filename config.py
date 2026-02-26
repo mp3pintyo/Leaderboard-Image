@@ -51,7 +51,7 @@ MODELS = {
     'model-038': {'name': 'OpenAI: GPT-5 Image Mini Low', 'filename': 'gpt-5-image-mini-low', 'open_source': False},
     'model-039': {'name': 'OpenAI: GPT-5 Image Mini Medium', 'filename': 'gpt-5-image-mini-medium', 'open_source': False},
     'model-040': {'name': 'Microsoft: MAI-Image-1', 'filename': 'mai-image-1', 'open_source': False},
-    'model-041': {'name': 'Google Nano Banana Pro (Nano Banana 2, Gemini 3 Pro Image)', 'filename': 'nanobananapro-4k', 'open_source': False},
+    'model-041': {'name': 'Google Nano Banana Pro (Gemini 3 Pro Image)', 'filename': 'nanobananapro-4k', 'open_source': False},
     'model-042': {'name': 'Alibaba: Z Image Turbo', 'filename': 'z-image-turbo', 'open_source': True},
     'model-043': {'name': 'Black Forest Labs: FLUX.2 [pro]', 'filename': 'flux2-pro-2k', 'open_source': False},
     'model-044': {'name': 'Black Forest Labs: FLUX.2 [dev]', 'filename': 'flux2-dev', 'open_source': True},
@@ -71,6 +71,7 @@ MODELS = {
     'model-058': {'name': 'ByteDance: BitDance', 'filename': 'bitdance', 'open_source': True},
     'model-059': {'name': 'Recraft V4', 'filename': 'recraft-v4', 'open_source': False},
     'model-060': {'name': 'ByteDance: Seedream 5.0 lite 3k', 'filename': 'seedream-5.0-lite', 'open_source': False},
+    'model-061': {'name': 'Google: Nano Banana 2', 'filename': 'nano-banana-2', 'open_source': False},
 }
 
 # Engedélyezett képkiterjesztések listája
