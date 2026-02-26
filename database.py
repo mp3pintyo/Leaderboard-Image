@@ -91,13 +91,15 @@ def ensure_user_id_column(db):
 
 def init_db():
     """Adatbázis séma inicializálása (ha még nem létezik)."""
+    global DATABASE
     # Ha a DATABASE mappa nem létezik (pl. Render Persistent Disk), létrehozzuk
     db_dir = os.path.dirname(DATABASE)
     if db_dir:
         try:
             os.makedirs(db_dir, exist_ok=True)
         except OSError as e:
-            print(f"Warning: could not create database directory '{db_dir}': {e}")
+            print(f"Warning: could not create database directory '{db_dir}': {e}. Falling back to 'votes.db'")
+            DATABASE = 'votes.db'
     db = get_db()
     tables_exist = db.execute("SELECT name FROM sqlite_master WHERE type='table' AND (name='votes' OR name='model_elo' OR name='elo_history' OR name='users')").fetchall()
     table_names = {row['name'] for row in tables_exist}
