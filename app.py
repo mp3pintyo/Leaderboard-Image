@@ -97,15 +97,39 @@ def update_frozen_models():
 with app.app_context():
     update_frozen_models()
 
+# Manifest cache DATA_MODE-hoz
+_manifest_cache = None
+
+def load_manifest():
+    """Betölti a manifest.json fájlt DATA_MODE-ban a képfájl kiterjesztes meghatározásához."""
+    global _manifest_cache
+    if _manifest_cache is None:
+        manifest_path = os.path.join(app.config['DATA_DIR'], 'manifest.json')
+        if os.path.exists(manifest_path):
+            import json
+            with open(manifest_path, 'r', encoding='utf-8') as f:
+                _manifest_cache = json.load(f)
+            print(f"Manifest loaded: {len(_manifest_cache)} prompts.")
+        else:
+            print("Warning: manifest.json not found! Run generate_manifest.py locally and commit it.")
+            _manifest_cache = {}
+    return _manifest_cache
+
+
 # Új segédfüggvény a fájlok megtalálásához, ami nem veszi figyelembe a kiterjesztést
 def find_model_file(prompt_id, model_base_name):
     """
     Megkeresi a megfelelő modell fájlt a megadott mappában, a kiterjesztéstől függetlenül.
+    DATA_MODE esetén a manifest.json-ból olvassa ki a fájlnevet (nincs helyi kép).
     
     :param prompt_id: A prompt mappájának azonosítója
     :param model_base_name: A modell fájl alapneve kiterjesztés nélkül
     :return: A teljes fájlnév kiterjesztéssel, vagy None ha nem található
     """
+    if DATA_MODE:
+        manifest = load_manifest()
+        return manifest.get(prompt_id, {}).get(model_base_name)
+
     directory = os.path.join(app.config['DATA_DIR'], prompt_id)
     
     # Megnézzük az összes lehetséges kiterjesztéssel, hogy létezik-e a fájl
@@ -120,7 +144,6 @@ def find_model_file(prompt_id, model_base_name):
     
     # Szűrjük az eredményt csak az engedélyezett kiterjesztésekre
     for file in matching_files:
-        # Ellenőrizzük, hogy a fájl kiterjesztése engedélyezett-e
         file_ext = os.path.splitext(file)[1].lower()
         if file_ext in ALLOWED_EXTENSIONS:
             return os.path.basename(file)

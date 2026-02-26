@@ -2,7 +2,12 @@
 import os
 
 # Adatbázis fájl neve
-DATABASE = 'votes.db'
+# Render.com-on használj Persistent Disk-et és állítsd be:
+# DATABASE_PATH=/var/data/votes.db
+DATABASE = os.environ.get('DATABASE_PATH', 'votes.db')
+_db_dir = os.path.dirname(DATABASE)
+if _db_dir:
+    os.makedirs(_db_dir, exist_ok=True)
 
 # Az adatmappák elérési útja
 DATA_DIR = 'data'
