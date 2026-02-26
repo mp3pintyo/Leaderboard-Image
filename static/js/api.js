@@ -14,6 +14,11 @@ export async function fetchData(url, options = {}) {
     try {
         const response = await fetch(url, options);
         if (!response.ok) {
+            if (response.status === 401) {
+                const loginMsg = document.getElementById('login-required-message');
+                if (loginMsg) loginMsg.style.display = 'block';
+                return null;
+            }
             const errorData = await response.json();
             throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
         }

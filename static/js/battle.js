@@ -1,6 +1,7 @@
 // filepath: d:\AI\Leaderboard-Image\static\js\battle.js
 import { fetchData } from './api.js';
 import { getRevealDelayMs } from './config.js';
+import { isLoggedIn } from './auth.js';
 
 // DOM elemek
 const battleModeDiv = document.getElementById('battle-mode');
@@ -57,7 +58,17 @@ export async function loadBattleData() {
         // A modellek valódi neveit itt már nem állítjuk be, csak a szavazás után.
         battleImage1.src = data.model1.image_url;
         battleImage2.src = data.model2.image_url;
-        disableVoting(false);
+        if (isLoggedIn()) {
+            disableVoting(false);
+        } else {
+            // Only disable vote buttons, keep tie and skip for browsing
+            voteBtn1.disabled = true;
+            voteBtn2.disabled = true;
+            tieBtn.disabled = false;
+            skipBtn.disabled = false;
+            const loginMsg = document.getElementById('login-required-message');
+            if (loginMsg) loginMsg.style.display = 'block';
+        }
         
         // Adjust height after images are set
         // setTimeout(adjustImageHeight, 0);
@@ -67,7 +78,7 @@ export async function loadBattleData() {
 }
 
 async function handleVote(winnerId, loserId) {
-    if (!currentBattleData) return;
+    if (!currentBattleData || !isLoggedIn()) return;
     disableVoting(true);
     const voteData = {
         prompt_id: currentBattleData.prompt_id,
@@ -141,19 +152,19 @@ export function initBattleMode() {
         // Check if the battle mode UI is currently visible and active
         // and if voting is currently allowed (buttons are not disabled)
         // battleModeDiv.offsetParent will be null if the element or its parents are display:none
-        if (battleModeDiv.offsetParent === null || !currentBattleData || voteBtn1.disabled) {
+        if (battleModeDiv.offsetParent === null || !currentBattleData) {
             return;
         }
 
         switch (event.key) {
             case '1':
-                voteBtn1.click();
+                if (!voteBtn1.disabled) voteBtn1.click();
                 break;
             case '2':
-                voteBtn2.click();
+                if (!voteBtn2.disabled) voteBtn2.click();
                 break;
             case '0':
-                tieBtn.click();
+                if (!tieBtn.disabled) tieBtn.click();
                 break;
         }
     });

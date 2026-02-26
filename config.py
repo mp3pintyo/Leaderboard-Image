@@ -1,4 +1,5 @@
 # Konfigurációs beállítások a képkereső alkalmazáshoz
+import os
 
 # Adatbázis fájl neve
 DATABASE = 'votes.db'
@@ -88,3 +89,10 @@ REVEAL_DELAY_MS = 2000  # Szavazás után a modellek neveinek megjelenítési id
 # Az alkalmazás indításakor a leaderboard alsó N modellje "befagyasztásra" kerül.
 # A befagyasztott modellek nem vesznek részt az Arena Battle-ben, de a Side-by-Side-ban láthatók.
 FROZEN_BOTTOM_COUNT = 0  # Hány modellt fagyasszunk be az aljáról (0 = kikapcsolva)
+
+# Authentication beállítások
+SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
+GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID', '')
+GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET', '')
+GITHUB_CLIENT_ID = os.environ.get('GITHUB_CLIENT_ID', '')
+GITHUB_CLIENT_SECRET = os.environ.get('GITHUB_CLIENT_SECRET', '')

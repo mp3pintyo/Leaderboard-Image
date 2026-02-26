@@ -4,15 +4,35 @@ import sqlite3
 import sys
 import glob
 import datetime
-from flask import Flask, render_template, jsonify, request, send_from_directory, abort
+from flask import Flask, render_template, jsonify, request, send_from_directory, abort, redirect, url_for, session
+from werkzeug.middleware.proxy_fix import ProxyFix
 from database import get_db, init_db, get_prompt_ids, update_elo
-from config import DATA_DIR, ALLOWED_EXTENSIONS, DEFAULT_ELO, MODELS, REVEAL_DELAY_MS, FROZEN_BOTTOM_COUNT
+from config import (DATA_DIR, ALLOWED_EXTENSIONS, DEFAULT_ELO, MODELS, REVEAL_DELAY_MS, FROZEN_BOTTOM_COUNT,
+                    SECRET_KEY, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET)
+from auth import oauth, init_oauth, login_required, get_current_user, save_user
 
 app = Flask(__name__)
 app.config['DATA_DIR'] = DATA_DIR # Flask konfigurációban is tároljuk
 
 # Check if DATA_MODE is set for remote image loading
 DATA_MODE = os.environ.get('DATA_MODE')
+
+# Authentication and session configuration
+app.secret_key = SECRET_KEY
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+app.config['SESSION_COOKIE_SECURE'] = DATA_MODE is not None
+app.config['GOOGLE_CLIENT_ID'] = GOOGLE_CLIENT_ID
+app.config['GOOGLE_CLIENT_SECRET'] = GOOGLE_CLIENT_SECRET
+app.config['GITHUB_CLIENT_ID'] = GITHUB_CLIENT_ID
+app.config['GITHUB_CLIENT_SECRET'] = GITHUB_CLIENT_SECRET
+
+# Trust proxy headers for HTTPS behind reverse proxy (Render.com)
+if DATA_MODE:
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
+
+# Initialize OAuth providers
+init_oauth(app)
 
 @app.route('/static/js/<path:filename>')
 def serve_js(filename):
@@ -168,7 +188,126 @@ def index():
     models_for_template = [
         {'id': model_id, 'name': model['name']} for model_id, model in MODELS.items()
     ]
-    return render_template('index.html', models=models_for_template, reveal_delay_ms=REVEAL_DELAY_MS)
+    
+    # Auth state for template
+    user = get_current_user()
+    user_info = None
+    if user:
+        user_info = {'name': user['name'], 'provider': user['provider']}
+    
+    auth_providers = []
+    if app.config.get('GOOGLE_CLIENT_ID'):
+        auth_providers.append('google')
+    if app.config.get('GITHUB_CLIENT_ID'):
+        auth_providers.append('github')
+    
+    return render_template('index.html', models=models_for_template, reveal_delay_ms=REVEAL_DELAY_MS,
+                         user=user_info, auth_providers=auth_providers,
+                         dev_mode=app.debug)
+
+
+# --- Auth Endpoints ---
+
+@app.route('/auth/dev-login')
+def auth_dev_login():
+    """Fejlesztői bejelentkezés - CSAK debug módban érhető el."""
+    if not app.debug:
+        abort(404)
+    db = get_db()
+    with db:
+        user_id = save_user(db, 'dev', 'dev-user', 'dev@localhost', 'Dev User')
+        db.commit()
+    session['user'] = {'id': user_id, 'name': 'Dev User', 'provider': 'dev'}
+    return redirect(url_for('index'))
+
+
+@app.route('/auth/login/<provider>')
+def auth_login(provider):
+    """Bejelentkezés indítása a megadott OAuth providerrel."""
+    if provider not in ('google', 'github'):
+        abort(404)
+    client = oauth.create_client(provider)
+    if client is None:
+        abort(404)
+    redirect_uri = url_for('auth_callback', provider=provider, _external=True)
+    return client.authorize_redirect(redirect_uri)
+
+
+@app.route('/auth/callback/<provider>')
+def auth_callback(provider):
+    """OAuth callback a bejelentkezés befejezéséhez."""
+    if provider not in ('google', 'github'):
+        abort(404)
+    client = oauth.create_client(provider)
+    if client is None:
+        abort(404)
+    
+    token = client.authorize_access_token()
+    
+    if provider == 'google':
+        userinfo = token.get('userinfo')
+        if not userinfo:
+            userinfo = client.userinfo()
+        user_data = {
+            'provider': 'google',
+            'provider_id': userinfo['sub'],
+            'email': userinfo.get('email', ''),
+            'name': userinfo.get('name', userinfo.get('email', 'Google User'))
+        }
+    elif provider == 'github':
+        resp = client.get('user')
+        github_user = resp.json()
+        email = github_user.get('email', '')
+        if not email:
+            resp_emails = client.get('user/emails')
+            emails = resp_emails.json()
+            primary_email = next((e for e in emails if e.get('primary')), None)
+            if primary_email:
+                email = primary_email['email']
+        user_data = {
+            'provider': 'github',
+            'provider_id': str(github_user['id']),
+            'email': email,
+            'name': github_user.get('name') or github_user.get('login', 'GitHub User')
+        }
+    
+    # Save user to database
+    db = get_db()
+    with db:
+        user_id = save_user(db, user_data['provider'], user_data['provider_id'],
+                           user_data['email'], user_data['name'])
+        db.commit()
+    
+    # Store in session
+    session['user'] = {
+        'id': user_id,
+        'name': user_data['name'],
+        'provider': user_data['provider']
+    }
+    
+    return redirect(url_for('index'))
+
+
+@app.route('/auth/logout')
+def auth_logout():
+    """Kijelentkezés - session törlése."""
+    session.pop('user', None)
+    return redirect(url_for('index'))
+
+
+@app.route('/api/auth/status')
+def auth_status():
+    """Visszaadja a bejelentkezési állapotot."""
+    user = get_current_user()
+    if user:
+        return jsonify({
+            'logged_in': True,
+            'user': {
+                'name': user['name'],
+                'provider': user['provider']
+            }
+        })
+    return jsonify({'logged_in': False})
 
 
 # Módosítás: Engedélyezzük a .jpeg kiterjesztést is
@@ -350,6 +489,7 @@ def get_image_for_model():
 
 
 @app.route('/api/vote', methods=['POST'])
+@login_required
 def record_vote():
     """Szavazat rögzítése az adatbázisban."""
     data = request.json
@@ -362,11 +502,12 @@ def record_vote():
     if winner not in MODELS or loser not in MODELS:
         return jsonify({"error": "Invalid model id in vote"}), 400
     try:
+        user = get_current_user()
         db = get_db()
         with db:
             db.execute(
-                'INSERT INTO votes (prompt_id, winner, loser) VALUES (?, ?, ?)',
-                (prompt_id, winner, loser)
+                'INSERT INTO votes (prompt_id, winner, loser, user_id) VALUES (?, ?, ?, ?)',
+                (prompt_id, winner, loser, user['id'])
             )
             winner_new_elo, loser_new_elo = update_elo(db, winner, loser)
             db.commit()

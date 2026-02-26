@@ -80,10 +80,19 @@ def ensure_frozen_column(db):
         db.execute("ALTER TABLE model_elo ADD COLUMN frozen INTEGER DEFAULT 0")
         db.commit()
 
+def ensure_user_id_column(db):
+    """Ellenőrzi és hozzáadja a 'user_id' oszlopot a votes táblához, ha még nem létezik."""
+    cur = db.execute("PRAGMA table_info('votes')")
+    cols = [row['name'] for row in cur.fetchall()]
+    if 'user_id' not in cols:
+        print("Adding 'user_id' column to votes table...")
+        db.execute("ALTER TABLE votes ADD COLUMN user_id INTEGER")
+        db.commit()
+
 def init_db():
     """Adatbázis séma inicializálása (ha még nem létezik)."""
     db = get_db()
-    tables_exist = db.execute("SELECT name FROM sqlite_master WHERE type='table' AND (name='votes' OR name='model_elo' OR name='elo_history')").fetchall()
+    tables_exist = db.execute("SELECT name FROM sqlite_master WHERE type='table' AND (name='votes' OR name='model_elo' OR name='elo_history' OR name='users')").fetchall()
     table_names = {row['name'] for row in tables_exist}
 
     with db:
@@ -123,6 +132,9 @@ def init_db():
         # Frozen oszlop hozzáadása, ha még nem létezik
         ensure_frozen_column(db)
 
+        # User ID oszlop hozzáadása a votes táblához, ha még nem létezik
+        ensure_user_id_column(db)
+
         if 'elo_history' not in table_names:
             print("Creating elo_history table...")
             db.execute('''
@@ -145,6 +157,21 @@ def init_db():
                  if not exists:
                      db.execute('INSERT INTO elo_history (model, elo) VALUES (?, ?)', 
                                (model, DEFAULT_ELO))
+
+        if 'users' not in table_names:
+            print("Creating users table...")
+            db.execute('''
+                CREATE TABLE users (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    provider TEXT NOT NULL,
+                    provider_id TEXT NOT NULL,
+                    email TEXT,
+                    name TEXT,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    last_login TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    UNIQUE(provider, provider_id)
+                )
+            ''')
 
     print("Database initialization check complete.")
 
