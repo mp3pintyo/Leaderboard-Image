@@ -93,7 +93,8 @@
         <div class="d-flex flex-column" style="height: calc(100vh - 70px);">
                 <!-- Header Section -->
                 <div class="flex-shrink-0">
-                    <p class="text-center mb-2 fst-italic" id="battle-prompt">Prompt betöltése...</p>
+                    <div id="battle-prompt-popup" class="prompt-full-popup mx-2"></div>
+                    <p class="text-center mb-2 prompt-truncated" id="battle-prompt" title="Kattints a teljes prompthoz">Prompt betöltése...</p>
                 </div>
 
                 <!-- Images Section -->
@@ -182,7 +183,8 @@
             <div class="row mb-2 justify-content-center flex-shrink-0">
                 <div class="col-md-10">
                     <div id="sbs-prompt-wrapper" class="text-center">
-                        <p id="sbs-prompt" class="fst-italic border rounded p-2 bg-white mb-0">Válassz modelleket és kattints a Betöltés gombra...</p>
+                        <div id="sbs-prompt-popup" class="prompt-full-popup"></div>
+                        <p id="sbs-prompt" class="fst-italic mb-0 prompt-truncated" title="Kattints a teljes prompthoz">Válassz modelleket és kattints a Betöltés gombra...</p>
                     </div>
                 </div>
             </div>

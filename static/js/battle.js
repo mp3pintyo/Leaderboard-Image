@@ -6,6 +6,7 @@ import { isLoggedIn } from './auth.js';
 // DOM elemek
 const battleModeDiv = document.getElementById('battle-mode');
 const battlePrompt = document.getElementById('battle-prompt');
+const battlePromptPopup = document.getElementById('battle-prompt-popup');
 const battleModel1Name = document.getElementById('battle-model1-name');
 const battleImage1 = document.getElementById('battle-image1');
 const battleImage1Wrapper = document.getElementById('battle-image1-wrapper');
@@ -54,7 +55,11 @@ export async function loadBattleData() {
     const data = await fetchData('/api/battle_data');
     if (data) {
         currentBattleData = data;
-        battlePrompt.textContent = `Prompt: "${data.prompt_text}" (ID: ${data.prompt_id})`;
+        const fullPromptText = `Prompt: "${data.prompt_text}" (ID: ${data.prompt_id})`;
+        battlePrompt.textContent = fullPromptText;
+        battlePromptPopup.textContent = fullPromptText;
+        battlePromptPopup.style.display = 'none';
+        battlePrompt.classList.remove('prompt-open');
         // A modellek valódi neveit itt már nem állítjuk be, csak a szavazás után.
         battleImage1.src = data.model1.image_url;
         battleImage2.src = data.model2.image_url;
@@ -140,6 +145,14 @@ export function initBattleMode() {
         } else {
             loadBattleData();
         }
+    });
+
+    // Prompt kinyitása/becsukása kattintásra
+    battlePrompt.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = battlePromptPopup.style.display !== 'none';
+        battlePromptPopup.style.display = isOpen ? 'none' : 'block';
+        battlePrompt.classList.toggle('prompt-open', !isOpen);
     });
 
     document.addEventListener('keydown', (event) => {

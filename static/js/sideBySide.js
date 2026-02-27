@@ -7,6 +7,7 @@ const sbsModel2Select = document.getElementById('sbs-model2-select');
 const sbsModel3Select = document.getElementById('sbs-model3-select');
 const sbsLoadBtn = document.getElementById('sbs-load-btn');
 const sbsPrompt = document.getElementById('sbs-prompt');
+const sbsPromptPopup = document.getElementById('sbs-prompt-popup');
 const sbsModel1Name = document.getElementById('sbs-model1-name');
 const sbsImage1 = document.getElementById('sbs-image1');
 const sbsModel2Name = document.getElementById('sbs-model2-name');
@@ -125,6 +126,8 @@ async function loadSideBySideData() {
     sbsImage1.alt = `${getModelNameById(currentSbsModel1)} képének betöltése...`;
     sbsImage2.alt = `${getModelNameById(currentSbsModel2)} képének betöltése...`;
     sbsPrompt.textContent = "Prompt betöltése...";
+    sbsPromptPopup.style.display = 'none';
+    sbsPrompt.classList.remove('prompt-open');
     sbsModel1Name.textContent = getModelNameById(currentSbsModel1);
     sbsModel2Name.textContent = getModelNameById(currentSbsModel2);
 
@@ -150,8 +153,10 @@ async function loadSideBySideData() {
     if (data && data.prompt_id) {
         currentPromptId = data.prompt_id;
 
-        sbsPrompt.textContent = `Prompt: "${data.prompt_text}" (ID: ${data.prompt_id})`;
-        
+        const sbsFullText = `Prompt: "${data.prompt_text}" (ID: ${data.prompt_id})`;
+        sbsPrompt.textContent = sbsFullText;
+        sbsPromptPopup.textContent = sbsFullText;
+
         sbsImage1.src = data.model1.image_url;
         sbsImage1.alt = `${data.model1.name} képe`;
         sbsModel1Name.textContent = data.model1.name;
@@ -249,8 +254,12 @@ async function loadNextPromptData() {
     currentSbsModel2 = selectedModel2;
     currentSbsModel3 = selectedModel3;
 
-    sbsPrompt.textContent = `Prompt: "${promptData.prompt_text}" (ID: ${nextPromptId})`;
-    
+    const nextFullText = `Prompt: "${promptData.prompt_text}" (ID: ${nextPromptId})`;
+    sbsPrompt.textContent = nextFullText;
+    sbsPromptPopup.textContent = nextFullText;
+    sbsPromptPopup.style.display = 'none';
+    sbsPrompt.classList.remove('prompt-open');
+
     sbsImage1.src = img1?.image_url || '';
     sbsImage1.alt = `${getModelNameById(currentSbsModel1)} képe`;
     sbsModel1Name.textContent = getModelNameById(currentSbsModel1);
@@ -276,6 +285,14 @@ async function loadNextPromptData() {
 }
 
 export function initSideBySideMode() {
+    // Prompt kinyitása/becsukása kattintásra
+    sbsPrompt.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = sbsPromptPopup.style.display !== 'none';
+        sbsPromptPopup.style.display = isOpen ? 'none' : 'block';
+        sbsPrompt.classList.toggle('prompt-open', !isOpen);
+    });
+
     const handleModelChange = async (changedSelect, newModelId, modelNumber) => {
         const otherModelIds = [currentSbsModel1, currentSbsModel2, currentSbsModel3].filter((_, i) => i + 1 !== modelNumber);
         if (newModelId && otherModelIds.includes(newModelId)) {
