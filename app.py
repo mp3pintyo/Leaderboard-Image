@@ -594,6 +594,82 @@ def get_leaderboard():
         print(f"Error fetching leaderboard: {e}")
         return jsonify({"error": "An unexpected error occurred"}), 500
 
+
+@app.route('/api/leaderboard/mine')
+@login_required
+def get_personal_leaderboard():
+    """Saját toplista: ELO kiszámítása csak a bejelentkezett felhasználó szavazatai alapján."""
+    try:
+        user = get_current_user()
+        user_id = user['id']
+        db = get_db()
+
+        # Csak a felhasználó saját szavazatai
+        rows = db.execute(
+            'SELECT winner, loser FROM votes WHERE user_id = ? ORDER BY id ASC',
+            (user_id,)
+        ).fetchall()
+
+        if not rows:
+            # Nincs még szavazat: visszaadjuk az összes modellt DEFAULT_ELO-val
+            leaderboard = [
+                {
+                    "id": model_id,
+                    "name": model['name'],
+                    "wins": 0, "matches": 0, "win_rate": 0.0,
+                    "elo": DEFAULT_ELO,
+                    "open_source": model['open_source'],
+                    "frozen": False
+                }
+                for model_id, model in MODELS.items()
+            ]
+            leaderboard.sort(key=lambda x: x['elo'], reverse=True)
+            return jsonify({"leaderboard": leaderboard, "vote_count": 0})
+
+        # ELO számítás nulláról, csak saját szavazatokból
+        from config import K_FACTOR
+        personal_elo = {m: DEFAULT_ELO for m in MODELS}
+        wins = {m: 0 for m in MODELS}
+        matches = {m: 0 for m in MODELS}
+
+        for row in rows:
+            winner, loser = row['winner'], row['loser']
+            if winner not in personal_elo or loser not in personal_elo:
+                continue
+            w_elo = personal_elo[winner]
+            l_elo = personal_elo[loser]
+            expected_w = 1 / (1 + 10 ** ((l_elo - w_elo) / 400))
+            expected_l = 1 - expected_w
+            personal_elo[winner] = w_elo + K_FACTOR * (1 - expected_w)
+            personal_elo[loser]  = l_elo + K_FACTOR * (0 - expected_l)
+            wins[winner] += 1
+            matches[winner] += 1
+            matches[loser]  += 1
+
+        leaderboard = []
+        for model_id, model in MODELS.items():
+            m = matches[model_id]
+            w = wins[model_id]
+            leaderboard.append({
+                "id": model_id,
+                "name": model['name'],
+                "wins": w,
+                "matches": m,
+                "win_rate": round(w / m * 100, 2) if m > 0 else 0.0,
+                "elo": round(personal_elo[model_id], 1),
+                "open_source": model['open_source'],
+                "frozen": False
+            })
+        leaderboard.sort(key=lambda x: x['elo'], reverse=True)
+        return jsonify({"leaderboard": leaderboard, "vote_count": len(rows)})
+    except sqlite3.Error as e:
+        print(f"Database error (personal leaderboard): {e}")
+        return jsonify({"error": "Database error"}), 500
+    except Exception as e:
+        print(f"Error (personal leaderboard): {e}")
+        return jsonify({"error": "An unexpected error occurred"}), 500
+
+
 @app.route('/api/elo_history')
 def get_elo_history():
     """Lekérdezi az ELO értékek időbeli változását a grafikonhoz."""
