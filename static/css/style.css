@@ -227,3 +227,28 @@ body {
     top: 0;
     z-index: 1;
 }
+
+.compare-prompt-row:hover {
+    background-color: rgba(13, 110, 253, 0.06) !important;
+}
+
+.compare-prompt-arrow {
+    font-size: 0.7em;
+    opacity: 0.5;
+    margin-left: 2px;
+    display: inline-block;
+    transition: transform 0.2s;
+}
+
+.compare-prompt-img {
+    max-height: 400px;
+    object-fit: contain;
+}
+
+.compare-border-model1 {
+    border: 2px solid #0d6efd;
+}
+
+.compare-border-model2 {
+    border: 2px solid #198754;
+}

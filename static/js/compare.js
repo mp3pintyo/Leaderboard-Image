@@ -211,22 +211,26 @@ function renderRadarChart(stats, info) {
     });
 }
 
-function renderPromptStats(stats) {
+function renderPromptStats(stats, model1Id, model2Id) {
     const promptStats = stats.prompt_stats;
     if (!promptStats || promptStats.length === 0) {
         return '<p class="text-muted text-center">Nincs prompt szintű adat</p>';
     }
+
+    const m1Name = stats.model1.name;
+    const m2Name = stats.model2.name;
 
     const rows = promptStats.map(p => {
         const m1WinPct = p.model1.win_rate;
         const m2WinPct = p.model2.win_rate;
         const m1BarColor = m1WinPct >= m2WinPct ? 'bg-primary' : 'bg-primary bg-opacity-50';
         const m2BarColor = m2WinPct >= m1WinPct ? 'bg-success' : 'bg-success bg-opacity-50';
+        const safePromptText = p.prompt_text.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 
         return `
-            <tr>
-                <td class="text-nowrap"><small>${p.prompt_id}</small></td>
-                <td><small class="text-truncate d-inline-block" style="max-width:200px" title="${p.prompt_text}">${p.prompt_text}</small></td>
+            <tr class="compare-prompt-row" data-prompt-id="${p.prompt_id}" data-model1="${model1Id}" data-model2="${model2Id}" data-model1-name="${m1Name}" data-model2-name="${m2Name}" style="cursor:pointer" title="Kattints a képek megtekintéséhez">
+                <td class="text-nowrap"><small>${p.prompt_id} <span class="compare-prompt-arrow">▶</span></small></td>
+                <td><small class="text-truncate d-inline-block" style="max-width:200px" title="${safePromptText}">${p.prompt_text}</small></td>
                 <td class="text-center">${p.model1.wins}/${p.model1.matches}</td>
                 <td style="width:80px">
                     <div class="progress" style="height:18px">
@@ -240,12 +244,15 @@ function renderPromptStats(stats) {
                     </div>
                 </td>
             </tr>
+            <tr class="compare-prompt-images" id="compare-images-${p.prompt_id}" style="display:none">
+                <td colspan="6" class="p-2 bg-light"></td>
+            </tr>
         `;
     }).join('');
 
     return `
         <div class="card mb-4">
-            <div class="card-header bg-dark text-white"><h5 class="mb-0">📝 Prompt szintű statisztikák</h5></div>
+            <div class="card-header bg-dark text-white"><h5 class="mb-0">📝 Prompt szintű statisztikák <small class="fw-normal opacity-75">(kattints egy sorra a képek megtekintéséhez)</small></h5></div>
             <div class="card-body p-0">
                 <div class="table-responsive">
                     <table class="table table-sm table-striped table-hover mb-0">
@@ -265,6 +272,68 @@ function renderPromptStats(stats) {
             </div>
         </div>
     `;
+}
+
+function attachPromptRowListeners() {
+    document.querySelectorAll('.compare-prompt-row').forEach(row => {
+        row.addEventListener('click', async function() {
+            const promptId = this.dataset.promptId;
+            const model1Id = this.dataset.model1;
+            const model2Id = this.dataset.model2;
+            const imageRow = document.getElementById(`compare-images-${promptId}`);
+            const arrow = this.querySelector('.compare-prompt-arrow');
+            if (!imageRow) return;
+
+            // Toggle: if already visible, hide and return
+            if (imageRow.style.display !== 'none') {
+                imageRow.style.display = 'none';
+                if (arrow) arrow.textContent = '▶';
+                return;
+            }
+
+            // Show the row
+            imageRow.style.display = '';
+            if (arrow) arrow.textContent = '▼';
+
+            const td = imageRow.querySelector('td');
+
+            // If images already loaded, just show
+            if (td.dataset.loaded === 'true') return;
+
+            // Show loading spinner
+            td.innerHTML = '<div class="text-center py-3"><div class="spinner-border spinner-border-sm" role="status"></div> Képek betöltése...</div>';
+
+            // Fetch both image URLs in parallel
+            const [img1Data, img2Data] = await Promise.all([
+                fetch(`/api/get_image?model=${encodeURIComponent(model1Id)}&prompt_id=${encodeURIComponent(promptId)}`).then(r => r.json()).catch(() => null),
+                fetch(`/api/get_image?model=${encodeURIComponent(model2Id)}&prompt_id=${encodeURIComponent(promptId)}`).then(r => r.json()).catch(() => null),
+            ]);
+
+            const img1Url = img1Data && img1Data.image_url ? img1Data.image_url : null;
+            const img2Url = img2Data && img2Data.image_url ? img2Data.image_url : null;
+
+            const img1Html = img1Url
+                ? `<img src="${img1Url}" alt="Model A" class="img-fluid rounded compare-prompt-img compare-border-model1" loading="lazy">`
+                : '<div class="text-muted text-center p-3">Kép nem elérhető</div>';
+            const img2Html = img2Url
+                ? `<img src="${img2Url}" alt="Model B" class="img-fluid rounded compare-prompt-img compare-border-model2" loading="lazy">`
+                : '<div class="text-muted text-center p-3">Kép nem elérhető</div>';
+
+            td.innerHTML = `
+                <div class="row g-2 justify-content-center">
+                    <div class="col-md-6 text-center">
+                        <div class="small fw-bold text-primary mb-1">${this.dataset.model1Name}</div>
+                        ${img1Html}
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <div class="small fw-bold text-success mb-1">${this.dataset.model2Name}</div>
+                        ${img2Html}
+                    </div>
+                </div>
+            `;
+            td.dataset.loaded = 'true';
+        });
+    });
 }
 
 function renderWinRateBarChart(stats) {
@@ -391,14 +460,15 @@ async function loadCompareData() {
         ${renderWinRateBarChart(statsData)}
 
         <!-- Prompt-level stats table -->
-        ${renderPromptStats(statsData)}
+        ${renderPromptStats(statsData, model1Id, model2Id)}
     `;
 
     compareResultDiv.innerHTML = html;
 
-    // Create charts after DOM is updated
+    // Create charts and attach listeners after DOM is updated
     renderRadarChart(statsData, infoData);
     createWinRateBarChart(statsData);
+    attachPromptRowListeners();
 }
 
 export function initCompareMode() {
