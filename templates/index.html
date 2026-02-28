@@ -27,6 +27,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#" data-mode="elo-history">ELO Fejlődés</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-mode="compare">Összehasonlítás</a>
+                    </li>
                 </ul>
                 <div class="navbar-nav ms-auto" id="auth-section">
                     {% if user %}
@@ -252,6 +255,37 @@
              <div class="text-center mt-3">
                 <button id="refresh-leaderboard-btn" class="btn btn-info">Leaderboard frissítése</button>
             </div>
+        </div>
+
+        <!-- Compare Mode -->
+        <div id="compare-mode" class="arena-mode" style="display: none;">
+            <h2 class="text-center mb-4">Modellek összehasonlítása</h2>
+            <div class="row mb-4 justify-content-center">
+                <div class="col-md-4">
+                    <label for="compare-model1-select" class="form-label fw-bold text-primary">Modell A:</label>
+                    <select id="compare-model1-select" class="form-select">
+                        {% for model_item in models %}
+                        <option value="{{ model_item.id }}">{{ model_item.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="compare-model2-select" class="form-label fw-bold text-success">Modell B:</label>
+                    <select id="compare-model2-select" class="form-select">
+                        {% for model_item in models %}
+                        {% if loop.index == 2 %}
+                        <option value="{{ model_item.id }}" selected>{{ model_item.name }}</option>
+                        {% else %}
+                        <option value="{{ model_item.id }}">{{ model_item.name }}</option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2 align-self-end">
+                    <button id="compare-load-btn" class="btn btn-primary w-100">Összehasonlítás</button>
+                </div>
+            </div>
+            <div id="compare-result"></div>
         </div>
 
         <!-- ELO History Mode -->

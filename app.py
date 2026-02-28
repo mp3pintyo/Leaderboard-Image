@@ -784,6 +784,152 @@ def get_prompt_text_api():
         return jsonify({"error": f"Error reading prompt: {e}"}), 500
 
 
+@app.route('/api/model_info')
+def get_model_info():
+    """Visszaadja egy vagy két modell konfigurációs adatait összehasonlításhoz."""
+    model1_id = request.args.get('model1')
+    model2_id = request.args.get('model2')
+
+    if not model1_id:
+        return jsonify({"error": "model1 parameter is required"}), 400
+    if model1_id not in MODELS:
+        return jsonify({"error": f"Invalid model1 key: {model1_id}"}), 400
+    if model2_id and model2_id not in MODELS:
+        return jsonify({"error": f"Invalid model2 key: {model2_id}"}), 400
+
+    def build_model_info(model_id):
+        m = MODELS[model_id]
+        return {
+            "id": model_id,
+            "name": m['name'],
+            "provider": m.get('provider', 'Unknown'),
+            "open_source": m['open_source'],
+            "release_date": m.get('release_date'),
+            "type": m.get('type', 'image-generation'),
+            "tags": m.get('tags', []),
+            "max_resolution": m.get('max_resolution'),
+            "pricing": m.get('pricing'),
+            "api_available": m.get('api_available', False),
+            "speed": m.get('speed'),
+            "website": m.get('website'),
+        }
+
+    result = {"model1": build_model_info(model1_id)}
+    if model2_id:
+        result["model2"] = build_model_info(model2_id)
+    return jsonify(result)
+
+
+@app.route('/api/compare_stats')
+def get_compare_stats():
+    """Visszaadja két modell összehasonlító statisztikáit: prompt-szintű szavazatok és head-to-head eredmények."""
+    model1_id = request.args.get('model1')
+    model2_id = request.args.get('model2')
+
+    if not model1_id or not model2_id:
+        return jsonify({"error": "Both model1 and model2 parameters are required"}), 400
+    if model1_id not in MODELS or model2_id not in MODELS:
+        return jsonify({"error": "Invalid model key provided"}), 400
+
+    try:
+        db = get_db()
+
+        # Aktuális ELO értékek
+        elo1_row = db.execute('SELECT elo FROM model_elo WHERE model = ?', (model1_id,)).fetchone()
+        elo2_row = db.execute('SELECT elo FROM model_elo WHERE model = ?', (model2_id,)).fetchone()
+        elo1 = round(elo1_row['elo'], 1) if elo1_row else DEFAULT_ELO
+        elo2 = round(elo2_row['elo'], 1) if elo2_row else DEFAULT_ELO
+
+        # Globális győzelmek és meccsek
+        def get_model_global_stats(model_id):
+            wins = db.execute('SELECT COUNT(*) as c FROM votes WHERE winner = ?', (model_id,)).fetchone()['c']
+            total = db.execute(
+                'SELECT COUNT(*) as c FROM votes WHERE winner = ? OR loser = ?',
+                (model_id, model_id)
+            ).fetchone()['c']
+            return {"wins": wins, "matches": total, "win_rate": round(wins / total * 100, 2) if total > 0 else 0}
+
+        model1_global = get_model_global_stats(model1_id)
+        model2_global = get_model_global_stats(model2_id)
+
+        # Head-to-head statisztikák (egymás ellen)
+        h2h_1_wins = db.execute(
+            'SELECT COUNT(*) as c FROM votes WHERE winner = ? AND loser = ?',
+            (model1_id, model2_id)
+        ).fetchone()['c']
+        h2h_2_wins = db.execute(
+            'SELECT COUNT(*) as c FROM votes WHERE winner = ? AND loser = ?',
+            (model2_id, model1_id)
+        ).fetchone()['c']
+        h2h_total = h2h_1_wins + h2h_2_wins
+
+        # Prompt-szintű statisztikák: minden promptra mennyi szavazat esett az adott modellre és hányszor nyert
+        prompt_stats = []
+        if AVAILABLE_PROMPTS:
+            for prompt_id in sorted(AVAILABLE_PROMPTS):
+                # Prompt text
+                prompt_path = os.path.join(app.config['DATA_DIR'], prompt_id, 'prompt.txt')
+                try:
+                    with open(prompt_path, 'r', encoding='utf-8') as f:
+                        prompt_text = f.read().strip()
+                except Exception:
+                    prompt_text = prompt_id
+
+                # Model 1 statisztikák ennél a promptnál
+                m1_wins = db.execute(
+                    'SELECT COUNT(*) as c FROM votes WHERE prompt_id = ? AND winner = ?',
+                    (prompt_id, model1_id)
+                ).fetchone()['c']
+                m1_total = db.execute(
+                    'SELECT COUNT(*) as c FROM votes WHERE prompt_id = ? AND (winner = ? OR loser = ?)',
+                    (prompt_id, model1_id, model1_id)
+                ).fetchone()['c']
+
+                # Model 2 statisztikák ennél a promptnál
+                m2_wins = db.execute(
+                    'SELECT COUNT(*) as c FROM votes WHERE prompt_id = ? AND winner = ?',
+                    (prompt_id, model2_id)
+                ).fetchone()['c']
+                m2_total = db.execute(
+                    'SELECT COUNT(*) as c FROM votes WHERE prompt_id = ? AND (winner = ? OR loser = ?)',
+                    (prompt_id, model2_id, model2_id)
+                ).fetchone()['c']
+
+                prompt_stats.append({
+                    "prompt_id": prompt_id,
+                    "prompt_text": prompt_text[:100] + ('...' if len(prompt_text) > 100 else ''),
+                    "model1": {"wins": m1_wins, "matches": m1_total, "win_rate": round(m1_wins / m1_total * 100, 1) if m1_total > 0 else 0},
+                    "model2": {"wins": m2_wins, "matches": m2_total, "win_rate": round(m2_wins / m2_total * 100, 1) if m2_total > 0 else 0},
+                })
+
+        return jsonify({
+            "model1": {
+                "id": model1_id,
+                "name": MODELS[model1_id]['name'],
+                "elo": elo1,
+                **model1_global
+            },
+            "model2": {
+                "id": model2_id,
+                "name": MODELS[model2_id]['name'],
+                "elo": elo2,
+                **model2_global
+            },
+            "head_to_head": {
+                "model1_wins": h2h_1_wins,
+                "model2_wins": h2h_2_wins,
+                "total": h2h_total,
+            },
+            "prompt_stats": prompt_stats,
+        })
+    except sqlite3.Error as e:
+        print(f"Database error: {e}")
+        return jsonify({"error": "Database error while fetching compare stats"}), 500
+    except Exception as e:
+        print(f"Error fetching compare stats: {e}")
+        return jsonify({"error": "An unexpected error occurred"}), 500
+
+
 if __name__ == '__main__':
     # Parancssori argumentumok kezelése
     if len(sys.argv) > 1 and sys.argv[1] == 'reset-votes':

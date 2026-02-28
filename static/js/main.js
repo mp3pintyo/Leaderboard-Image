@@ -2,9 +2,10 @@ import { initBattleMode, loadBattleData } from './battle.js';
 import { initSideBySideMode, adjustImageHeight as adjustSbsHeight } from './sideBySide.js';
 import { initLeaderboardMode, loadLeaderboardData } from './leaderboard.js';
 import { initEloHistoryMode, loadEloHistoryData } from './eloHistory.js';
+import { initCompareMode, loadCompareData } from './compare.js';
 
 // DOM elemek
-const modes = ['battle', 'side-by-side', 'leaderboard', 'elo-history'];
+const modes = ['battle', 'side-by-side', 'leaderboard', 'elo-history', 'compare'];
 const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
 
 // Segédfüggvények
@@ -40,6 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initSideBySideMode();
     initLeaderboardMode();
     initEloHistoryMode();
+    initCompareMode();
 
     // Navigáció kezelése
     navLinks.forEach(link => {
