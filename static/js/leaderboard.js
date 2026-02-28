@@ -4,9 +4,12 @@ import { fetchData } from './api.js';
 const leaderboardTableBody = document.getElementById('leaderboard-table-body');
 const refreshLeaderboardBtn = document.getElementById('refresh-leaderboard-btn');
 const modelTypeRadios = document.querySelectorAll('input[name="model-type"]');
+const myVotesSubfilter = document.getElementById('my-votes-subfilter');
+const myTypeRadios = document.querySelectorAll('input[name="my-type"]');
 
 // Változók
 let currentModelType = 'all'; // Alapértelmezett szűrő: összes modell
+let currentMySubType = 'all'; // Saját toplista al-szűrő
 
 function renderRows(rows) {
     leaderboardTableBody.innerHTML = '';
@@ -44,7 +47,7 @@ export async function loadLeaderboardData() {
     let infoBar = document.getElementById('personal-leaderboard-info');
 
     if (currentModelType === 'my-votes') {
-        const data = await fetchData('/api/leaderboard/mine');
+        const data = await fetchData(`/api/leaderboard/mine?model_type=${currentMySubType}`);
         if (data) {
             // Info sáv megjelenítése
             if (!infoBar) {
@@ -86,6 +89,16 @@ export function initLeaderboardMode() {
     modelTypeRadios.forEach(radio => {
         radio.addEventListener('change', (e) => {
             currentModelType = e.target.value;
+            // Al-szűrő megjelenítése/elrejtése
+            myVotesSubfilter.style.display = currentModelType === 'my-votes' ? 'flex' : 'none';
+            loadLeaderboardData();
+        });
+    });
+
+    // Saját toplista al-szűrők
+    myTypeRadios.forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            currentMySubType = e.target.value;
             loadLeaderboardData();
         });
     });

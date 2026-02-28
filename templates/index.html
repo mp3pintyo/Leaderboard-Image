@@ -233,6 +233,16 @@
                         <input type="radio" class="btn-check" name="model-type" id="my-votes" value="my-votes">
                         <label class="btn btn-outline-info" for="my-votes">Saját toplista</label>
                     </div>
+                    <div id="my-votes-subfilter" class="btn-group w-100 mt-2" role="group" aria-label="Saját toplista szűrő" style="display: none;">
+                        <input type="radio" class="btn-check" name="my-type" id="my-all" value="all" checked>
+                        <label class="btn btn-outline-primary btn-sm" for="my-all">Összes modell</label>
+                        
+                        <input type="radio" class="btn-check" name="my-type" id="my-open" value="open-source">
+                        <label class="btn btn-outline-success btn-sm" for="my-open">Open Source modellek</label>
+                        
+                        <input type="radio" class="btn-check" name="my-type" id="my-closed" value="closed-source">
+                        <label class="btn btn-outline-warning btn-sm" for="my-closed">Zárt forrású modellek</label>
+                    </div>
                 </div>
             </div>
             

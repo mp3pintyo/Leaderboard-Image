@@ -610,6 +610,8 @@ def get_personal_leaderboard():
             (user_id,)
         ).fetchall()
 
+        model_type = request.args.get('model_type', 'all')
+
         if not rows:
             # Nincs még szavazat: visszaadjuk az összes modellt DEFAULT_ELO-val
             leaderboard = [
@@ -622,6 +624,8 @@ def get_personal_leaderboard():
                     "frozen": False
                 }
                 for model_id, model in MODELS.items()
+                if not ((model_type == 'open-source' and not model['open_source']) or
+                        (model_type == 'closed-source' and model['open_source']))
             ]
             leaderboard.sort(key=lambda x: x['elo'], reverse=True)
             return jsonify({"leaderboard": leaderboard, "vote_count": 0})
@@ -646,8 +650,13 @@ def get_personal_leaderboard():
             matches[winner] += 1
             matches[loser]  += 1
 
+        model_type = request.args.get('model_type', 'all')
         leaderboard = []
         for model_id, model in MODELS.items():
+            is_open_source = model['open_source']
+            if (model_type == 'open-source' and not is_open_source) or \
+               (model_type == 'closed-source' and is_open_source):
+                continue
             m = matches[model_id]
             w = wins[model_id]
             leaderboard.append({
@@ -657,7 +666,7 @@ def get_personal_leaderboard():
                 "matches": m,
                 "win_rate": round(w / m * 100, 2) if m > 0 else 0.0,
                 "elo": round(personal_elo[model_id], 1),
-                "open_source": model['open_source'],
+                "open_source": is_open_source,
                 "frozen": False
             })
         leaderboard.sort(key=lambda x: x['elo'], reverse=True)
