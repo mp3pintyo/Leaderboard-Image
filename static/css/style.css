@@ -131,6 +131,41 @@ body {
     margin-bottom: 20px;
 }
 
+/* --- Mobile nézet: Arena Battle --- */
+@media (max-width: 767.98px) {
+    /* Kisebb gombok mobilon */
+    #battle-mode .battle-btn {
+        font-size: 0.75rem;
+        padding: 0.3rem 0.4rem;
+        line-height: 1.2;
+    }
+
+    /* Kisebb címek mobilon */
+    #battle-mode h4 {
+        font-size: 1rem;
+        margin-bottom: 0.25rem;
+        min-height: auto;
+    }
+
+    /* Kompaktabb prompt */
+    #battle-mode .prompt-truncated {
+        font-size: 0.78rem;
+        padding: 0.25rem 0.5rem;
+        margin-bottom: 0.3rem !important;
+    }
+
+    /* Kevesebb padding az alsó gomb szekcióban */
+    #battle-mode .flex-shrink-0.mt-2 {
+        margin-top: 0.25rem !important;
+        padding-bottom: 0.25rem !important;
+    }
+
+    /* Képek kisebb min-height */
+    #battle-mode .arena-image {
+        min-height: 0 !important;
+    }
+}
+
 /* Compare Mode */
 .compare-model-card .card-body {
     padding: 0.75rem;
