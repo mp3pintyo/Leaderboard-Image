@@ -142,29 +142,34 @@ function renderRadarChart(stats, info) {
     const m1 = stats.model1;
     const m2 = stats.model2;
 
-    // Normalized metrics for radar (0-100 scale)
-    const maxElo = Math.max(m1.elo, m2.elo, 1600);
-    const minElo = Math.min(1400, m1.elo, m2.elo);
-    const eloRange = maxElo - minElo || 1;
-
-    function normalize(val, min, max) {
-        if (max === min) return 50;
-        return Math.round(((val - min) / (max - min)) * 100);
-    }
-
-    const labels = ['ELO Rating', 'Győzelmi arány', 'Meccsek száma', 'Győzelmek'];
+    // Normalize to 0-100 for radar display, but keep raw values for tooltips
+    // Use a fixed wide range for ELO so close values look proportionally close
+    const eloMin = 1000;
+    const eloMax = 2200;
     const maxMatches = Math.max(m1.matches, m2.matches, 1);
     const maxWins = Math.max(m1.wins, m2.wins, 1);
 
+    function normalize(val, min, max) {
+        if (max === min) return 50;
+        return Math.min(100, Math.max(0, Math.round(((val - min) / (max - min)) * 100)));
+    }
+
+    const labels = ['ELO Rating', 'Győzelmi arány', 'Meccsek száma', 'Győzelmek'];
+
+    // Raw values for tooltip display
+    const raw1 = [m1.elo, m1.win_rate, m1.matches, m1.wins];
+    const raw2 = [m2.elo, m2.win_rate, m2.matches, m2.wins];
+    const units = ['', '%', '', ''];
+
     const data1 = [
-        normalize(m1.elo, minElo, maxElo),
+        normalize(m1.elo, eloMin, eloMax),
         m1.win_rate,
         normalize(m1.matches, 0, maxMatches),
         normalize(m1.wins, 0, maxWins),
     ];
 
     const data2 = [
-        normalize(m2.elo, minElo, maxElo),
+        normalize(m2.elo, eloMin, eloMax),
         m2.win_rate,
         normalize(m2.matches, 0, maxMatches),
         normalize(m2.wins, 0, maxWins),
@@ -178,6 +183,7 @@ function renderRadarChart(stats, info) {
                 {
                     label: m1.name,
                     data: data1,
+                    rawData: raw1,
                     backgroundColor: 'rgba(13, 110, 253, 0.15)',
                     borderColor: 'rgba(13, 110, 253, 1)',
                     pointBackgroundColor: 'rgba(13, 110, 253, 1)',
@@ -186,6 +192,7 @@ function renderRadarChart(stats, info) {
                 {
                     label: m2.name,
                     data: data2,
+                    rawData: raw2,
                     backgroundColor: 'rgba(25, 135, 84, 0.15)',
                     borderColor: 'rgba(25, 135, 84, 1)',
                     pointBackgroundColor: 'rgba(25, 135, 84, 1)',
@@ -205,7 +212,18 @@ function renderRadarChart(stats, info) {
                 }
             },
             plugins: {
-                legend: { position: 'top' }
+                legend: { position: 'top' },
+                tooltip: {
+                    callbacks: {
+                        label: function(ctx) {
+                            const ds = ctx.dataset;
+                            const idx = ctx.dataIndex;
+                            const raw = ds.rawData ? ds.rawData[idx] : ctx.raw;
+                            const unit = units[idx] || '';
+                            return `${ds.label}: ${raw}${unit}`;
+                        }
+                    }
+                }
             }
         }
     });
