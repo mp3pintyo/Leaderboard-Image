@@ -133,36 +133,56 @@ body {
 
 /* --- Mobile nézet: Arena Battle --- */
 @media (max-width: 767.98px) {
-    /* Kisebb gombok mobilon */
-    #battle-mode .battle-btn {
-        font-size: 0.75rem;
-        padding: 0.3rem 0.4rem;
-        line-height: 1.2;
+    /* Képek egymás alatt: a sor legyen flex-column, mindkét col 50% magasság */
+    #battle-mode .row.flex-grow-1 {
+        flex-direction: column !important;
+        align-items: stretch !important;
     }
 
-    /* Kisebb címek mobilon */
+    #battle-mode .row.flex-grow-1 > div {
+        flex: 0 0 50% !important;
+        max-width: 100% !important;
+        width: 100% !important;
+        height: 50% !important;
+        padding-left: 2px !important;
+        padding-right: 2px !important;
+    }
+
+    /* Minimális padding a képeken belül */
+    #battle-mode .arena-image {
+        min-height: 0 !important;
+        border: none !important;
+    }
+
+    /* Kisebb fejlécek */
     #battle-mode h4 {
-        font-size: 1rem;
-        margin-bottom: 0.25rem;
+        font-size: 0.85rem;
+        margin-bottom: 0.1rem !important;
         min-height: auto;
     }
 
     /* Kompaktabb prompt */
     #battle-mode .prompt-truncated {
-        font-size: 0.78rem;
-        padding: 0.25rem 0.5rem;
-        margin-bottom: 0.3rem !important;
+        font-size: 0.75rem;
+        padding: 0.2rem 0.4rem;
+        margin-bottom: 0.2rem !important;
     }
 
-    /* Kevesebb padding az alsó gomb szekcióban */
+    /* Kisebb gombok, egymás mellett (col-6 már be van állítva) */
+    #battle-mode .battle-btn {
+        font-size: 0.72rem;
+        padding: 0.25rem 0.3rem;
+        line-height: 1.2;
+    }
+
+    /* Kompaktabb gomb szekció */
     #battle-mode .flex-shrink-0.mt-2 {
-        margin-top: 0.25rem !important;
-        padding-bottom: 0.25rem !important;
+        margin-top: 0.15rem !important;
+        padding-bottom: 0.15rem !important;
     }
 
-    /* Képek kisebb min-height */
-    #battle-mode .arena-image {
-        min-height: 0 !important;
+    #battle-mode .mb-1 {
+        margin-bottom: 0.15rem !important;
     }
 }
 
