@@ -181,6 +181,7 @@ MODELS = {
 - ByteDance: Seedream 5.0 lite 3k
 - Google: Nano Banana 2 4k
 - Adobe: Firefly Image 5 preview
+- Tencent: HunyuanImage-3.0 Instruct
 
 ## 🗄️ Adatbázis struktúra
 

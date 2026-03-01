@@ -893,6 +893,20 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'speed': 'medium',
         'website': 'https://firefly.adobe.com',
     },
+    'model-063': {
+        'name': 'Tencent: HunyuanImage-3.0 Instruct',
+        'filename': 'hunyuan-image-3.0-instruct',
+        'open_source': True,
+        'provider': 'Tencent',
+        'release_date': '2026-01-26',
+        'type': 'image-generation',
+        'tags': ['general', 'multimodal', 'text-rendering'],
+        'max_resolution': '1024x1024',
+        'pricing': 'Free (Open Source)',
+        'api_available': True,
+        'speed': 'slow',
+        'website': 'https://hunyuan.tencent.com',
+    },
 }
 
 # Engedélyezett képkiterjesztések listája
