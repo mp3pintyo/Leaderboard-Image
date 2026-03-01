@@ -879,6 +879,20 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'speed': 'medium',
         'website': 'https://deepmind.google',
     },
+    'model-062': {
+        'name': 'Adobe: Firefly Image 5 preview',
+        'filename': 'firefly-image-5-preview',
+        'open_source': False,
+        'provider': 'Adobe',
+        'release_date': '2025-10-28',
+        'type': 'image-generation',
+        'tags': ['general', 'editing', 'commercial-safe','layers'],
+        'max_resolution': '2048x2048',
+        'pricing': 'Subscription',
+        'api_available': True,
+        'speed': 'medium',
+        'website': 'https://firefly.adobe.com',
+    },
 }
 
 # Engedélyezett képkiterjesztések listája

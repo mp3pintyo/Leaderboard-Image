@@ -120,46 +120,46 @@ MODELS = {
 ## 🌟 Jelenleg támogatott modellek
 
 - Grok
-- Google Gemini Flash 2.0
-- Google Imagen 3
-- GPT Image 1
+- Google: Gemini Flash 2.0
+- Google: Imagen 3
+- OpenAI: GPT Image 1
 - Midjourney v6.1
 - Midjourney v7
 - Midjourney v7 20250501
 - Reve
 - HiDream-I1
 - Lumina-Image-2.0
-- Capcut Dreamina Image 2.0 Pro
+- ByteDance: Capcut Dreamina Image 2.0 Pro
 - Juggernaut XI
 - Fluxmania V
 - Tengr.ai
 - Tengr.ai Quantum
-- Adobe Firefly Image 4
-- Dreamina Seedream 3.0
+- Adobe: Firefly Image 4
+- ByteDance: Seedream 3.0
 - Ideogram 3.0
 - Piclumen Realistic V2
 - F Lite Standard
 - Google Gemini Flash 2.0 Preview 0507
-- Tencent Hunyuan Image 2.0
-- Google Imagen 4
+- Tencent: Hunyuan Image 2.0
+- Google: Imagen 4
 - Recraft V3 Raw
-- ByteDance BAGEL
+- ByteDance: BAGEL
 - FLUX.1 Kontext [pro]
 - Chroma v34
 - Ernie 4.5 Turbo
-- Google Imagen 4 Ultra
-- Qwen-Image
+- Google: Imagen 4 Ultra
+- Alibaba: Qwen-Image
 - Google Gemini 2.5 Flash Image Preview
 - FLUX.1 Krea
-- Tencent Hunyuan Image 2.1
+- Tencent: Hunyuan Image 2.1
 - ByteDance Seedream 4.0 4k
-- Kling AI KOLORS 2.1
-- Tencent HunyuanImage-3.0
+- Kling AI: KOLORS 2.1
+- Tencent: HunyuanImage-3.0
 - OpenAI: GPT-5 Image Mini High
 - OpenAI: GPT-5 Image Mini Low
 - OpenAI: GPT-5 Image Mini Medium
 - Microsoft: MAI-Image-1
-- Google Nano Banana Pro (Gemini 3 Pro Image)
+- Google: Nano Banana Pro (Gemini 3 Pro Image)
 - Alibaba: Z Image Turbo
 - Black Forest Labs: FLUX.2 [pro]
 - Black Forest Labs: FLUX.2 [dev]
@@ -180,6 +180,7 @@ MODELS = {
 - Recraft V4
 - ByteDance: Seedream 5.0 lite 3k
 - Google: Nano Banana 2 4k
+- Adobe: Firefly Image 5 preview
 
 ## 🗄️ Adatbázis struktúra
 
