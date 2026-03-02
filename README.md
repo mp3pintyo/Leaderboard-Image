@@ -182,6 +182,7 @@ MODELS = {
 - Google: Nano Banana 2 4k
 - Adobe: Firefly Image 5 preview
 - Tencent: HunyuanImage-3.0 Instruct
+- Black Forest Labs: FLUX.2 [max]
 
 ## 🗄️ Adatbázis struktúra
 

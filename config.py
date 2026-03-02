@@ -907,6 +907,20 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'speed': 'slow',
         'website': 'https://hunyuan.tencent.com',
     },
+    'model-064': {
+        'name': 'Black Forest Labs: FLUX.2 [max]',
+        'filename': 'flux2-max-2k',
+        'open_source': False,
+        'provider': 'Black Forest Labs',
+        'release_date': '2025-11-25',
+        'type': 'image-generation',
+        'tags': ['photorealistic', 'artistic', 'high-resolution'],
+        'max_resolution': '2048x2048',
+        'pricing': '$0.07/image',
+        'api_available': True,
+        'speed': 'medium',
+        'website': 'https://blackforestlabs.ai',
+    },
 }
 
 # Engedélyezett képkiterjesztések listája
