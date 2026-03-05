@@ -207,10 +207,21 @@ def reset_votes():
 @app.route('/')
 def index():
     """Főoldal megjelenítése."""
-    # A modellek listáját névvel adjuk át a template-nek
-    models_for_template = [
-        {'id': model_id, 'name': model['name']} for model_id, model in MODELS.items()
-    ]
+    # A modellek listáját névvel és szolgáltatóval adjuk át a template-nek
+    # display mező tartalmazza a megjelenítendő szöveget: "provider: name".
+    # Rendezés display alapján, így a dropdownok is ABC-s listát mutatnak.
+    models_for_template = sorted(
+        (
+            {
+                'id': model_id,
+                'name': model['name'],
+                'provider': model.get('provider') or '',
+                'display': f"{model.get('provider')}: {model['name']}" if model.get('provider') else model['name'],
+            }
+            for model_id, model in MODELS.items()
+        ),
+        key=lambda m: m['display'].lower()
+    )
     
     # Auth state for template
     user = get_current_user()

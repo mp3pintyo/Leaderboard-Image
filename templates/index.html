@@ -149,7 +149,7 @@
                     <label for="sbs-model1-select" class="form-label">Válassz modellt 1:</label>
                     <select id="sbs-model1-select" class="form-select">
                         {% for model_item in models %}
-                        <option value="{{ model_item.id }}">{{ model_item.name }}</option>
+                        <option value="{{ model_item.id }}">{{ model_item.display }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -158,9 +158,9 @@
                     <select id="sbs-model2-select" class="form-select">
                          {% for model_item in models %}
                          {% if loop.index == 2 %}
-                         <option value="{{ model_item.id }}" selected>{{ model_item.name }}</option>
+                         <option value="{{ model_item.id }}" selected>{{ model_item.display }}</option>
                          {% else %}
-                         <option value="{{ model_item.id }}">{{ model_item.name }}</option>
+                         <option value="{{ model_item.id }}">{{ model_item.display }}</option>
                          {% endif %}
                          {% endfor %}
                     </select>
@@ -171,9 +171,9 @@
                         <option value="" selected>Nincs</option>
                          {% for model_item in models %}
                          {% if loop.index == 3 %}
-                         <option value="{{ model_item.id }}">{{ model_item.name }}</option>
+                         <option value="{{ model_item.id }}">{{ model_item.display }}</option>
                          {% else %}
-                         <option value="{{ model_item.id }}">{{ model_item.name }}</option>
+                         <option value="{{ model_item.id }}">{{ model_item.display }}</option>
                          {% endif %}
                          {% endfor %}
                     </select>
@@ -275,7 +275,7 @@
                     <label for="compare-model1-select" class="form-label fw-bold text-primary">Modell A:</label>
                     <select id="compare-model1-select" class="form-select">
                         {% for model_item in models %}
-                        <option value="{{ model_item.id }}">{{ model_item.name }}</option>
+                        <option value="{{ model_item.id }}">{{ model_item.display }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -284,9 +284,9 @@
                     <select id="compare-model2-select" class="form-select">
                         {% for model_item in models %}
                         {% if loop.index == 2 %}
-                        <option value="{{ model_item.id }}" selected>{{ model_item.name }}</option>
+                        <option value="{{ model_item.id }}" selected>{{ model_item.display }}</option>
                         {% else %}
-                        <option value="{{ model_item.id }}">{{ model_item.name }}</option>
+                        <option value="{{ model_item.id }}">{{ model_item.display }}</option>
                         {% endif %}
                         {% endfor %}
                     </select>

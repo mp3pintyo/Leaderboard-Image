@@ -40,7 +40,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://x.ai',
     },
     'model-002': {
-        'name': 'Google Gemini Flash 2.0',
+        'name': 'Gemini Flash 2.0',
         'filename': 'gemini-flash',
         'open_source': False,
         'provider': 'Google',
@@ -54,7 +54,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://deepmind.google',
     },
     'model-003': {
-        'name': 'Google Imagen 3',
+        'name': 'Imagen 3',
         'filename': 'imagen3',
         'open_source': False,
         'provider': 'Google',
@@ -68,7 +68,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://deepmind.google',
     },
     'model-004': {
-        'name': 'OpenAI: GPT Image 1',
+        'name': 'GPT Image 1',
         'filename': 'gpt-image-1',
         'open_source': False,
         'provider': 'OpenAI',
@@ -82,7 +82,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://openai.com',
     },
     'model-005': {
-        'name': 'Midjourney v6.1',
+        'name': 'v6.1',
         'filename': 'midjourneyv61',
         'open_source': False,
         'provider': 'Midjourney',
@@ -96,7 +96,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://midjourney.com',
     },
     'model-006': {
-        'name': 'Midjourney v7',
+        'name': 'v7',
         'filename': 'midjourneyv7',
         'open_source': False,
         'provider': 'Midjourney',
@@ -124,7 +124,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': None,
     },
     'model-008': {
-        'name': 'HiDream-I1',
+        'name': 'I1',
         'filename': 'hidreami1',
         'open_source': True,
         'provider': 'HiDream',
@@ -152,7 +152,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://github.com/Alpha-VLLM',
     },
     'model-010': {
-        'name': 'ByteDance: Seedream 2.0 (CapCut Dreamina Image 2.0 Pro)',
+        'name': 'Seedream 2.0 (CapCut Dreamina Image 2.0 Pro)',
         'filename': 'dreamina-image20pro',
         'open_source': False,
         'provider': 'ByteDance',
@@ -208,7 +208,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://tengr.ai',
     },
     'model-014': {
-        'name': 'Tengr.ai Quantum',
+        'name': 'Quantum',
         'filename': 'tengrai-q',
         'open_source': False,
         'provider': 'Tengr.ai',
@@ -222,7 +222,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://tengr.ai',
     },
     'model-015': {
-        'name': 'Adobe Firefly Image 4',
+        'name': 'Firefly Image 4',
         'filename': 'firefly4',
         'open_source': False,
         'provider': 'Adobe',
@@ -250,7 +250,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://dreamina.capcut.com',
     },
     'model-017': {
-        'name': 'Ideogram 3.0',
+        'name': '3.0',
         'filename': 'ideogram3',
         'open_source': False,
         'provider': 'Ideogram',
@@ -264,7 +264,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://ideogram.ai',
     },
     'model-018': {
-        'name': 'Piclumen Realistic V2',
+        'name': 'Realistic V2',
         'filename': 'piclumen-realistic-v2',
         'open_source': False,
         'provider': 'Piclumen',
@@ -292,7 +292,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': None,
     },
     'model-020': {
-        'name': 'Google Gemini Flash 2.0 Preview 0507',
+        'name': 'Gemini Flash 2.0 Preview 0507',
         'filename': 'gemini-2.0-flash-0507',
         'open_source': False,
         'provider': 'Google',
@@ -306,7 +306,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://deepmind.google',
     },
     'model-021': {
-        'name': 'Midjourney v7 20250501',
+        'name': 'v7 20250501',
         'filename': 'midjourneyv7-20250501',
         'open_source': False,
         'provider': 'Midjourney',
@@ -320,7 +320,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://midjourney.com',
     },
     'model-022': {
-        'name': 'Tencent: Hunyuan Image 2.0',
+        'name': 'Hunyuan Image 2.0',
         'filename': 'hunyuan-image-2.0',
         'open_source': False,
         'provider': 'Tencent',
@@ -334,7 +334,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://hunyuan.tencent.com',
     },
     'model-023': {
-        'name': 'Google: Imagen 4',
+        'name': 'Imagen 4',
         'filename': 'imagen4',
         'open_source': False,
         'provider': 'Google',
@@ -348,7 +348,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://deepmind.google',
     },
     'model-024': {
-        'name': 'Recraft V3 Raw',
+        'name': 'V3 Raw',
         'filename': 'recraft-v3-raw',
         'open_source': False,
         'provider': 'Recraft',
@@ -362,7 +362,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://recraft.ai',
     },
     'model-025': {
-        'name': 'ByteDance: BAGEL',
+        'name': 'BAGEL',
         'filename': 'bagel',
         'open_source': True,
         'provider': 'ByteDance',
@@ -376,7 +376,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://github.com/bytedance',
     },
     'model-026': {
-        'name': 'Black Forest Labs: FLUX.1 Kontext [pro]',
+        'name': 'FLUX.1 Kontext [pro]',
         'filename': 'flux1-kontext-pro',
         'open_source': False,
         'provider': 'Black Forest Labs',
@@ -418,7 +418,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://yiyan.baidu.com',
     },
     'model-029': {
-        'name': 'Google: Imagen 4 Ultra',
+        'name': 'Imagen 4 Ultra',
         'filename': 'imagen4ultra',
         'open_source': False,
         'provider': 'Google',
@@ -432,7 +432,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://deepmind.google',
     },
     'model-030': {
-        'name': 'Alibaba: Qwen-Image',
+        'name': 'Qwen-Image',
         'filename': 'qwen-image',
         'open_source': True,
         'provider': 'Alibaba Cloud',
@@ -446,7 +446,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://qwen.ai',
     },
     'model-031': {
-        'name': 'Google: Gemini 2.5 Flash Image Preview',
+        'name': 'Gemini 2.5 Flash Image Preview',
         'filename': 'gemini25flashimagepreview',
         'open_source': False,
         'provider': 'Google',
@@ -474,7 +474,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://krea.ai',
     },
     'model-033': {
-        'name': 'Tencent: Hunyuan Image 2.1',
+        'name': 'Hunyuan Image 2.1',
         'filename': 'hunyuan-image-2.1',
         'open_source': True,
         'provider': 'Tencent',
@@ -488,7 +488,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://hunyuan.tencent.com',
     },
     'model-034': {
-        'name': 'ByteDance: Seedream 4.0 4k',
+        'name': 'Seedream 4.0 4k',
         'filename': 'seedream-4.0-4k',
         'open_source': False,
         'provider': 'ByteDance',
@@ -502,7 +502,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://dreamina.capcut.com',
     },
     'model-035': {
-        'name': 'Kling AI: KOLORS 2.1',
+        'name': 'KOLORS 2.1',
         'filename': 'klingai-kolors-2.1',
         'open_source': False,
         'provider': 'Kling AI',
@@ -516,7 +516,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://klingai.com',
     },
     'model-036': {
-        'name': 'Tencent: HunyuanImage-3.0',
+        'name': 'HunyuanImage-3.0',
         'filename': 'hunyuan-image-3.0',
         'open_source': True,
         'provider': 'Tencent',
@@ -530,7 +530,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://hunyuan.tencent.com',
     },
     'model-037': {
-        'name': 'OpenAI: GPT-5 Image Mini High',
+        'name': 'GPT-5 Image Mini High',
         'filename': 'gpt-5-image-mini-high',
         'open_source': False,
         'provider': 'OpenAI',
@@ -544,7 +544,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://openai.com',
     },
     'model-038': {
-        'name': 'OpenAI: GPT-5 Image Mini Low',
+        'name': 'GPT-5 Image Mini Low',
         'filename': 'gpt-5-image-mini-low',
         'open_source': False,
         'provider': 'OpenAI',
@@ -558,7 +558,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://openai.com',
     },
     'model-039': {
-        'name': 'OpenAI: GPT-5 Image Mini Medium',
+        'name': 'GPT-5 Image Mini Medium',
         'filename': 'gpt-5-image-mini-medium',
         'open_source': False,
         'provider': 'OpenAI',
@@ -572,7 +572,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://openai.com',
     },
     'model-040': {
-        'name': 'Microsoft: MAI-Image-1',
+        'name': 'MAI-Image-1',
         'filename': 'mai-image-1',
         'open_source': False,
         'provider': 'Microsoft',
@@ -586,7 +586,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://azure.microsoft.com',
     },
     'model-041': {
-        'name': 'Google Nano Banana Pro (Gemini 3 Pro Image)',
+        'name': 'Nano Banana Pro (Gemini 3 Pro Image)',
         'filename': 'nanobananapro-4k',
         'open_source': False,
         'provider': 'Google',
@@ -600,7 +600,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://deepmind.google',
     },
     'model-042': {
-        'name': 'Alibaba: Z Image Turbo',
+        'name': 'Z Image Turbo',
         'filename': 'z-image-turbo',
         'open_source': True,
         'provider': 'Alibaba Cloud',
@@ -614,7 +614,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://qwen.ai',
     },
     'model-043': {
-        'name': 'Black Forest Labs: FLUX.2 [pro]',
+        'name': 'FLUX.2 [pro]',
         'filename': 'flux2-pro-2k',
         'open_source': False,
         'provider': 'Black Forest Labs',
@@ -628,7 +628,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://blackforestlabs.ai',
     },
     'model-044': {
-        'name': 'Black Forest Labs: FLUX.2 [dev]',
+        'name': 'FLUX.2 [dev]',
         'filename': 'flux2-dev',
         'open_source': True,
         'provider': 'Black Forest Labs',
@@ -642,7 +642,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://blackforestlabs.ai',
     },
     'model-045': {
-        'name': 'Kling AI: Omni Image 1.0',
+        'name': 'Omni Image 1.0',
         'filename': 'klingai-omni-image-1.0',
         'open_source': False,
         'provider': 'Kling AI',
@@ -656,7 +656,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://klingai.com',
     },
     'model-046': {
-        'name': 'Black Forest Labs: FLUX.2 [flex]',
+        'name': 'FLUX.2 [flex]',
         'filename': 'flux2-flex-2k',
         'open_source': False,
         'provider': 'Black Forest Labs',
@@ -670,7 +670,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://blackforestlabs.ai',
     },
     'model-047': {
-        'name': 'ByteDance: Seedream 4.5 4k',
+        'name': 'Seedream 4.5 4k',
         'filename': 'seedream-4.5-4k',
         'open_source': False,
         'provider': 'ByteDance',
@@ -684,7 +684,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://dreamina.capcut.com',
     },
     'model-048': {
-        'name': 'OpenAI: GPT Image 1.5',
+        'name': 'GPT Image 1.5',
         'filename': 'gpt-image-1.5',
         'open_source': False,
         'provider': 'OpenAI',
@@ -698,7 +698,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://openai.com',
     },
     'model-049': {
-        'name': 'Alibaba: Qwen-Image-2512',
+        'name': 'Qwen-Image-2512',
         'filename': 'qwen-image-2512',
         'open_source': True,
         'provider': 'Alibaba Cloud',
@@ -712,7 +712,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://qwen.ai',
     },
     'model-050': {
-        'name': 'Z.ai: GLM-Image',
+        'name': 'GLM-Image',
         'filename': 'glm-image',
         'open_source': True,
         'provider': 'Z.ai',
@@ -726,7 +726,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://open.bigmodel.cn',
     },
     'model-051': {
-        'name': 'Black Forest Labs: FLUX.2 [klein base] 9B',
+        'name': 'FLUX.2 [klein base] 9B',
         'filename': 'flux2-klein-base-9b',
         'open_source': True,
         'provider': 'Black Forest Labs',
@@ -740,7 +740,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://blackforestlabs.ai',
     },
     'model-052': {
-        'name': 'Black Forest Labs: FLUX.2 [klein distilled] 9B',
+        'name': 'FLUX.2 [klein distilled] 9B',
         'filename': 'flux2-klein-9b',
         'open_source': True,
         'provider': 'Black Forest Labs',
@@ -754,7 +754,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://blackforestlabs.ai',
     },
     'model-053': {
-        'name': 'Black Forest Labs: FLUX.2 [klein base] 4B',
+        'name': 'FLUX.2 [klein base] 4B',
         'filename': 'flux2-klein-base-4b',
         'open_source': True,
         'provider': 'Black Forest Labs',
@@ -768,7 +768,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://blackforestlabs.ai',
     },
     'model-054': {
-        'name': 'Black Forest Labs: FLUX.2 [klein distilled] 4B',
+        'name': 'FLUX.2 [klein distilled] 4B',
         'filename': 'flux2-klein-4b',
         'open_source': True,
         'provider': 'Black Forest Labs',
@@ -782,7 +782,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://blackforestlabs.ai',
     },
     'model-055': {
-        'name': 'Alibaba: Z-Image Base',
+        'name': 'Z-Image Base',
         'filename': 'z-image-base',
         'open_source': True,
         'provider': 'Alibaba Cloud',
@@ -810,7 +810,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://x.ai',
     },
     'model-057': {
-        'name': 'Alibaba: Qwen-Image 2.0',
+        'name': 'Qwen-Image 2.0',
         'filename': 'qwen-image-2.0',
         'open_source': False,
         'provider': 'Alibaba Cloud',
@@ -824,7 +824,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://qwen.ai',
     },
     'model-058': {
-        'name': 'ByteDance: BitDance',
+        'name': 'BitDance',
         'filename': 'bitdance',
         'open_source': True,
         'provider': 'ByteDance',
@@ -838,7 +838,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': None,
     },
     'model-059': {
-        'name': 'Recraft V4',
+        'name': 'V4',
         'filename': 'recraft-v4',
         'open_source': False,
         'provider': 'Recraft',
@@ -852,7 +852,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://recraft.ai',
     },
     'model-060': {
-        'name': 'ByteDance: Seedream 5.0 lite 3k',
+        'name': 'Seedream 5.0 lite 3k',
         'filename': 'seedream-5.0-lite',
         'open_source': False,
         'provider': 'ByteDance',
@@ -866,7 +866,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://dreamina.capcut.com',
     },
     'model-061': {
-        'name': 'Google: Nano Banana 2 4k',
+        'name': 'Nano Banana 2 4k',
         'filename': 'nanobanana-2-4k',
         'open_source': False,
         'provider': 'Google',
@@ -880,7 +880,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://deepmind.google',
     },
     'model-062': {
-        'name': 'Adobe: Firefly Image 5 preview',
+        'name': 'Firefly Image 5 preview',
         'filename': 'firefly-image-5-preview',
         'open_source': False,
         'provider': 'Adobe',
@@ -894,7 +894,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://firefly.adobe.com',
     },
     'model-063': {
-        'name': 'Tencent: HunyuanImage-3.0 Instruct',
+        'name': 'HunyuanImage-3.0 Instruct',
         'filename': 'hunyuan-image-3.0-instruct',
         'open_source': True,
         'provider': 'Tencent',
@@ -908,7 +908,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://hunyuan.tencent.com',
     },
     'model-064': {
-        'name': 'Black Forest Labs: FLUX.2 [max]',
+        'name': 'FLUX.2 [max]',
         'filename': 'flux2-max-2k',
         'open_source': False,
         'provider': 'Black Forest Labs',
