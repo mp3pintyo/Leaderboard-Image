@@ -119,7 +119,7 @@ MODELS = {
 
 ## 🌟 Jelenleg támogatott modellek
 
-- Grok
+- xAI: Grok
 - Google: Gemini Flash 2.0
 - Google: Imagen 3
 - OpenAI: GPT Image 1
