@@ -417,11 +417,13 @@ def get_battle_data():
         "model1": {
             "id": model1_id,
             "name": MODELS[model1_id]['name'],
+            "provider": MODELS[model1_id].get('provider', ''),
             "image_url": get_image_url(prompt_id, model1_file)
         },
         "model2": {
             "id": model2_id,
             "name": MODELS[model2_id]['name'],
+            "provider": MODELS[model2_id].get('provider', ''),
             "image_url": get_image_url(prompt_id, model2_file)
         },
         "reveal_models": False

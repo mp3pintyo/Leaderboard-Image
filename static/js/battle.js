@@ -96,8 +96,10 @@ async function handleVote(winnerId, loserId) {
         body: JSON.stringify(voteData)
     });
     if (result && result.success) {
-        battleModel1Name.textContent = currentBattleData.model1.name;
-        battleModel2Name.textContent = currentBattleData.model2.name;
+        const m1 = currentBattleData.model1;
+        const m2 = currentBattleData.model2;
+        battleModel1Name.textContent = m1.provider ? `${m1.provider}: ${m1.name}` : m1.name;
+        battleModel2Name.textContent = m2.provider ? `${m2.provider}: ${m2.name}` : m2.name;
         if (winnerId === currentBattleData.model1.id) {
             battleModel1Name.classList.add('text-success');
             battleModel1Name.style.fontWeight = 'bold';
@@ -126,8 +128,10 @@ export function initBattleMode() {
     });
     tieBtn.addEventListener('click', () => {
         if (currentBattleData) {
-            battleModel1Name.textContent = currentBattleData.model1.name;
-            battleModel2Name.textContent = currentBattleData.model2.name;
+            const m1t = currentBattleData.model1;
+            const m2t = currentBattleData.model2;
+            battleModel1Name.textContent = m1t.provider ? `${m1t.provider}: ${m1t.name}` : m1t.name;
+            battleModel2Name.textContent = m2t.provider ? `${m2t.provider}: ${m2t.name}` : m2t.name;
             setTimeout(() => {
                 loadBattleData();
             }, getRevealDelayMs());
@@ -137,8 +141,10 @@ export function initBattleMode() {
     });
     skipBtn.addEventListener('click', () => {
         if (currentBattleData) {
-            battleModel1Name.textContent = currentBattleData.model1.name;
-            battleModel2Name.textContent = currentBattleData.model2.name;
+            const m1s = currentBattleData.model1;
+            const m2s = currentBattleData.model2;
+            battleModel1Name.textContent = m1s.provider ? `${m1s.provider}: ${m1s.name}` : m1s.name;
+            battleModel2Name.textContent = m2s.provider ? `${m2s.provider}: ${m2s.name}` : m2s.name;
             setTimeout(() => {
                 loadBattleData();
             }, getRevealDelayMs());
