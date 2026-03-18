@@ -183,6 +183,7 @@ MODELS = {
 - Adobe: Firefly Image 5 preview
 - Tencent: HunyuanImage-3.0 Instruct
 - Black Forest Labs: FLUX.2 [max]
+- Midjourney v8 alpha
 
 ## 🗄️ Adatbázis struktúra
 

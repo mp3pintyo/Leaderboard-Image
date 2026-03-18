@@ -921,6 +921,20 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'speed': 'medium',
         'website': 'https://blackforestlabs.ai',
     },
+    'model-065': {
+        'name': 'Midjourney v8 alpha',
+        'filename': 'midjourneyv8alpha',
+        'open_source': False,
+        'provider': 'Midjourney',
+        'release_date': '2026-03-17',
+        'type': 'image-generation',
+        'tags': ['general', 'artistic', 'photorealistic'],
+        'max_resolution': '2048x2048',
+        'pricing': 'Subscription',
+        'api_available': False,
+        'speed': 'slow',
+        'website': 'https://midjourney.com',
+    },
 }
 
 # Engedélyezett képkiterjesztések listája
