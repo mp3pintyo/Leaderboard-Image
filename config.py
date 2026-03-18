@@ -922,7 +922,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://blackforestlabs.ai',
     },
     'model-065': {
-        'name': 'Midjourney v8 alpha',
+        'name': 'v8 alpha',
         'filename': 'midjourneyv8alpha',
         'open_source': False,
         'provider': 'Midjourney',
@@ -934,7 +934,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'api_available': False,
         'speed': 'slow',
         'website': 'https://midjourney.com',
-    },
+    }
 }
 
 # Engedélyezett képkiterjesztések listája
