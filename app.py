@@ -591,6 +591,8 @@ def get_leaderboard():
             leaderboard.append({
                 "id": model_id,
                 "name": model['name'],
+                "display": f"{model.get('provider')}: {model['name']}" if model.get('provider') else model['name'],
+                "provider": model.get('provider') or '',
                 "wins": model_wins,
                 "matches": model_matches,
                 "win_rate": round(win_rate, 2),
@@ -675,6 +677,8 @@ def get_personal_leaderboard():
             leaderboard.append({
                 "id": model_id,
                 "name": model['name'],
+                "display": f"{model.get('provider')}: {model['name']}" if model.get('provider') else model['name'],
+                "provider": model.get('provider') or '',
                 "wins": w,
                 "matches": m,
                 "win_rate": round(w / m * 100, 2) if m > 0 else 0.0,

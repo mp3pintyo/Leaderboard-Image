@@ -25,9 +25,10 @@ function renderRows(rows) {
             '<span class="badge bg-warning text-dark">Zárt forrású</span>';
         const frozenBadge = row.frozen ?
             ' <span class="badge bg-secondary" title="Ez a modell jelenleg ki van zárva az Arena Battle-ből">Befagyasztva</span>' : '';
+        const modelDisplayName = row.display || (row.provider ? `${row.provider}: ${row.name}` : row.name);
         tr.innerHTML = `
             <td>${index + 1}</td>
-            <td>${row.name}${frozenBadge}</td>
+            <td>${modelDisplayName}${frozenBadge}</td>
             <td><strong>${row.elo}</strong></td>
             <td>${row.wins}</td>
             <td>${row.matches}</td>
