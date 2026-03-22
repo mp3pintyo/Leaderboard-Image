@@ -184,6 +184,8 @@ MODELS = {
 - Tencent: HunyuanImage-3.0 Instruct
 - Black Forest Labs: FLUX.2 [max]
 - Midjourney v8 alpha
+- Microsoft: MAI-Image-2
+- Reve AI: Reve v1.5
 
 ## 🗄️ Adatbázis struktúra
 

@@ -934,7 +934,35 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'api_available': False,
         'speed': 'slow',
         'website': 'https://midjourney.com',
-    }
+    },
+    'model-066': {
+        'name': 'MAI-Image-2',
+        'filename': 'mai-image-2',
+        'open_source': False,
+        'provider': 'Microsoft',
+        'release_date': '2026-03-19',
+        'type': 'image-generation',
+        'tags': ['general', 'text-rendering'],
+        'max_resolution': '1024x1024',
+        'pricing': '???',
+        'api_available': True,
+        'speed': 'medium',
+        'website': 'https://www.microsoft.com/en-us/ai',
+    },
+    'model-067': {
+        'name': 'Reve v1.5',
+        'filename': 'reve-1.5',
+        'open_source': False,
+        'provider': 'Reve AI',
+        'release_date': '2026-02-23',
+        'type': 'image-generation',
+        'tags': ['general', '4k', 'photorealistic'],
+        'max_resolution': '4096x4096',
+        'pricing': '???',
+        'api_available': True,
+        'speed': 'medium',
+        'website': 'https://reve.ai',
+    },
 }
 
 # Engedélyezett képkiterjesztések listája
