@@ -8,6 +8,7 @@ from flask import Flask, render_template, jsonify, request, send_from_directory,
 from werkzeug.middleware.proxy_fix import ProxyFix
 from database import get_db, init_db, get_prompt_ids, update_elo
 from config import (DATA_DIR, ALLOWED_EXTENSIONS, DEFAULT_ELO, MODELS, REVEAL_DELAY_MS, FROZEN_BOTTOM_COUNT,
+                    NEW_MODEL_BOOST_THRESHOLD, NEW_MODEL_BOOST_WEIGHT,
                     SECRET_KEY, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET)
 from auth import oauth, init_oauth, login_required, get_current_user, save_user
 
@@ -402,7 +403,29 @@ def get_battle_data():
     
     if len(model_ids) < 2:
         return jsonify({"error": "Not enough models defined for battle"}), 500
-    model1_id, model2_id = random.sample(model_ids, 2)
+
+    # Új modellek boost: a 50 meccs alatti modellek nagyobb eséllyel jelennek meg
+    # az egyik battle-slotban. A másik slot teljesen véletlenszerű marad.
+    match_counts_rows = db.execute(
+        'SELECT model, COUNT(*) as cnt FROM '
+        '(SELECT winner as model FROM votes UNION ALL SELECT loser as model FROM votes) '
+        'GROUP BY model'
+    ).fetchall()
+    match_counts = {r['model']: r['cnt'] for r in match_counts_rows}
+
+    weights = [
+        NEW_MODEL_BOOST_WEIGHT if match_counts.get(m, 0) < NEW_MODEL_BOOST_THRESHOLD else 1
+        for m in model_ids
+    ]
+    # Súlyozott pick az egyik slothoz, uniform random a másikhoz
+    featured_id = random.choices(model_ids, weights=weights, k=1)[0]
+    remaining_ids = [m for m in model_ids if m != featured_id]
+    other_id = random.choice(remaining_ids)
+    # Véletlenszerűen osszuk el a két slot között, hogy ne legyen oldalbias
+    if random.random() < 0.5:
+        model1_id, model2_id = featured_id, other_id
+    else:
+        model1_id, model2_id = other_id, featured_id
 
     model1_file = find_model_file(prompt_id, MODELS[model1_id]['filename'])
     model2_file = find_model_file(prompt_id, MODELS[model2_id]['filename'])
