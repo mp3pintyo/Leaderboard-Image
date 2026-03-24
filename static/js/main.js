@@ -45,6 +45,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Navigáció kezelése
     navLinks.forEach(link => {
+        if (!link.hasAttribute('data-mode')) return; // Ne kezelje a külső linkeket, mint pl. a GitHub
         link.addEventListener('click', (e) => {
             e.preventDefault();
             const mode = link.dataset.mode;
