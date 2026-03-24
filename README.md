@@ -126,7 +126,7 @@ MODELS = {
 - Midjourney v6.1
 - Midjourney v7
 - Midjourney v7 20250501
-- Reve
+- Reve AI: Reve v1
 - HiDream-I1
 - Lumina-Image-2.0
 - ByteDance: Capcut Dreamina Image 2.0 Pro
@@ -183,9 +183,10 @@ MODELS = {
 - Adobe: Firefly Image 5 preview
 - Tencent: HunyuanImage-3.0 Instruct
 - Black Forest Labs: FLUX.2 [max]
-- Midjourney v8 alpha
+- Midjourney: v8 alpha
 - Microsoft: MAI-Image-2
 - Reve AI: Reve v1.5
+- Luma AI: Uni-1
 
 ## 🗄️ Adatbázis struktúra
 

@@ -963,6 +963,20 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'speed': 'medium',
         'website': 'https://reve.ai',
     },
+    'model-068': {
+        'name': 'Uni-1',
+        'filename': 'uni-1',
+        'open_source': False,
+        'provider': 'Luma AI',
+        'release_date': '2026-03-23',
+        'type': 'image-generation',
+        'tags': ['general', 'reasoning', 'photorealistic'],
+        'max_resolution': '2048x2048',
+        'pricing': '???',
+        'api_available': False,
+        'speed': 'slow',
+        'website': 'https://luma.ai',
+    },
 }
 
 # Engedélyezett képkiterjesztések listája
