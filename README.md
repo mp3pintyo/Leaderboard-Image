@@ -187,6 +187,7 @@ MODELS = {
 - Microsoft: MAI-Image-2
 - Reve AI: Reve v1.5
 - Luma AI: Uni-1
+- Alibaba: Wan 2.7-Image Pro 2k
 
 ## 🗄️ Adatbázis struktúra
 

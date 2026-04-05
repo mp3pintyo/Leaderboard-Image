@@ -977,6 +977,21 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'speed': 'slow',
         'website': 'https://luma.ai',
     },
+    'model-069': {
+        'name': 'Wan 2.7-Image Pro 2k',
+        'filename': 'wan-2-7-pro-2k',
+        'open_source': False,
+        'provider': 'Alibaba',
+        'release_date': '2026-04-01',
+        'type': 'image-generation',
+        'tags': ['general', 'high-resolution', 'photorealistic'],
+        'max_resolution': '2048x2048',
+        'pricing': '???',
+        'api_available': True,
+        'speed': 'medium',
+        'website': 'https://x.com/Alibaba_Wan/status/2039329029241872767',
+    },
+
 }
 
 # Engedélyezett képkiterjesztések listája
