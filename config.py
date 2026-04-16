@@ -1019,7 +1019,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'speed': 'medium',
         'website': 'https://yiyan.baidu.com',
     },
-    'model-071': {
+    'model-072': {
         'name': 'ERNIE-Image Turbo',
         'filename': 'ernie-image-turbo',
         'open_source': True,
