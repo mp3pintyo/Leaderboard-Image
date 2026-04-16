@@ -191,6 +191,7 @@ MODELS = {
 - Midjourney: v8.1 alpha
 - Baidu: ERNIE-Image
 - Baidu: ERNIE-Image Turbo
+- ImagineArt: ImagineArt 2.0
 
 ## 🗄️ Adatbázis struktúra
 

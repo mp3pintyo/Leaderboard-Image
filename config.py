@@ -1032,6 +1032,20 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'api_available': False,
         'speed': 'fast',
         'website': 'https://yiyan.baidu.com',
+    },
+    'model-073': {
+        'name': 'ImagineArt 2.0',
+        'filename': 'imagineart-2-0',
+        'open_source': False,
+        'provider': 'ImagineArt',
+        'release_date': '2026-04-16',
+        'type': 'image-generation',
+        'tags': ['general', 'artistic', 'photorealistic'],
+        'max_resolution': '2048x2048',
+        'pricing': 'Subscription',
+        'api_available': False,
+        'speed': 'medium',
+        'website': 'https://imagineart.com',
     }
 }
 
