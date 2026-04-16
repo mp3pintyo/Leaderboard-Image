@@ -1004,6 +1004,20 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'api_available': False,
         'speed': 'fast',
         'website': 'https://midjourney.com',
+    },
+    'model-071': {
+        'name': 'ERNIE-Image',
+        'filename': 'ernie-image',
+        'open_source': True,
+        'provider': 'Baidu',
+        'release_date': '2026-04-08',
+        'type': 'multimodal',
+        'tags': ['general', 'multimodal', 'text-rendering'],
+        'max_resolution': '1024x1024',
+        'pricing': 'Free (Open Source)',
+        'api_available': False,
+        'speed': 'medium',
+        'website': 'https://yiyan.baidu.com',
     }
 }
 

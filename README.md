@@ -189,6 +189,7 @@ MODELS = {
 - Luma AI: Uni-1
 - Alibaba: Wan 2.7-Image Pro 2k
 - Midjourney: v8.1 alpha
+- Baidu: ERNIE-Image
 
 ## 🗄️ Adatbázis struktúra
 
