@@ -188,6 +188,7 @@ MODELS = {
 - Reve AI: Reve v1.5
 - Luma AI: Uni-1
 - Alibaba: Wan 2.7-Image Pro 2k
+- Midjourney: v8.1 alpha
 
 ## 🗄️ Adatbázis struktúra
 

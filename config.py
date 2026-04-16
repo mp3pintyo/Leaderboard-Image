@@ -944,7 +944,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'type': 'image-generation',
         'tags': ['general', 'text-rendering'],
         'max_resolution': '1024x1024',
-        'pricing': '???',
+        'pricing': '$33 USD per 1M tokens',
         'api_available': True,
         'speed': 'medium',
         'website': 'https://www.microsoft.com/en-us/ai',
@@ -991,7 +991,19 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'speed': 'medium',
         'website': 'https://x.com/Alibaba_Wan/status/2039329029241872767',
     },
-
+    'model-070': {
+        'name': 'Midjourney v8.1',
+        'filename': 'midjourney-v8.1-alpha',
+        'open_source': False,
+        'provider': 'Midjourney',
+        'release_date': '2026-04-14',
+        'type': 'image-generation',
+        'tags': ['general', 'artistic', 'photorealistic'],
+        'max_resolution': '2048x2048',
+        'pricing': 'Subscription',
+        'api_available': False,
+        'speed': 'fast',
+        'website': 'https://midjourney.com',
 }
 
 # Engedélyezett képkiterjesztések listája
