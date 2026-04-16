@@ -190,6 +190,7 @@ MODELS = {
 - Alibaba: Wan 2.7-Image Pro 2k
 - Midjourney: v8.1 alpha
 - Baidu: ERNIE-Image
+- Baidu: ERNIE-Image Turbo
 
 ## 🗄️ Adatbázis struktúra
 
