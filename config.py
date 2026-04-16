@@ -1004,6 +1004,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'api_available': False,
         'speed': 'fast',
         'website': 'https://midjourney.com',
+    }
 }
 
 # Engedélyezett képkiterjesztések listája
