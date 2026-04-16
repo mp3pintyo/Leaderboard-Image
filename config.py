@@ -992,7 +992,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://x.com/Alibaba_Wan/status/2039329029241872767',
     },
     'model-070': {
-        'name': 'Midjourney v8.1',
+        'name': 'v8.1 alpha',
         'filename': 'midjourney-v8.1-alpha',
         'open_source': False,
         'provider': 'Midjourney',
