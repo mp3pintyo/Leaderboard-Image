@@ -192,6 +192,8 @@ MODELS = {
 - Baidu: ERNIE-Image
 - Baidu: ERNIE-Image Turbo
 - ImagineArt: ImagineArt 2.0
+- OpenAI: GPT Image 2 3k
+- OpenAI: GPT Image 2 ChatGPT
 
 ## 🗄️ Adatbázis struktúra
 
