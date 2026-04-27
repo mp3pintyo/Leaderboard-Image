@@ -283,7 +283,6 @@ def auth_dev_login():
     with db:
         user_id = save_user(db, 'dev', 'dev-user', 'dev@localhost', 'Dev User')
         db.commit()
-    session.clear()
     session['user'] = {'id': user_id, 'name': 'Dev User', 'provider': 'dev'}
     return redirect(url_for('index'))
 
@@ -346,7 +345,6 @@ def auth_callback(provider):
         db.commit()
     
     # Store in session
-    session.clear()
     session['user'] = {
         'id': user_id,
         'name': user_data['name'],

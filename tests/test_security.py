@@ -23,6 +23,7 @@ class SecurityRegressionTests(unittest.TestCase):
         if str(REPO_ROOT) not in sys.path:
             sys.path.insert(0, str(REPO_ROOT))
 
+        sys.modules.pop('app', None)
         import app as app_module
 
         cls.app_module = app_module
@@ -72,6 +73,17 @@ class SecurityRegressionTests(unittest.TestCase):
         })
         self.assertEqual(forged_vote.status_code, 400)
         self.assertEqual(forged_vote.get_json()['error'], 'Invalid or expired battle state')
+
+        third_battle = self.client.get('/api/battle_data')
+        self.assertEqual(third_battle.status_code, 200)
+        third_data = third_battle.get_json()
+        wrong_models_vote = self.client.post('/api/vote', json={
+            'prompt_id': third_data['prompt_id'],
+            'winner': valid_payload['winner'],
+            'loser': valid_payload['loser'],
+        })
+        self.assertEqual(wrong_models_vote.status_code, 400)
+        self.assertEqual(wrong_models_vote.get_json()['error'], 'Invalid or expired battle state')
 
     def test_production_mode_requires_explicit_secret_key(self):
         result = subprocess.run(
