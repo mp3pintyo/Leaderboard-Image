@@ -128,7 +128,6 @@ def consume_pending_battle(prompt_id, winner, loser):
     expected_models = pending_battle.get('models', [])
     return (
         pending_battle.get('prompt_id') == prompt_id and
-        winner != loser and
         sorted([winner, loser]) == expected_models
     )
 
@@ -584,7 +583,7 @@ def get_image_for_model():
 @login_required
 def record_vote():
     """Szavazat rögzítése az adatbázisban."""
-    data = request.get_json(silent=True) or {}
+    data = request.get_json()
     prompt_id = data.get('prompt_id')
     winner = data.get('winner')
     loser = data.get('loser')
@@ -595,6 +594,8 @@ def record_vote():
         return jsonify({"error": "Invalid prompt id in vote"}), 400
     if winner not in MODELS or loser not in MODELS:
         return jsonify({"error": "Invalid model id in vote"}), 400
+    if winner == loser:
+        return jsonify({"error": "Winner and loser must be different models"}), 400
     if not consume_pending_battle(prompt_id, winner, loser):
         return jsonify({"error": "Invalid or expired battle state"}), 400
     try:

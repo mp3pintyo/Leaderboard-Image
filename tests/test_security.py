@@ -29,6 +29,11 @@ class SecurityRegressionTests(unittest.TestCase):
         cls.app_module = app_module
         cls.client = app_module.app.test_client()
 
+    @classmethod
+    def tearDownClass(cls):
+        if os.path.exists(cls.database_path):
+            os.remove(cls.database_path)
+
     def setUp(self):
         with self.client.session_transaction() as sess:
             sess.clear()
@@ -72,7 +77,7 @@ class SecurityRegressionTests(unittest.TestCase):
             'loser': second_data['model1']['id'],
         })
         self.assertEqual(forged_vote.status_code, 400)
-        self.assertEqual(forged_vote.get_json()['error'], 'Invalid or expired battle state')
+        self.assertEqual(forged_vote.get_json()['error'], 'Winner and loser must be different models')
 
         third_battle = self.client.get('/api/battle_data')
         self.assertEqual(third_battle.status_code, 200)
