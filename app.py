@@ -24,7 +24,7 @@ if SECRET_KEY:
     app.secret_key = SECRET_KEY
 elif DEBUG_MODE:
     app.secret_key = secrets.token_hex(32)
-    app.logger.warning('SECRET_KEY is not set; using a temporary development key and resetting sessions on restart.')
+    app.logger.warning('SECRET_KEY is not set; generated a temporary development key. All sessions will be invalidated on restart.')
 else:
     raise RuntimeError('SECRET_KEY environment variable must be set when running outside development mode.')
 
@@ -583,7 +583,7 @@ def get_image_for_model():
 @login_required
 def record_vote():
     """Szavazat rögzítése az adatbázisban."""
-    data = request.get_json()
+    data = request.get_json() or {}
     prompt_id = data.get('prompt_id')
     winner = data.get('winner')
     loser = data.get('loser')

@@ -40,6 +40,8 @@ class SecurityRegressionTests(unittest.TestCase):
             sess['user'] = {'id': 1, 'name': 'Tester', 'provider': 'dev'}
 
     def test_battle_data_stores_pending_battle_in_session(self):
+        self.assertIsNotNone(self.app_module.app.secret_key)
+
         response = self.client.get('/api/battle_data')
         self.assertEqual(response.status_code, 200)
         battle_data = response.get_json()
