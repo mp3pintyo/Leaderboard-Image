@@ -24,6 +24,7 @@ if SECRET_KEY:
     app.secret_key = SECRET_KEY
 elif DEBUG_MODE:
     app.secret_key = secrets.token_hex(32)
+    app.logger.warning('SECRET_KEY is not set; using a temporary development key and resetting sessions on restart.')
 else:
     raise RuntimeError('SECRET_KEY environment variable must be set when running outside development mode.')
 
