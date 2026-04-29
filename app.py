@@ -1,5 +1,6 @@
 import os
 import random
+import secrets
 import sqlite3
 import sys
 import glob
@@ -8,7 +9,7 @@ from flask import Flask, render_template, jsonify, request, send_from_directory,
 from werkzeug.middleware.proxy_fix import ProxyFix
 from database import get_db, init_db, get_prompt_ids, update_elo
 from config import (DATA_DIR, ALLOWED_EXTENSIONS, DEFAULT_ELO, MODELS, REVEAL_DELAY_MS, FROZEN_BOTTOM_COUNT,
-                    NEW_MODEL_BOOST_THRESHOLD, NEW_MODEL_BOOST_WEIGHT,
+                    NEW_MODEL_BOOST_THRESHOLD, NEW_MODEL_BOOST_WEIGHT, DEBUG_MODE,
                     SECRET_KEY, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET)
 from auth import oauth, init_oauth, login_required, get_current_user, save_user
 
@@ -19,10 +20,17 @@ app.config['DATA_DIR'] = DATA_DIR # Flask konfigurációban is tároljuk
 DATA_MODE = os.environ.get('DATA_MODE')
 
 # Authentication and session configuration
-app.secret_key = SECRET_KEY
+if SECRET_KEY:
+    app.secret_key = SECRET_KEY
+elif DEBUG_MODE:
+    app.secret_key = secrets.token_hex(32)
+    app.logger.warning('SECRET_KEY is not set; generated a temporary development key. All sessions will be invalidated on restart.')
+else:
+    raise RuntimeError('SECRET_KEY environment variable must be set when running outside development mode.')
+
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
-app.config['SESSION_COOKIE_SECURE'] = DATA_MODE is not None
+app.config['SESSION_COOKIE_SECURE'] = not DEBUG_MODE
 app.config['GOOGLE_CLIENT_ID'] = GOOGLE_CLIENT_ID
 app.config['GOOGLE_CLIENT_SECRET'] = GOOGLE_CLIENT_SECRET
 app.config['GITHUB_CLIENT_ID'] = GITHUB_CLIENT_ID
@@ -100,6 +108,28 @@ with app.app_context():
 
 # Manifest cache DATA_MODE-hoz
 _manifest_cache = None
+
+
+def set_pending_battle(prompt_id, model1_id, model2_id):
+    """Store the currently displayed battle in the session to prevent forged votes."""
+    session['pending_battle'] = {
+        'prompt_id': prompt_id,
+        'models': sorted([model1_id, model2_id]),
+    }
+    session.modified = True
+
+
+def consume_pending_battle(prompt_id, winner, loser):
+    """Validate and consume the currently displayed battle."""
+    pending_battle = session.pop('pending_battle', None)
+    if not pending_battle:
+        return False
+
+    expected_models = pending_battle.get('models', [])
+    return (
+        pending_battle.get('prompt_id') == prompt_id and
+        sorted([winner, loser]) == expected_models
+    )
 
 def load_manifest():
     """Betölti a manifest.json fájlt DATA_MODE-ban a képfájl kiterjesztes meghatározásához."""
@@ -246,7 +276,7 @@ def index():
 @app.route('/auth/dev-login')
 def auth_dev_login():
     """Fejlesztői bejelentkezés - CSAK debug módban érhető el."""
-    if not app.debug:
+    if not DEBUG_MODE:
         abort(404)
     db = get_db()
     with db:
@@ -326,7 +356,7 @@ def auth_callback(provider):
 @app.route('/auth/logout')
 def auth_logout():
     """Kijelentkezés - session törlése."""
-    session.pop('user', None)
+    session.clear()
     return redirect(url_for('index'))
 
 
@@ -433,6 +463,8 @@ def get_battle_data():
         return jsonify({"error": f"Image for model {model1_id} not found in prompt {prompt_id}"}), 500
     if not model2_file:
         return jsonify({"error": f"Image for model {model2_id} not found in prompt {prompt_id}"}), 500
+
+    set_pending_battle(prompt_id, model1_id, model2_id)
 
     data = {
         "prompt_id": prompt_id,
@@ -551,15 +583,21 @@ def get_image_for_model():
 @login_required
 def record_vote():
     """Szavazat rögzítése az adatbázisban."""
-    data = request.json
+    data = request.get_json() or {}
     prompt_id = data.get('prompt_id')
     winner = data.get('winner')
     loser = data.get('loser')
 
     if not all([prompt_id, winner, loser]):
         return jsonify({"error": "Missing data for vote"}), 400
+    if prompt_id not in AVAILABLE_PROMPTS:
+        return jsonify({"error": "Invalid prompt id in vote"}), 400
     if winner not in MODELS or loser not in MODELS:
         return jsonify({"error": "Invalid model id in vote"}), 400
+    if winner == loser:
+        return jsonify({"error": "Winner and loser must be different models"}), 400
+    if not consume_pending_battle(prompt_id, winner, loser):
+        return jsonify({"error": "Invalid or expired battle state"}), 400
     try:
         user = get_current_user()
         db = get_db()
@@ -992,4 +1030,4 @@ if __name__ == '__main__':
     # Indítás előtt frissítjük a prompt listát
     update_available_prompts()
     # Debug mód fejlesztéshez, élesben False és használj pl. Gunicornt/Waitress-t
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=DEBUG_MODE, host='0.0.0.0')

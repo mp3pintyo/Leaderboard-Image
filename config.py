@@ -1100,7 +1100,8 @@ NEW_MODEL_BOOST_THRESHOLD = 50  # Ennyi meccs alatt aktív a boost
 NEW_MODEL_BOOST_WEIGHT = 5       # Hányszoros esély az átlagos modellhez képest
 
 # Authentication beállítások
-SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
+DEBUG_MODE = os.environ.get('FLASK_DEBUG') == '1' or os.environ.get('FLASK_ENV') == 'development'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID', '')
 GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET', '')
 GITHUB_CLIENT_ID = os.environ.get('GITHUB_CLIENT_ID', '')

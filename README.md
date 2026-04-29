@@ -38,10 +38,14 @@ cd image-leaderboard
 # 2. Függőségek telepítése
 pip install -r requirements.txt
 
-# 3. Adatbázis inicializálása
+# 3. Fejlesztői környezeti változók
+export FLASK_DEBUG=1
+export SECRET_KEY=$(python -c "import secrets; print(secrets.token_hex(32))")
+
+# 4. Adatbázis inicializálása
 python database.py
 
-# 4. Alkalmazás indítása
+# 5. Alkalmazás indítása
 flask run --host=0.0.0.0
 
 # Az alkalmazás alapértelmezetten a következő címen érhető el:
