@@ -8,6 +8,35 @@ const compareResultDiv = document.getElementById('compare-result');
 
 let compareChart = null; // Chart.js instance
 
+function escapeHtml(value) {
+    return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+function sanitizeUrl(url) {
+    if (!url) return null;
+    const value = String(url).trim();
+
+    // Relative URLs
+    if (value.startsWith('/')) return value;
+
+    // Absolute http/https URLs
+    try {
+        const parsed = new URL(value, window.location.origin);
+        if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
+            return parsed.href;
+        }
+    } catch (_) {
+        // invalid URL
+    }
+
+    return null;
+}
+
 function getTagBadgeClass(tag) {
     const map = {
         'photorealistic': 'bg-primary',
@@ -37,31 +66,35 @@ function getSpeedBadge(speed) {
 }
 
 function renderModelCard(model, side) {
-    const tags = (model.tags || []).map(t => `<span class="badge ${getTagBadgeClass(t)} me-1">${t}</span>`).join('');
+    const tags = (model.tags || [])
+        .map(t => `<span class="badge ${getTagBadgeClass(t)} me-1">${escapeHtml(t)}</span>`)
+        .join('');
     const openSourceBadge = model.open_source
         ? '<span class="badge bg-success">Open Source</span>'
         : '<span class="badge bg-warning text-dark">Zárt forrású</span>';
     const apiAvailable = model.api_available
         ? '<span class="badge bg-success">✓ Elérhető</span>'
         : '<span class="badge bg-danger">✗ Nem elérhető</span>';
-    const website = model.website
-        ? `<a href="${model.website}" target="_blank" rel="noopener noreferrer" class="text-decoration-none">${model.website}</a>`
+
+    const safeWebsiteHref = sanitizeUrl(model.website);
+    const website = safeWebsiteHref
+        ? `<a href="${escapeHtml(safeWebsiteHref)}" target="_blank" rel="noopener noreferrer" class="text-decoration-none">${escapeHtml(model.website)}</a>`
         : '<span class="text-muted">N/A</span>';
 
     return `
         <div class="card compare-model-card h-100 ${side === 'left' ? 'border-primary' : 'border-success'}">
             <div class="card-header ${side === 'left' ? 'bg-primary' : 'bg-success'} text-white">
-                <h5 class="mb-0">${model.name}</h5>
+                <h5 class="mb-0">${escapeHtml(model.name)}</h5>
             </div>
             <div class="card-body">
                 <table class="table table-sm table-borderless mb-0">
                     <tbody>
-                        <tr><td class="fw-bold text-nowrap" style="width:40%">Szolgáltató</td><td>${model.provider}</td></tr>
+                        <tr><td class="fw-bold text-nowrap" style="width:40%">Szolgáltató</td><td>${escapeHtml(model.provider)}</td></tr>
                         <tr><td class="fw-bold">Típus</td><td>${openSourceBadge}</td></tr>
-                        <tr><td class="fw-bold">Kategória</td><td><span class="badge bg-dark">${model.type || 'N/A'}</span></td></tr>
-                        <tr><td class="fw-bold">Megjelenés</td><td>${model.release_date || 'N/A'}</td></tr>
-                        <tr><td class="fw-bold">Max felbontás</td><td>${model.max_resolution || 'N/A'}</td></tr>
-                        <tr><td class="fw-bold">Árazás</td><td>${model.pricing || 'N/A'}</td></tr>
+                        <tr><td class="fw-bold">Kategória</td><td><span class="badge bg-dark">${escapeHtml(model.type || 'N/A')}</span></td></tr>
+                        <tr><td class="fw-bold">Megjelenés</td><td>${escapeHtml(model.release_date || 'N/A')}</td></tr>
+                        <tr><td class="fw-bold">Max felbontás</td><td>${escapeHtml(model.max_resolution || 'N/A')}</td></tr>
+                        <tr><td class="fw-bold">Árazás</td><td>${escapeHtml(model.pricing || 'N/A')}</td></tr>
                         <tr><td class="fw-bold">API</td><td>${apiAvailable}</td></tr>
                         <tr><td class="fw-bold">Sebesség</td><td>${getSpeedBadge(model.speed)}</td></tr>
                         <tr><td class="fw-bold">Weboldal</td><td>${website}</td></tr>
@@ -77,6 +110,8 @@ function renderStatsOverview(stats) {
     const m1 = stats.model1;
     const m2 = stats.model2;
     const h2h = stats.head_to_head;
+    const m1Name = escapeHtml(m1.name);
+    const m2Name = escapeHtml(m2.name);
 
     // Head-to-head bar percentages
     let h2hBar = '';
@@ -85,8 +120,8 @@ function renderStatsOverview(stats) {
         const pct2 = 100 - pct1;
         h2hBar = `
             <div class="progress" style="height: 30px;">
-                <div class="progress-bar bg-primary" style="width: ${pct1}%">${m1.name}: ${h2h.model1_wins} (${pct1}%)</div>
-                <div class="progress-bar bg-success" style="width: ${pct2}%">${m2.name}: ${h2h.model2_wins} (${pct2}%)</div>
+                <div class="progress-bar bg-primary" style="width: ${pct1}%">${m1Name}: ${h2h.model1_wins} (${pct1}%)</div>
+                <div class="progress-bar bg-success" style="width: ${pct2}%">${m2Name}: ${h2h.model2_wins} (${pct2}%)</div>
             </div>
         `;
     } else {
@@ -100,7 +135,7 @@ function renderStatsOverview(stats) {
                 <div class="row text-center mb-3">
                     <div class="col-md-6">
                         <div class="border rounded p-3">
-                            <h6 class="text-primary">${m1.name}</h6>
+                            <h6 class="text-primary">${m1Name}</h6>
                             <div class="display-6 fw-bold text-primary">${m1.elo}</div>
                             <small class="text-muted">ELO</small>
                             <div class="mt-2">
@@ -112,7 +147,7 @@ function renderStatsOverview(stats) {
                     </div>
                     <div class="col-md-6">
                         <div class="border rounded p-3">
-                            <h6 class="text-success">${m2.name}</h6>
+                            <h6 class="text-success">${m2Name}</h6>
                             <div class="display-6 fw-bold text-success">${m2.elo}</div>
                             <small class="text-muted">ELO</small>
                             <div class="mt-2">
@@ -235,20 +270,24 @@ function renderPromptStats(stats, model1Id, model2Id) {
         return '<p class="text-muted text-center">Nincs prompt szintű adat</p>';
     }
 
-    const m1Name = stats.model1.name;
-    const m2Name = stats.model2.name;
+    const m1Name = escapeHtml(stats.model1.name);
+    const m2Name = escapeHtml(stats.model2.name);
 
     const rows = promptStats.map(p => {
         const m1WinPct = p.model1.win_rate;
         const m2WinPct = p.model2.win_rate;
         const m1BarColor = m1WinPct >= m2WinPct ? 'bg-primary' : 'bg-primary bg-opacity-50';
         const m2BarColor = m2WinPct >= m1WinPct ? 'bg-success' : 'bg-success bg-opacity-50';
-        const safePromptText = p.prompt_text.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+
+        const safePromptId = escapeHtml(p.prompt_id);
+        const safePromptText = escapeHtml(p.prompt_text);
+        const safeModel1Id = escapeHtml(model1Id);
+        const safeModel2Id = escapeHtml(model2Id);
 
         return `
-            <tr class="compare-prompt-row" data-prompt-id="${p.prompt_id}" data-model1="${model1Id}" data-model2="${model2Id}" data-model1-name="${m1Name}" data-model2-name="${m2Name}" style="cursor:pointer" title="Kattints a képek megtekintéséhez">
-                <td class="text-nowrap"><small>${p.prompt_id} <span class="compare-prompt-arrow">▶</span></small></td>
-                <td><small class="text-truncate d-inline-block" style="max-width:200px" title="${safePromptText}">${p.prompt_text}</small></td>
+            <tr class="compare-prompt-row" data-prompt-id="${safePromptId}" data-model1="${safeModel1Id}" data-model2="${safeModel2Id}" data-model1-name="${m1Name}" data-model2-name="${m2Name}" style="cursor:pointer" title="Kattints a képek megtekintéséhez">
+                <td class="text-nowrap"><small>${safePromptId} <span class="compare-prompt-arrow">▶</span></small></td>
+                <td><small class="text-truncate d-inline-block" style="max-width:200px" title="${safePromptText}">${safePromptText}</small></td>
                 <td class="text-center">${p.model1.wins}/${p.model1.matches}</td>
                 <td style="width:80px">
                     <div class="progress" style="height:18px">
@@ -262,7 +301,7 @@ function renderPromptStats(stats, model1Id, model2Id) {
                     </div>
                 </td>
             </tr>
-            <tr class="compare-prompt-images" id="compare-images-${p.prompt_id}" style="display:none">
+            <tr class="compare-prompt-images" id="compare-images-${safePromptId}" style="display:none">
                 <td colspan="6" class="p-2 bg-light"></td>
             </tr>
         `;
@@ -327,8 +366,8 @@ function attachPromptRowListeners() {
                 fetch(`/api/get_image?model=${encodeURIComponent(model2Id)}&prompt_id=${encodeURIComponent(promptId)}`).then(r => r.json()).catch(() => null),
             ]);
 
-            const img1Url = img1Data && img1Data.image_url ? img1Data.image_url : null;
-            const img2Url = img2Data && img2Data.image_url ? img2Data.image_url : null;
+            const img1Url = img1Data && img1Data.image_url ? sanitizeUrl(img1Data.image_url) : null;
+            const img2Url = img2Data && img2Data.image_url ? sanitizeUrl(img2Data.image_url) : null;
 
             const img1Html = img1Url
                 ? `<img src="${img1Url}" alt="Model A" class="img-fluid rounded compare-prompt-img compare-border-model1" loading="lazy">`
@@ -337,14 +376,17 @@ function attachPromptRowListeners() {
                 ? `<img src="${img2Url}" alt="Model B" class="img-fluid rounded compare-prompt-img compare-border-model2" loading="lazy">`
                 : '<div class="text-muted text-center p-3">Kép nem elérhető</div>';
 
+            const safeModel1Name = escapeHtml(this.dataset.model1Name || 'Model 1');
+            const safeModel2Name = escapeHtml(this.dataset.model2Name || 'Model 2');
+
             td.innerHTML = `
                 <div class="row g-2 justify-content-center">
                     <div class="col-md-6 text-center">
-                        <div class="small fw-bold text-primary mb-1">${this.dataset.model1Name}</div>
+                        <div class="small fw-bold text-primary mb-1">${safeModel1Name}</div>
                         ${img1Html}
                     </div>
                     <div class="col-md-6 text-center">
-                        <div class="small fw-bold text-success mb-1">${this.dataset.model2Name}</div>
+                        <div class="small fw-bold text-success mb-1">${safeModel2Name}</div>
                         ${img2Html}
                     </div>
                 </div>
