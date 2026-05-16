@@ -194,6 +194,7 @@ MODELS = {
 - ImagineArt: ImagineArt 2.0
 - OpenAI: GPT Image 2 3k
 - OpenAI: GPT Image 2 ChatGPT
+- Luma AI: Uni-1.1
 
 ## 🗄️ Adatbázis struktúra
 

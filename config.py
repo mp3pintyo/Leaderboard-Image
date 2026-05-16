@@ -1075,6 +1075,20 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'speed': 'slow',
         'website': 'https://openai.com',
     },
+    'model-076': {
+        'name': 'Uni-1.1',
+        'filename': 'uni-1.1',
+        'open_source': False,
+        'provider': 'Luma AI',
+        'release_date': '2026-05-05',
+        'type': 'image-generation',
+        'tags': ['general', 'reasoning', 'photorealistic'],
+        'max_resolution': '2048x2048',
+        'pricing': '$0.0404-$0.1000/image',
+        'api_available': True,
+        'speed': 'slow',
+        'website': 'https://luma.ai',
+    },
 }
 
 # Engedélyezett képkiterjesztések listája
