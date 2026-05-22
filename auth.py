@@ -1,8 +1,11 @@
+import hmac
+import secrets
 from functools import wraps
-from flask import session, jsonify
+from flask import abort, jsonify, request, session
 from authlib.integrations.flask_client import OAuth
 
 oauth = OAuth()
+CSRF_SESSION_KEY = '_csrf_token'
 
 
 def init_oauth(app):
@@ -33,6 +36,50 @@ def login_required(f):
         if 'user' not in session:
             return jsonify({"error": "Bejelentkezés szükséges a szavazáshoz."}), 401
         return f(*args, **kwargs)
+    return decorated_function
+
+
+def get_csrf_token():
+    """Get or create the per-session CSRF token."""
+    token = session.get(CSRF_SESSION_KEY)
+    if not token:
+        token = secrets.token_urlsafe(32)
+        session[CSRF_SESSION_KEY] = token
+    return token
+
+
+def _get_submitted_csrf_token():
+    """Extract the CSRF token from headers, form data, or JSON."""
+    header_token = request.headers.get('X-CSRF-Token')
+    if header_token:
+        return header_token
+
+    form_token = request.form.get('csrf_token')
+    if form_token:
+        return form_token
+
+    if request.is_json:
+        payload = request.get_json(silent=True)
+        if isinstance(payload, dict):
+            return payload.get('csrf_token')
+
+    return None
+
+
+def csrf_protect(f):
+    """Require a valid CSRF token for state-changing requests."""
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        expected_token = session.get(CSRF_SESSION_KEY)
+        submitted_token = _get_submitted_csrf_token()
+
+        if not expected_token or not submitted_token or not hmac.compare_digest(expected_token, str(submitted_token)):
+            if request.path.startswith('/api/'):
+                return jsonify({"error": "Érvénytelen vagy hiányzó biztonsági token."}), 403
+            abort(403)
+
+        return f(*args, **kwargs)
+
     return decorated_function
 
 

@@ -17,24 +17,55 @@ function renderRows(rows) {
         leaderboardTableBody.innerHTML = '<tr><td colspan="7" class="text-center">Nincs adat a kiválasztott szűrésre</td></tr>';
         return;
     }
+
+    const createCell = (text, strong = false) => {
+        const td = document.createElement('td');
+        if (strong) {
+            const strongEl = document.createElement('strong');
+            strongEl.textContent = text;
+            td.appendChild(strongEl);
+        } else {
+            td.textContent = text;
+        }
+        return td;
+    };
+
+    const createBadge = (text, className, title = '') => {
+        const badge = document.createElement('span');
+        badge.className = `badge ${className}`;
+        badge.textContent = text;
+        if (title) badge.title = title;
+        return badge;
+    };
+
     rows.forEach((row, index) => {
         const tr = document.createElement('tr');
         if (row.frozen) tr.classList.add('frozen-model');
-        const modelType = row.open_source ?
-            '<span class="badge bg-success">Open Source</span>' :
-            '<span class="badge bg-warning text-dark">Zárt forrású</span>';
-        const frozenBadge = row.frozen ?
-            ' <span class="badge bg-secondary" title="Ez a modell jelenleg ki van zárva az Arena Battle-ből">Befagyasztva</span>' : '';
         const modelDisplayName = row.display || (row.provider ? `${row.provider}: ${row.name}` : row.name);
-        tr.innerHTML = `
-            <td>${index + 1}</td>
-            <td>${modelDisplayName}${frozenBadge}</td>
-            <td><strong>${row.elo}</strong></td>
-            <td>${row.wins}</td>
-            <td>${row.matches}</td>
-            <td>${row.win_rate}%</td>
-            <td>${modelType}</td>
-        `;
+
+        tr.appendChild(createCell(String(index + 1)));
+
+        const modelTd = document.createElement('td');
+        modelTd.append(document.createTextNode(modelDisplayName));
+        if (row.frozen) {
+            modelTd.append(document.createTextNode(' '));
+            modelTd.append(createBadge('Befagyasztva', 'bg-secondary', 'Ez a modell jelenleg ki van zárva az Arena Battle-ből'));
+        }
+        tr.appendChild(modelTd);
+
+        tr.appendChild(createCell(String(row.elo), true));
+        tr.appendChild(createCell(String(row.wins)));
+        tr.appendChild(createCell(String(row.matches)));
+        tr.appendChild(createCell(`${row.win_rate}%`));
+
+        const typeTd = document.createElement('td');
+        typeTd.appendChild(
+            row.open_source
+                ? createBadge('Open Source', 'bg-success')
+                : createBadge('Zárt forrású', 'bg-warning text-dark')
+        );
+        tr.appendChild(typeTd);
+
         leaderboardTableBody.appendChild(tr);
     });
 }

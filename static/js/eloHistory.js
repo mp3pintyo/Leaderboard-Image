@@ -8,6 +8,8 @@ const topNValue = document.getElementById('top-n-value');
 let eloHistoryChart = null;
 let eloHistoryRange = 'all';
 let topNCount = 1; // Default to showing top 1
+let legendMouseDownHandler = null;
+let legendMouseUpHandler = null;
 
 function formatDate(date, formatStr) {
     if (typeof date === 'string') date = new Date(date);
@@ -106,6 +108,14 @@ function hexToRgba(hex, alpha) {
 
 function renderEloHistoryChart(apiData, totalModelCount) {
     if (eloHistoryChart) eloHistoryChart.destroy();
+    if (legendMouseDownHandler) {
+        eloHistoryChartCanvas.removeEventListener('mousedown', legendMouseDownHandler);
+        legendMouseDownHandler = null;
+    }
+    if (legendMouseUpHandler) {
+        eloHistoryChartCanvas.removeEventListener('mouseup', legendMouseUpHandler);
+        legendMouseUpHandler = null;
+    }
 
     // Update slider max value and current display
     if (topNSlider && totalModelCount > 0) {
@@ -237,7 +247,7 @@ function renderEloHistoryChart(apiData, totalModelCount) {
     eloHistoryChart._originalBackgroundColors = eloHistoryChart.data.datasets.map(ds => ds.backgroundColor);
 
     // fade other datasets on legend mousedown
-    eloHistoryChartCanvas.addEventListener('mousedown', event => {
+    legendMouseDownHandler = event => {
         const rect = eloHistoryChartCanvas.getBoundingClientRect();
         const x = event.clientX - rect.left;
         const y = event.clientY - rect.top;
@@ -255,16 +265,18 @@ function renderEloHistoryChart(apiData, totalModelCount) {
                 eloHistoryChart.update();
             }
         });
-    });
+    };
+    eloHistoryChartCanvas.addEventListener('mousedown', legendMouseDownHandler);
 
     // restore full opacity on mouseup
-    eloHistoryChartCanvas.addEventListener('mouseup', () => {
+    legendMouseUpHandler = () => {
         eloHistoryChart.data.datasets.forEach((ds, i) => {
             ds.borderColor = eloHistoryChart._originalBorderColors[i];
             ds.backgroundColor = eloHistoryChart._originalBackgroundColors[i];
         });
         eloHistoryChart.update();
-    });
+    };
+    eloHistoryChartCanvas.addEventListener('mouseup', legendMouseUpHandler);
 }
 
 export function initEloHistoryMode() {

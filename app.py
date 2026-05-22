@@ -6,17 +6,22 @@ import glob
 import datetime
 from flask import Flask, render_template, jsonify, request, send_from_directory, abort, redirect, url_for, session
 from werkzeug.middleware.proxy_fix import ProxyFix
-from database import get_db, init_db, get_prompt_ids, update_elo
+from database import close_db, get_db, init_db, get_prompt_ids, update_elo
 from config import (DATA_DIR, ALLOWED_EXTENSIONS, DEFAULT_ELO, MODELS, REVEAL_DELAY_MS, FROZEN_BOTTOM_COUNT,
-                    NEW_MODEL_BOOST_THRESHOLD, NEW_MODEL_BOOST_WEIGHT,
-                    SECRET_KEY, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET)
-from auth import oauth, init_oauth, login_required, get_current_user, save_user
+                     NEW_MODEL_BOOST_THRESHOLD, NEW_MODEL_BOOST_WEIGHT,
+                     DEFAULT_SECRET_KEY, SECRET_KEY, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET)
+from auth import csrf_protect, get_csrf_token, oauth, init_oauth, login_required, get_current_user, save_user
 
 app = Flask(__name__)
 app.config['DATA_DIR'] = DATA_DIR # Flask konfigurációban is tároljuk
 
 # Check if DATA_MODE is set for remote image loading
 DATA_MODE = os.environ.get('DATA_MODE')
+BATTLE_SESSION_KEY = 'active_battle'
+ALLOW_INSECURE_DEV_SECRET = __name__ == '__main__'
+
+if SECRET_KEY == DEFAULT_SECRET_KEY and not ALLOW_INSECURE_DEV_SECRET:
+    raise RuntimeError('SECRET_KEY must be set outside the direct local dev entrypoint.')
 
 # Authentication and session configuration
 app.secret_key = SECRET_KEY
@@ -31,6 +36,8 @@ app.config['GITHUB_CLIENT_SECRET'] = GITHUB_CLIENT_SECRET
 # Trust proxy headers for HTTPS behind reverse proxy (Render.com)
 if DATA_MODE:
     app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
+
+app.teardown_appcontext(close_db)
 
 # Initialize OAuth providers
 init_oauth(app)
@@ -163,6 +170,31 @@ def get_image_url(prompt_id, filename):
         return f"/images/{prompt_id}/{filename}"
 
 
+def store_active_battle(prompt_id, model1_id, model2_id):
+    """Store the currently issued battle in the session for vote validation."""
+    session[BATTLE_SESSION_KEY] = {
+        'prompt_id': prompt_id,
+        'models': sorted((model1_id, model2_id)),
+    }
+
+
+def consume_active_battle():
+    """Read and clear the currently issued battle from the session."""
+    battle = session.pop(BATTLE_SESSION_KEY, None)
+    if not isinstance(battle, dict):
+        return None
+
+    prompt_id = battle.get('prompt_id')
+    models = battle.get('models')
+    if not prompt_id or not isinstance(models, list) or len(models) != 2:
+        return None
+
+    return {
+        'prompt_id': prompt_id,
+        'models': sorted(models),
+    }
+
+
 @app.before_request
 def before_first_request_func():
     # Első kérés előtt (vagy fejlesztéskor minden kérés előtt, ha `debug=True`)
@@ -237,7 +269,7 @@ def index():
         auth_providers.append('github')
     
     return render_template('index.html', models=models_for_template, reveal_delay_ms=REVEAL_DELAY_MS,
-                         user=user_info, auth_providers=auth_providers,
+                         user=user_info, auth_providers=auth_providers, csrf_token=get_csrf_token(),
                          dev_mode=app.debug)
 
 
@@ -252,7 +284,9 @@ def auth_dev_login():
     with db:
         user_id = save_user(db, 'dev', 'dev-user', 'dev@localhost', 'Dev User')
         db.commit()
+    session.clear()
     session['user'] = {'id': user_id, 'name': 'Dev User', 'provider': 'dev'}
+    get_csrf_token()
     return redirect(url_for('index'))
 
 
@@ -314,19 +348,22 @@ def auth_callback(provider):
         db.commit()
     
     # Store in session
+    session.clear()
     session['user'] = {
         'id': user_id,
         'name': user_data['name'],
         'provider': user_data['provider']
     }
+    get_csrf_token()
     
     return redirect(url_for('index'))
 
 
-@app.route('/auth/logout')
+@app.route('/auth/logout', methods=['POST'])
+@csrf_protect
 def auth_logout():
     """Kijelentkezés - session törlése."""
-    session.pop('user', None)
+    session.clear()
     return redirect(url_for('index'))
 
 
@@ -385,9 +422,11 @@ def get_battle_data():
         with open(prompt_path, 'r', encoding='utf-8') as f:
             prompt_text = f.read().strip()
     except FileNotFoundError:
-        return jsonify({"error": f"Prompt file not found for ID: {prompt_id}"}), 500
+        app.logger.warning("Prompt file not found for battle prompt_id=%s", prompt_id)
+        return jsonify({"error": "Prompt file not found"}), 500
     except Exception as e:
-         return jsonify({"error": f"Error reading prompt file: {e}"}), 500
+        app.logger.exception("Error reading battle prompt file for prompt_id=%s", prompt_id)
+        return jsonify({"error": "Error reading prompt file"}), 500
     
     # Válassz két KÜLÖNBÖZŐ modellt véletlenszerűen (befagyasztott modellek kizárásával)
     db = get_db()
@@ -451,6 +490,7 @@ def get_battle_data():
         },
         "reveal_models": False
     }
+    store_active_battle(prompt_id, model1_id, model2_id)
     return jsonify(data)
 
 @app.route('/api/side_by_side_data')
@@ -483,9 +523,11 @@ def get_side_by_side_data():
         with open(prompt_path, 'r', encoding='utf-8') as f:
             prompt_text = f.read().strip()
     except FileNotFoundError:
-        return jsonify({"error": f"Prompt file not found for ID: {prompt_id}"}), 500
+        app.logger.warning("Prompt file not found for side-by-side prompt_id=%s", prompt_id)
+        return jsonify({"error": "Prompt file not found"}), 500
     except Exception as e:
-        return jsonify({"error": f"Error reading prompt file: {e}"}), 500
+        app.logger.exception("Error reading side-by-side prompt file for prompt_id=%s", prompt_id)
+        return jsonify({"error": "Error reading prompt file"}), 500
     model1_file = find_model_file(prompt_id, MODELS[model1_id]['filename'])
     model2_file = find_model_file(prompt_id, MODELS[model2_id]['filename'])
     if not model1_file:
@@ -549,17 +591,32 @@ def get_image_for_model():
 
 @app.route('/api/vote', methods=['POST'])
 @login_required
+@csrf_protect
 def record_vote():
     """Szavazat rögzítése az adatbázisban."""
-    data = request.json
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+        return jsonify({"error": "Érvénytelen kérésformátum"}), 400
+
     prompt_id = data.get('prompt_id')
     winner = data.get('winner')
     loser = data.get('loser')
 
     if not all([prompt_id, winner, loser]):
         return jsonify({"error": "Missing data for vote"}), 400
+    if winner == loser:
+        return jsonify({"error": "A győztes és a vesztes nem lehet ugyanaz a modell"}), 400
     if winner not in MODELS or loser not in MODELS:
         return jsonify({"error": "Invalid model id in vote"}), 400
+    if prompt_id not in AVAILABLE_PROMPTS:
+        return jsonify({"error": "Invalid prompt_id in vote"}), 400
+
+    active_battle = consume_active_battle()
+    if not active_battle:
+        return jsonify({"error": "Nincs érvényes aktív battle ehhez a szavazathoz"}), 409
+    if active_battle['prompt_id'] != prompt_id or active_battle['models'] != sorted((winner, loser)):
+        return jsonify({"error": "A szavazat nem egyezik a legutóbb kiosztott battle-lel"}), 409
+
     try:
         user = get_current_user()
         db = get_db()
@@ -830,7 +887,8 @@ def get_prompt_text_api():
             prompt_text = f.read().strip()
         return jsonify({"prompt_text": prompt_text})
     except Exception as e:
-        return jsonify({"error": f"Error reading prompt: {e}"}), 500
+        app.logger.exception("Error reading prompt text for prompt_id=%s", prompt_id)
+        return jsonify({"error": "Error reading prompt"}), 500
 
 
 @app.route('/api/model_info')

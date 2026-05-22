@@ -2,6 +2,7 @@ import sqlite3
 import os
 import math
 import datetime
+from flask import g
 from config import DATABASE, DATA_DIR, MODELS, DEFAULT_ELO, K_FACTOR
 
 # ELO rating számítás függvényei
@@ -67,9 +68,19 @@ def update_elo(db, winner_id, loser_id):
 
 def get_db():
     """Adatbázis kapcsolat létrehozása vagy visszaadása."""
-    db = sqlite3.connect(DATABASE)
-    db.row_factory = sqlite3.Row # Sorok szótárként való eléréséhez
+    db = g.get('db')
+    if db is None:
+        db = sqlite3.connect(DATABASE)
+        db.row_factory = sqlite3.Row # Sorok szótárként való eléréséhez
+        g.db = db
     return db
+
+
+def close_db(_error=None):
+    """Lezárja az aktuális kéréshez tartozó adatbázis kapcsolatot."""
+    db = g.pop('db', None)
+    if db is not None:
+        db.close()
 
 def ensure_frozen_column(db):
     """Ellenőrzi és hozzáadja a 'frozen' oszlopot a model_elo táblához, ha még nem létezik."""
