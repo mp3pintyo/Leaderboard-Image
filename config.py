@@ -1089,6 +1089,20 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'speed': 'slow',
         'website': 'https://luma.ai',
     },
+    'model-077': {
+        'name': 'Lens',
+        'filename': 'lens',
+        'open_source': True,
+        'provider': 'Microsoft',
+        'release_date': '2026-05-15',
+        'type': 'image-generation',
+        'tags': ['general', 'text', 'photorealistic'],
+        'max_resolution': '1440x1440',
+        'pricing': 'Free (Open Source)',
+        'api_available': False,
+        'speed': 'slow',
+        'website': 'https://huggingface.co/microsoft/Lens',
+    },
 }
 
 # Engedélyezett képkiterjesztések listája

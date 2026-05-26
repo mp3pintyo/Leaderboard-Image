@@ -195,6 +195,7 @@ MODELS = {
 - OpenAI: GPT Image 2 3k
 - OpenAI: GPT Image 2 ChatGPT
 - Luma AI: Uni-1.1
+- Microsoft: Lens
 
 ## 🗄️ Adatbázis struktúra
 
