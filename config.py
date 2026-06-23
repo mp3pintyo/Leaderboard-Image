@@ -1103,6 +1103,20 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'speed': 'slow',
         'website': 'https://huggingface.co/microsoft/Lens',
     },
+    'model-078': {
+        'name': 'Krea 2 Turbo (INT8)',
+        'filename': 'krea2-turbo-int8',
+        'open_source': True,
+        'provider': 'Krea.ai',
+        'release_date': '2026-06-22',
+        'type': 'image-generation',
+        'tags': ['general', 'photorealistic'],
+        'max_resolution': '2048x2048',
+        'pricing': 'Free (Open Source)',
+        'api_available': False,
+        'speed': 'fast',
+        'website': 'https://krea.ai',
+    }
 }
 
 # Engedélyezett képkiterjesztések listája

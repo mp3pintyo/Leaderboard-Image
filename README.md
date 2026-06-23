@@ -196,6 +196,7 @@ MODELS = {
 - OpenAI: GPT Image 2 ChatGPT
 - Luma AI: Uni-1.1
 - Microsoft: Lens
+- Krea.ai: Krea 2 Turbo (INT8)
 
 ## 🗄️ Adatbázis struktúra
 
