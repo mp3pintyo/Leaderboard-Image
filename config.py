@@ -975,7 +975,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'pricing': '$0,0909-$0,1101/image | $45,45/1M tokens',
         'api_available': True,
         'speed': 'slow',
-        'website': 'https://luma.ai',
+        'website': 'https://lumalabs.ai/',
     },
     'model-069': {
         'name': 'Wan 2.7-Image Pro 2k',
@@ -1087,7 +1087,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'pricing': '$0.0404-$0.1000/image',
         'api_available': True,
         'speed': 'slow',
-        'website': 'https://luma.ai',
+        'website': 'https://lumalabs.ai/',
     },
     'model-077': {
         'name': 'Lens',
@@ -1116,7 +1116,21 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'api_available': False,
         'speed': 'fast',
         'website': 'https://krea.ai',
-    }
+    },
+    'model-079': {
+        'name': 'Uni-1.1 Max',
+        'filename': 'uni-1.1-max',
+        'open_source': False,
+        'provider': 'Luma AI',
+        'release_date': '2026-05-05',
+        'type': 'image-generation',
+        'tags': ['general', 'reasoning', 'photorealistic'],
+        'max_resolution': '2048x2048',
+        'pricing': '$0.1000/image',
+        'api_available': True,
+        'speed': 'slow',
+        'website': 'https://lumalabs.ai/',
+    },
 }
 
 # Engedélyezett képkiterjesztések listája
