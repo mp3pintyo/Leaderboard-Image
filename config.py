@@ -1144,7 +1144,8 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'api_available': True,
         'speed': 'slow',
         'website': 'https://www.bytedance.com/',
-    },
+    }
+}
 
 # Engedélyezett képkiterjesztések listája
 ALLOWED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp']
