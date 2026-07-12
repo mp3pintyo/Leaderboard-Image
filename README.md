@@ -198,6 +198,7 @@ MODELS = {
 - Microsoft: Lens
 - Krea.ai: Krea 2 Turbo (INT8)
 - Luma AI: Uni-1.1 Max
+- ByteDance: Seedream 5.0 Pro
 
 ## 🗄️ Adatbázis struktúra
 

@@ -1131,7 +1131,20 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'speed': 'slow',
         'website': 'https://lumalabs.ai/',
     },
-}
+    'model-080': {
+        'name': 'Seedream 5.0 Pro',
+        'filename': 'seedream-5.0-pro',
+        'open_source': False,
+        'provider': 'ByteDance',
+        'release_date': '2026-07-08',
+        'type': 'image-generation',
+        'tags': ['general', 'editing', 'photorealistic'],
+        'max_resolution': '2048x2048',
+        'pricing': '$0.09/image',
+        'api_available': True,
+        'speed': 'slow',
+        'website': 'https://www.bytedance.com/',
+    },
 
 # Engedélyezett képkiterjesztések listája
 ALLOWED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp']
