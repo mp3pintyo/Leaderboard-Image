@@ -1138,7 +1138,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'provider': 'ByteDance',
         'release_date': '2026-07-08',
         'type': 'image-generation',
-        'tags': ['general', 'editing', 'photorealistic'],
+        'tags': ['general', 'editing', 'photorealistic','minimal text'],
         'max_resolution': '2048x2048',
         'pricing': '$0.09/image',
         'api_available': True,
