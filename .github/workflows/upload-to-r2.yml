@@ -34,6 +34,7 @@ jobs:
             echo "manifest.json unchanged, skipping commit."
           else
             git commit -m "chore: auto-update manifest.json [skip ci]"
+            git pull --rebase --autostash
             git push
           fi
 
