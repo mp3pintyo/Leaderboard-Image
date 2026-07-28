@@ -1149,7 +1149,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'name': 'MAI-Image-2.5',
         'filename': 'mai-image-2-5',
         'open_source': False,
-        'provider': 'MAI',
+        'provider': 'Microsoft',
         'release_date': '2026-06-02',
         'type': 'image-generation',
         'tags': ['general', 'photorealistic'],
