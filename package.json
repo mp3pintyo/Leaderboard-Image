@@ -7,7 +7,8 @@
     "doc": "docs"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npm run test:e2e",
+    "test:e2e": "playwright test"
   },
   "repository": {
     "type": "git",
@@ -23,5 +24,8 @@
   "homepage": "https://github.com/mp3pintyo/Leaderboard-Image#readme",
   "dependencies": {
     "date-fns": "^4.1.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.62.0"
   }
 }

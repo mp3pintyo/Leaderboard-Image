@@ -51,6 +51,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const mode = link.dataset.mode;
             showMode(mode);
 
+            const navbarCollapse = document.getElementById('navbarNav');
+            if (navbarCollapse?.classList.contains('show') && window.bootstrap?.Collapse) {
+                window.bootstrap.Collapse.getOrCreateInstance(navbarCollapse).hide();
+            }
+
             // Az aktuális mód adatainak betöltése
             if (mode === 'battle') {
                 loadBattleData();

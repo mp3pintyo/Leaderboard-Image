@@ -12,6 +12,206 @@ body {
     background-color: rgba(255, 180, 180, 0.5) !important;
 }
 
+/* Leaderboard nézetválasztó és Quality vs. Price diagram */
+#leaderboard-mode {
+    padding-bottom: 4rem;
+}
+
+.leaderboard-heading {
+    max-width: 720px;
+    margin: 1rem auto 2rem;
+}
+
+.leaderboard-heading h2 {
+    margin: 0.25rem 0 0.5rem;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    letter-spacing: -0.04em;
+}
+
+.leaderboard-heading p,
+.quality-price-header p {
+    color: #657078;
+    margin-bottom: 0;
+}
+
+.leaderboard-eyebrow {
+    color: #54616a;
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+}
+
+.leaderboard-view-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.leaderboard-view-card {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 1rem;
+    align-items: center;
+    padding: 1.15rem;
+    border: 1px solid #d8dee3;
+    border-radius: 1rem;
+    background: #fff;
+    color: #20262b;
+    text-align: left;
+    box-shadow: 0 5px 20px rgba(30, 40, 50, 0.05);
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+
+.leaderboard-view-card:hover {
+    transform: translateY(-2px);
+    border-color: #8aa6bc;
+    box-shadow: 0 9px 26px rgba(30, 40, 50, 0.09);
+}
+
+.leaderboard-view-card.active {
+    border-color: #172b3a;
+    box-shadow: 0 0 0 2px #172b3a;
+}
+
+.leaderboard-view-card strong,
+.leaderboard-view-card small {
+    display: block;
+}
+
+.leaderboard-view-card strong {
+    margin-bottom: 0.18rem;
+    font-size: 1.05rem;
+}
+
+.leaderboard-view-card small {
+    color: #6b747b;
+}
+
+.leaderboard-view-icon {
+    display: grid;
+    width: 2.75rem;
+    height: 2.75rem;
+    place-items: center;
+    border-radius: 50%;
+    background: #e9f0f4;
+    font-size: 0.78rem;
+    font-weight: 800;
+}
+
+.leaderboard-view-card.active .leaderboard-view-icon {
+    background: #172b3a;
+    color: #fff;
+}
+
+.leaderboard-view-arrow {
+    font-size: 1.45rem;
+}
+
+.leaderboard-panel {
+    padding: clamp(1rem, 3vw, 2rem);
+    border: 1px solid #dfe4e7;
+    border-radius: 1.15rem;
+    background: #fff;
+    box-shadow: 0 10px 35px rgba(32, 38, 43, 0.06);
+}
+
+.quality-price-header {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.quality-price-header h3 {
+    margin: 0.25rem 0;
+    font-size: clamp(1.65rem, 4vw, 2.5rem);
+    letter-spacing: -0.035em;
+}
+
+.quality-price-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+    margin-bottom: 0.75rem;
+    color: #566069;
+    font-size: 0.86rem;
+}
+
+.quality-price-legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.legend-swatch {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+}
+
+.legend-frontier {
+    background: #1f6f5f;
+}
+
+.legend-standard {
+    background: #527b94;
+}
+
+.legend-square {
+    width: 0.85rem;
+    height: 0.85rem;
+    border-radius: 0.2rem;
+}
+
+.legend-attractive {
+    background: #e4efdf;
+    border: 1px solid #c7d9bd;
+}
+
+.quality-price-chart-wrap {
+    position: relative;
+    min-height: 430px;
+    height: min(62vh, 620px);
+}
+
+.quality-price-note {
+    margin: 1.1rem 0 0;
+    padding-top: 1rem;
+    border-top: 1px solid #e2e6e9;
+    color: #69737a;
+    font-size: 0.86rem;
+}
+
+@media (max-width: 767.98px) {
+    .leaderboard-view-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .quality-price-header {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .quality-price-header .btn-group {
+        align-self: flex-start;
+    }
+
+    .quality-price-chart-wrap {
+        height: 68vh;
+        min-height: 390px;
+    }
+
+    .leaderboard-filter-group {
+        flex-wrap: wrap;
+    }
+
+    .leaderboard-filter-group > .btn {
+        flex: 1 0 50%;
+    }
+}
+
 /* Fixált navigációs sáv */
 .navbar {
     position: fixed;

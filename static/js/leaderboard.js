@@ -1,15 +1,21 @@
 import { fetchData } from './api.js';
 
-// DOM elemek
 const leaderboardTableBody = document.getElementById('leaderboard-table-body');
 const refreshLeaderboardBtn = document.getElementById('refresh-leaderboard-btn');
 const modelTypeRadios = document.querySelectorAll('input[name="model-type"]');
 const myVotesSubfilter = document.getElementById('my-votes-subfilter');
 const myTypeRadios = document.querySelectorAll('input[name="my-type"]');
+const viewCards = document.querySelectorAll('[data-leaderboard-view]');
+const rankingPanel = document.getElementById('leaderboard-ranking-panel');
+const qualityPricePanel = document.getElementById('leaderboard-quality-price-panel');
+const qualityPriceLimitRadios = document.querySelectorAll('input[name="quality-price-limit"]');
+const qualityPriceEmpty = document.getElementById('quality-price-empty');
 
-// Változók
-let currentModelType = 'all'; // Alapértelmezett szűrő: összes modell
-let currentMySubType = 'all'; // Saját toplista al-szűrő
+let currentModelType = 'all';
+let currentMySubType = 'all';
+let currentQualityPriceLimit = 10;
+let baseLeaderboard = null;
+let qualityPriceChart = null;
 
 function renderRows(rows) {
     leaderboardTableBody.innerHTML = '';
@@ -70,39 +76,280 @@ function renderRows(rows) {
     });
 }
 
-// Fő funkciók
+function median(values) {
+    const sorted = [...values].sort((a, b) => a - b);
+    const middle = Math.floor(sorted.length / 2);
+    return sorted.length % 2 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2;
+}
+
+function getParetoModelIds(rows) {
+    return new Set(rows.filter((candidate) => !rows.some((other) => (
+        other.id !== candidate.id
+        && other.price_per_1000 <= candidate.price_per_1000
+        && other.elo >= candidate.elo
+        && (other.price_per_1000 < candidate.price_per_1000 || other.elo > candidate.elo)
+    ))).map((row) => row.id));
+}
+
+const qualityPriceQuadrants = {
+    id: 'qualityPriceQuadrants',
+    beforeDraw(chart, args, options) {
+        const { ctx, chartArea, scales } = chart;
+        if (!chartArea || !options?.priceThreshold || !options?.eloThreshold) return;
+
+        const thresholdX = scales.x.getPixelForValue(options.priceThreshold);
+        const thresholdY = scales.y.getPixelForValue(options.eloThreshold);
+        const x = Math.min(Math.max(thresholdX, chartArea.left), chartArea.right);
+        const y = Math.min(Math.max(thresholdY, chartArea.top), chartArea.bottom);
+
+        ctx.save();
+        ctx.fillStyle = '#e4efdf';
+        ctx.fillRect(chartArea.left, chartArea.top, x - chartArea.left, y - chartArea.top);
+        ctx.fillStyle = '#f8e8e2';
+        ctx.fillRect(x, y, chartArea.right - x, chartArea.bottom - y);
+        ctx.restore();
+    }
+};
+
+const qualityPriceLabels = {
+    id: 'qualityPriceLabels',
+    afterDatasetsDraw(chart) {
+        const { ctx, chartArea } = chart;
+        if (!chartArea || chart.width < 720) return;
+
+        const occupied = [];
+        const candidates = [
+            [12, -15], [12, 17], [-12, -15], [-12, 17],
+            [18, 2], [-18, 2], [8, -28], [8, 30]
+        ];
+
+        ctx.save();
+        ctx.font = '600 11px system-ui, sans-serif';
+        ctx.textBaseline = 'middle';
+
+        chart.data.datasets.forEach((dataset, datasetIndex) => {
+            const meta = chart.getDatasetMeta(datasetIndex);
+            meta.data.forEach((point, index) => {
+                const raw = dataset.data[index];
+                const label = raw.name;
+                const textWidth = ctx.measureText(label).width;
+                let placement = null;
+
+                for (const [dx, dy] of candidates) {
+                    const alignRight = dx < 0;
+                    const left = alignRight ? point.x + dx - textWidth : point.x + dx;
+                    const box = { left: left - 3, right: left + textWidth + 3, top: point.y + dy - 8, bottom: point.y + dy + 8 };
+                    const inside = box.left >= chartArea.left && box.right <= chartArea.right
+                        && box.top >= chartArea.top && box.bottom <= chartArea.bottom;
+                    const overlaps = occupied.some((used) => !(
+                        box.right < used.left || box.left > used.right || box.bottom < used.top || box.top > used.bottom
+                    ));
+                    if (inside && !overlaps) {
+                        placement = { dx, dy, alignRight, box };
+                        break;
+                    }
+                }
+
+                if (!placement) return;
+                occupied.push(placement.box);
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.82)';
+                ctx.fillRect(
+                    placement.box.left,
+                    placement.box.top,
+                    placement.box.right - placement.box.left,
+                    placement.box.bottom - placement.box.top
+                );
+                ctx.textAlign = placement.alignRight ? 'right' : 'left';
+                ctx.fillStyle = dataset.borderColor;
+                ctx.fillText(label, point.x + placement.dx, point.y + placement.dy);
+            });
+        });
+        ctx.restore();
+    }
+};
+
+function destroyQualityPriceChart() {
+    if (qualityPriceChart) {
+        qualityPriceChart.destroy();
+        qualityPriceChart = null;
+    }
+}
+
+async function loadQualityPriceData() {
+    if (!baseLeaderboard) {
+        baseLeaderboard = await fetchData('/api/leaderboard?model_type=all');
+    }
+
+    const eligible = Array.isArray(baseLeaderboard)
+        ? baseLeaderboard
+            .filter((row) => Number.isFinite(row.price_per_1000))
+            .sort((a, b) => b.elo - a.elo)
+            .slice(0, currentQualityPriceLimit)
+        : [];
+
+    if (eligible.length < 2 || typeof window.Chart === 'undefined') {
+        destroyQualityPriceChart();
+        qualityPriceEmpty.hidden = false;
+        return;
+    }
+
+    qualityPriceEmpty.hidden = true;
+    renderQualityPriceChart(eligible);
+}
+
+function renderQualityPriceChart(rows) {
+    destroyQualityPriceChart();
+
+    const paretoIds = getParetoModelIds(rows);
+    const toPoint = (row) => ({
+        x: row.price_per_1000,
+        y: row.elo,
+        id: row.id,
+        name: row.name,
+        display: row.display,
+        pricing: row.pricing
+    });
+    const standard = rows.filter((row) => !paretoIds.has(row.id)).map(toPoint);
+    const frontier = rows.filter((row) => paretoIds.has(row.id)).map(toPoint);
+    const prices = rows.map((row) => row.price_per_1000);
+    const elos = rows.map((row) => row.elo);
+    const priceThreshold = median(prices);
+    const eloThreshold = median(elos);
+    const canvas = document.getElementById('quality-price-chart');
+
+    qualityPriceChart = new window.Chart(canvas, {
+        type: 'scatter',
+        data: {
+            datasets: [
+                {
+                    label: 'További modellek',
+                    data: standard,
+                    backgroundColor: '#527b94',
+                    borderColor: '#365a70',
+                    pointRadius: 7,
+                    pointHoverRadius: 10,
+                    pointBorderWidth: 2
+                },
+                {
+                    label: 'Pareto élvonal',
+                    data: frontier,
+                    backgroundColor: '#1f6f5f',
+                    borderColor: '#12473d',
+                    pointRadius: 9,
+                    pointHoverRadius: 12,
+                    pointBorderWidth: 3
+                }
+            ]
+        },
+        plugins: [qualityPriceQuadrants, qualityPriceLabels],
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: {
+                duration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 650
+            },
+            layout: {
+                padding: { top: 16, right: 14 }
+            },
+            interaction: {
+                mode: 'nearest',
+                intersect: true
+            },
+            plugins: {
+                legend: { display: false },
+                qualityPriceQuadrants: { priceThreshold, eloThreshold },
+                tooltip: {
+                    displayColors: false,
+                    callbacks: {
+                        title(items) {
+                            return items[0]?.raw?.display || '';
+                        },
+                        label(context) {
+                            return [
+                                `ELO: ${context.raw.y}`,
+                                `Ár: $${context.raw.x.toLocaleString('hu-HU')} / 1 000 kép`,
+                                `Forrásadat: ${context.raw.pricing}`
+                            ];
+                        },
+                        afterLabel(context) {
+                            return paretoIds.has(context.raw.id) ? 'Pareto élvonal' : '';
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'API-ár (USD / 1 000 kép)',
+                        font: { weight: 'bold' }
+                    },
+                    grid: { color: 'rgba(70, 82, 90, 0.12)' },
+                    ticks: {
+                        callback(value) {
+                            return `$${value}`;
+                        }
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Minőség (ELO)',
+                        font: { weight: 'bold' }
+                    },
+                    grace: '8%',
+                    grid: { color: 'rgba(70, 82, 90, 0.12)' }
+                }
+            }
+        }
+    });
+}
+
+function selectLeaderboardView(view) {
+    const showQualityPrice = view === 'quality-price';
+    rankingPanel.hidden = showQualityPrice;
+    qualityPricePanel.hidden = !showQualityPrice;
+
+    viewCards.forEach((card) => {
+        const selected = card.dataset.leaderboardView === view;
+        card.classList.toggle('active', selected);
+        card.setAttribute('aria-selected', String(selected));
+    });
+
+    if (showQualityPrice) {
+        requestAnimationFrame(loadQualityPriceData);
+    }
+}
+
 export async function loadLeaderboardData() {
     leaderboardTableBody.innerHTML = '<tr><td colspan="7" class="text-center">Leaderboard betöltése...</td></tr>';
     refreshLeaderboardBtn.disabled = true;
 
-    // Saját toplista info-sáv kezelése
     let infoBar = document.getElementById('personal-leaderboard-info');
 
     if (currentModelType === 'my-votes') {
         const data = await fetchData(`/api/leaderboard/mine?model_type=${currentMySubType}`);
         if (data) {
-            // Info sáv megjelenítése
             if (!infoBar) {
                 infoBar = document.createElement('div');
                 infoBar.id = 'personal-leaderboard-info';
                 infoBar.className = 'alert alert-info text-center mb-3';
-                leaderboardTableBody.closest('table').before(infoBar);
+                leaderboardTableBody.closest('.table-responsive').before(infoBar);
             }
-            if (data.vote_count === 0) {
-                infoBar.textContent = 'Még nem adtál le szavazatot. Szavazz az Arena Battle módban, hogy megjelenjen a saját toplistád!';
-            } else {
-                infoBar.textContent = `A toplista a te ${data.vote_count} szavazatod alapján lett kiszámítva.`;
-            }
+            infoBar.textContent = data.vote_count === 0
+                ? 'Még nem adtál le szavazatot. Szavazz az Arena Battle módban, hogy megjelenjen a saját toplistád!'
+                : `A toplista a te ${data.vote_count} szavazatod alapján lett kiszámítva.`;
             renderRows(data.leaderboard);
         } else {
             leaderboardTableBody.innerHTML = '<tr><td colspan="7" class="text-center">Hiba a leaderboard betöltése közben.</td></tr>';
         }
     } else {
-        // Info sáv elrejtése normál módban
         if (infoBar) infoBar.remove();
 
         const data = await fetchData(`/api/leaderboard?model_type=${currentModelType}`);
         if (data) {
+            if (currentModelType === 'all') baseLeaderboard = data;
             renderRows(data);
         } else {
             leaderboardTableBody.innerHTML = '<tr><td colspan="7" class="text-center">Hiba a leaderboard betöltése közben.</td></tr>';
@@ -112,25 +359,35 @@ export async function loadLeaderboardData() {
     refreshLeaderboardBtn.disabled = false;
 }
 
-// Event listeners
 export function initLeaderboardMode() {
-    // Frissítés gomb eseménykezelő
-    refreshLeaderboardBtn.addEventListener('click', loadLeaderboardData);
-    
-    // Modell típus szűrők eseménykezelői
-    modelTypeRadios.forEach(radio => {
-        radio.addEventListener('change', (e) => {
-            currentModelType = e.target.value;
-            // Al-szűrő megjelenítése/elrejtése
+    refreshLeaderboardBtn.addEventListener('click', async () => {
+        baseLeaderboard = null;
+        await loadLeaderboardData();
+        if (!qualityPricePanel.hidden) loadQualityPriceData();
+    });
+
+    viewCards.forEach((card) => {
+        card.addEventListener('click', () => selectLeaderboardView(card.dataset.leaderboardView));
+    });
+
+    qualityPriceLimitRadios.forEach((radio) => {
+        radio.addEventListener('change', (event) => {
+            currentQualityPriceLimit = Number(event.target.value);
+            loadQualityPriceData();
+        });
+    });
+
+    modelTypeRadios.forEach((radio) => {
+        radio.addEventListener('change', (event) => {
+            currentModelType = event.target.value;
             myVotesSubfilter.style.display = currentModelType === 'my-votes' ? 'flex' : 'none';
             loadLeaderboardData();
         });
     });
 
-    // Saját toplista al-szűrők
-    myTypeRadios.forEach(radio => {
-        radio.addEventListener('change', (e) => {
-            currentMySubType = e.target.value;
+    myTypeRadios.forEach((radio) => {
+        radio.addEventListener('change', (event) => {
+            currentMySubType = event.target.value;
             loadLeaderboardData();
         });
     });
