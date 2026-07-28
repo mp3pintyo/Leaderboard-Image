@@ -1144,7 +1144,21 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'api_available': True,
         'speed': 'slow',
         'website': 'https://www.bytedance.com/',
-    }
+    },
+    'model-081': {
+        'name': 'MAI-Image-2.5',
+        'filename': 'mai-image-2-5',
+        'open_source': False,
+        'provider': 'MAI',
+        'release_date': '2026-06-02',
+        'type': 'image-generation',
+        'tags': ['general', 'photorealistic'],
+        'max_resolution': '1024x1024',
+        'pricing': '$0.05/image',
+        'api_available': True,
+        'speed': 'slow',
+        'website': 'https://microsoft.ai/models/mai-image-2-5/', 
+    },
 }
 
 # Engedélyezett képkiterjesztések listája
