@@ -37,7 +37,7 @@ test('Leaderboard Quality vs. Price Top 10/20 flow', async ({ page }, testInfo) 
         const rows = await response.json();
         return rows.filter((row) => Number.isFinite(row.price_per_1000)).length;
     });
-    expect(eligibleCount).toBeGreaterThanOrEqual(20);
+    expect(eligibleCount).toBe(29);
 
     const screenshotPrefix = `leaderboard-quality-price-${testInfo.project.name}`;
     const top10Path = path.join(os.tmpdir(), `${screenshotPrefix}-top-10.png`);

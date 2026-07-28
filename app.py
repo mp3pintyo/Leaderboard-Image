@@ -1,6 +1,5 @@
 import os
 import random
-import re
 import sqlite3
 import sys
 import glob
@@ -60,17 +59,13 @@ with app.app_context():
 
 AVAILABLE_PROMPTS = [] # Gyorsítótárazzuk a prompt ID-kat
 
-EXACT_IMAGE_PRICE_RE = re.compile(r'^\$(\d+(?:[.,]\d+)?)/image$', re.IGNORECASE)
-
-
-def get_price_per_1000_images(pricing):
-    """Fix, képenkénti USD árat alakít 1000 képre; minden más árazást kizár."""
-    if not isinstance(pricing, str):
+def get_price_per_1000_images(min_price_per_image):
+    """A konfigurált minimum API-árat alakítja USD / 1000 képre."""
+    if not isinstance(min_price_per_image, (int, float)) or isinstance(min_price_per_image, bool):
         return None
-    match = EXACT_IMAGE_PRICE_RE.fullmatch(pricing.strip())
-    if not match:
+    if min_price_per_image < 0:
         return None
-    return round(float(match.group(1).replace(',', '.')) * 1000, 4)
+    return round(float(min_price_per_image) * 1000, 4)
 
 def update_available_prompts():
     """Frissíti az elérhető prompt ID-k listáját."""
@@ -687,7 +682,7 @@ def get_leaderboard():
                 "display": f"{model.get('provider')}: {model['name']}" if model.get('provider') else model['name'],
                 "provider": model.get('provider') or '',
                 "pricing": model.get('pricing') or '',
-                "price_per_1000": get_price_per_1000_images(model.get('pricing')),
+                "price_per_1000": get_price_per_1000_images(model.get('min_api_price_per_image')),
                 "wins": model_wins,
                 "matches": model_matches,
                 "win_rate": round(win_rate, 2),
