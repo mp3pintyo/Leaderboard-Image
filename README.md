@@ -200,6 +200,7 @@ MODELS = {
 - Luma AI: Uni-1.1 Max
 - ByteDance: Seedream 5.0 Pro
 - Microsoft: MAI-Image-2.5
+- Microsoft: MAI-Image-2.5 Flash
 
 ## 🗄️ Adatbázis struktúra
 
