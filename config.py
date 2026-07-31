@@ -1207,6 +1207,21 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'speed': 'slow',
         'website': 'https://microsoft.ai/models/mai-image-2-5/', 
     },
+    'model-083': {
+        'name': 'MAI-Image-2.5 Pro',
+        'filename': 'mai-image-2-5-pro',
+        'open_source': False,
+        'provider': 'Microsoft',
+        'release_date': '2026-06-02',
+        'type': 'image-generation',
+        'tags': ['general', 'photorealistic'],
+        'max_resolution': '1024x1024',
+        'pricing': '$0.106/image',
+        'min_api_price_per_image': 0.106,
+        'api_available': True,
+        'speed': 'medium',
+        'website': 'https://microsoft.ai/models/mai-image-2-5/', 
+    },
 }
 
 # Engedélyezett képkiterjesztések listája

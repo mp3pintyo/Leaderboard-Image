@@ -201,6 +201,7 @@ MODELS = {
 - ByteDance: Seedream 5.0 Pro
 - Microsoft: MAI-Image-2.5
 - Microsoft: MAI-Image-2.5 Flash
+- Microsoft: MAI-Image-2.5 Pro
 
 ## 🗄️ Adatbázis struktúra
 
