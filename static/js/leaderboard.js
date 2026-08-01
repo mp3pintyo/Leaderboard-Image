@@ -10,6 +10,12 @@ const rankingPanel = document.getElementById('leaderboard-ranking-panel');
 const qualityPricePanel = document.getElementById('leaderboard-quality-price-panel');
 const qualityPriceLimitRadios = document.querySelectorAll('input[name="quality-price-limit"]');
 const qualityPriceEmpty = document.getElementById('quality-price-empty');
+const columnToggles = document.querySelectorAll('.leaderboard-column-toggle');
+const columnHeaders = document.querySelectorAll('[data-column-header]');
+
+const leaderboardColumnsStorageKey = 'leaderboard-visible-columns';
+const optionalColumns = ['release_date', 'max_resolution', 'pricing'];
+let visibleColumns = new Set();
 
 let currentModelType = 'all';
 let currentMySubType = 'all';
@@ -17,10 +23,37 @@ let currentQualityPriceLimit = 10;
 let baseLeaderboard = null;
 let qualityPriceChart = null;
 
+function getColumnCount() {
+    return 7 + visibleColumns.size;
+}
+
+function updateColumnVisibility() {
+    columnHeaders.forEach((header) => {
+        header.hidden = !visibleColumns.has(header.dataset.columnHeader);
+    });
+    columnToggles.forEach((toggle) => {
+        toggle.checked = visibleColumns.has(toggle.dataset.column);
+    });
+}
+
+function loadVisibleColumns() {
+    try {
+        const stored = JSON.parse(localStorage.getItem(leaderboardColumnsStorageKey) || '[]');
+        visibleColumns = new Set(Array.isArray(stored) ? stored.filter((column) => optionalColumns.includes(column)) : []);
+    } catch (error) {
+        visibleColumns = new Set();
+    }
+    updateColumnVisibility();
+}
+
+function saveVisibleColumns() {
+    localStorage.setItem(leaderboardColumnsStorageKey, JSON.stringify([...visibleColumns]));
+}
+
 function renderRows(rows) {
     leaderboardTableBody.innerHTML = '';
     if (rows.length === 0) {
-        leaderboardTableBody.innerHTML = '<tr><td colspan="7" class="text-center">Nincs adat a kiválasztott szűrésre</td></tr>';
+        leaderboardTableBody.innerHTML = `<tr><td colspan="${getColumnCount()}" class="text-center">Nincs adat a kiválasztott szűrésre</td></tr>`;
         return;
     }
 
@@ -71,6 +104,11 @@ function renderRows(rows) {
                 : createBadge('Zárt forrású', 'bg-warning text-dark')
         );
         tr.appendChild(typeTd);
+
+        optionalColumns.forEach((column) => {
+            if (!visibleColumns.has(column)) return;
+            tr.appendChild(createCell(row[column] || 'N/A'));
+        });
 
         leaderboardTableBody.appendChild(tr);
     });
@@ -323,7 +361,7 @@ function selectLeaderboardView(view) {
 }
 
 export async function loadLeaderboardData() {
-    leaderboardTableBody.innerHTML = '<tr><td colspan="7" class="text-center">Leaderboard betöltése...</td></tr>';
+    leaderboardTableBody.innerHTML = `<tr><td colspan="${getColumnCount()}" class="text-center">Leaderboard betöltése...</td></tr>`;
     refreshLeaderboardBtn.disabled = true;
 
     let infoBar = document.getElementById('personal-leaderboard-info');
@@ -342,7 +380,7 @@ export async function loadLeaderboardData() {
                 : `A toplista a te ${data.vote_count} szavazatod alapján lett kiszámítva.`;
             renderRows(data.leaderboard);
         } else {
-            leaderboardTableBody.innerHTML = '<tr><td colspan="7" class="text-center">Hiba a leaderboard betöltése közben.</td></tr>';
+            leaderboardTableBody.innerHTML = `<tr><td colspan="${getColumnCount()}" class="text-center">Hiba a leaderboard betöltése közben.</td></tr>`;
         }
     } else {
         if (infoBar) infoBar.remove();
@@ -352,7 +390,7 @@ export async function loadLeaderboardData() {
             if (currentModelType === 'all') baseLeaderboard = data;
             renderRows(data);
         } else {
-            leaderboardTableBody.innerHTML = '<tr><td colspan="7" class="text-center">Hiba a leaderboard betöltése közben.</td></tr>';
+            leaderboardTableBody.innerHTML = `<tr><td colspan="${getColumnCount()}" class="text-center">Hiba a leaderboard betöltése közben.</td></tr>`;
         }
     }
 
@@ -360,6 +398,8 @@ export async function loadLeaderboardData() {
 }
 
 export function initLeaderboardMode() {
+    loadVisibleColumns();
+
     refreshLeaderboardBtn.addEventListener('click', async () => {
         baseLeaderboard = null;
         await loadLeaderboardData();
@@ -388,6 +428,17 @@ export function initLeaderboardMode() {
     myTypeRadios.forEach((radio) => {
         radio.addEventListener('change', (event) => {
             currentMySubType = event.target.value;
+            loadLeaderboardData();
+        });
+    });
+
+    columnToggles.forEach((toggle) => {
+        toggle.addEventListener('change', (event) => {
+            const { column } = event.target.dataset;
+            if (event.target.checked) visibleColumns.add(column);
+            else visibleColumns.delete(column);
+            saveVisibleColumns();
+            updateColumnVisibility();
             loadLeaderboardData();
         });
     });

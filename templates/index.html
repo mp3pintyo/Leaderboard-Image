@@ -278,6 +278,26 @@
                             <input type="radio" class="btn-check" name="my-type" id="my-closed" value="closed-source">
                             <label class="btn btn-outline-warning btn-sm" for="my-closed">Zárt forrású modellek</label>
                         </div>
+                        <fieldset class="leaderboard-column-picker mt-3">
+                            <legend class="form-label mb-2">Opcionális oszlopok</legend>
+                            <div class="leaderboard-column-options" role="group" aria-label="Opcionális leaderboard oszlopok">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input leaderboard-column-toggle" type="checkbox"
+                                        id="leaderboard-column-release-date" data-column="release_date">
+                                    <label class="form-check-label" for="leaderboard-column-release-date">Megjelenés</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input leaderboard-column-toggle" type="checkbox"
+                                        id="leaderboard-column-resolution" data-column="max_resolution">
+                                    <label class="form-check-label" for="leaderboard-column-resolution">Max felbontás</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input leaderboard-column-toggle" type="checkbox"
+                                        id="leaderboard-column-pricing" data-column="pricing">
+                                    <label class="form-check-label" for="leaderboard-column-pricing">Árazás</label>
+                                </div>
+                            </div>
+                        </fieldset>
                     </div>
                 </div>
 
@@ -292,6 +312,9 @@
                                 <th>Meccsek száma</th>
                                 <th>Győzelmi arány</th>
                                 <th>Típus</th>
+                                <th data-column-header="release_date" hidden>Megjelenés</th>
+                                <th data-column-header="max_resolution" hidden>Max felbontás</th>
+                                <th data-column-header="pricing" hidden>Árazás</th>
                             </tr>
                         </thead>
                         <tbody id="leaderboard-table-body"></tbody>
