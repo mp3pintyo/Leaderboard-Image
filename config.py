@@ -1222,6 +1222,21 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'speed': 'medium',
         'website': 'https://microsoft.ai/models/mai-image-2-5/', 
     },
+    'model-084': {
+        'name': 'Qwen-Image 3.0',
+        'filename': 'qwen-image-3.0',
+        'open_source': False,
+        'provider': 'Alibaba Cloud',
+        'release_date': '2026-07-21',
+        'type': 'multimodal',
+        'tags': ['general', 'multimodal'],
+        'max_resolution': '2048x2048',
+        'pricing': '$0.1/image',
+        'min_api_price_per_image': 0.1,
+        'api_available': True,
+        'speed': 'medium',
+        'website': 'https://qwen.ai',
+    },
 }
 
 # Engedélyezett képkiterjesztések listája
