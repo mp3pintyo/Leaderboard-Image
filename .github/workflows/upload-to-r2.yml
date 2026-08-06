@@ -52,7 +52,7 @@ jobs:
 
       - name: Upload data folder to R2
         run: |
-          aws s3 sync ./data/ s3://${{ secrets.UPLOAD_R2_BUCKET }}/ --endpoint-url https://${{ secrets.UPLOAD_R2_ACCOUNT_ID }}.r2.cloudflarestorage.com --delete
+          aws s3 sync ./data/ s3://${{ secrets.UPLOAD_R2_BUCKET }}/ --endpoint-url https://${{ secrets.UPLOAD_R2_ACCOUNT_ID }}.r2.cloudflarestorage.com --delete --cache-control "public,max-age=604800,stale-while-revalidate=86400"
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.UPLOAD_R2_ACCESS_KEY }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.UPLOAD_R2_SECRET_KEY }}

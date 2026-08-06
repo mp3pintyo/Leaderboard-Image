@@ -2,6 +2,7 @@
 import { fetchData } from './api.js';
 import { getRevealDelayMs } from './config.js';
 import { isLoggedIn } from './auth.js';
+import { preloadImages } from './imageLoading.js';
 
 // DOM elemek
 const battleModeDiv = document.getElementById('battle-mode');
@@ -45,8 +46,6 @@ function adjustImageHeight() {
 // window.addEventListener('resize', adjustImageHeight);
 
 export async function loadBattleData() {
-    battleImage1.src = "";
-    battleImage2.src = "";
     battlePrompt.textContent = "Új prompt betöltése...";
     resetModelNameStyles();
     battleModel1Name.textContent = "Modell A";
@@ -54,6 +53,23 @@ export async function loadBattleData() {
     disableVoting(true);
     const data = await fetchData('/api/battle_data');
     if (data) {
+        try {
+            await preloadImages([data.model1.image_url, data.model2.image_url]);
+        } catch (error) {
+            console.error('Battle image preload failed:', error);
+            battlePrompt.textContent = "Hiba a képek betöltése közben.";
+            if (currentBattleData) {
+                // The server has already issued a different battle, so the
+                // previously visible pair must not be votable. Browsing on to
+                // another pair is still safe.
+                voteBtn1.disabled = true;
+                voteBtn2.disabled = true;
+                tieBtn.disabled = false;
+                skipBtn.disabled = false;
+            }
+            return;
+        }
+
         currentBattleData = data;
         const fullPromptText = `Prompt: "${data.prompt_text}" (ID: ${data.prompt_id})`;
         battlePrompt.textContent = fullPromptText;
@@ -61,6 +77,9 @@ export async function loadBattleData() {
         battlePromptPopup.style.display = 'none';
         battlePrompt.classList.remove('prompt-open');
         // A modellek valódi neveit itt már nem állítjuk be, csak a szavazás után.
+        // Swap only after both resources are downloaded and decoded. Until
+        // then the previous round stays visible, so even a cache lookup cannot
+        // produce a blank/flickering image area.
         battleImage1.src = data.model1.image_url;
         battleImage2.src = data.model2.image_url;
         if (isLoggedIn()) {

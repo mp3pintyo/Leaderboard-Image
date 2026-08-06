@@ -15,6 +15,11 @@ from auth import csrf_protect, get_csrf_token, oauth, init_oauth, login_required
 app = Flask(__name__)
 app.config['DATA_DIR'] = DATA_DIR # Flask konfigurációban is tároljuk
 
+# The generated images are stable assets. Keep them fresh enough for occasional
+# replacements while allowing repeated Arena appearances to come from the
+# browser cache instead of transferring the same multi-megabyte file again.
+IMAGE_CACHE_MAX_AGE_SECONDS = 7 * 24 * 60 * 60
+
 # Check if DATA_MODE is set for remote image loading
 DATA_MODE = os.environ.get('DATA_MODE')
 BATTLE_SESSION_KEY = 'active_battle'
@@ -407,7 +412,17 @@ def serve_image(prompt_id, filename):
     directory = os.path.join(app.config['DATA_DIR'], prompt_id)
     # `send_from_directory` biztonságosabb, mint kézzel összerakni az útvonalat
     try:
-        return send_from_directory(directory, filename)
+        response = send_from_directory(
+            directory,
+            filename,
+            conditional=True,
+            max_age=IMAGE_CACHE_MAX_AGE_SECONDS,
+        )
+        response.headers['Cache-Control'] = (
+            f'public, max-age={IMAGE_CACHE_MAX_AGE_SECONDS}, '
+            'stale-while-revalidate=86400'
+        )
+        return response
     except FileNotFoundError:
         print(f"Image not found: {directory}/{filename}")
         abort(404)
