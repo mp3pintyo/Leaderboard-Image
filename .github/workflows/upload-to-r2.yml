@@ -21,7 +21,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git -c http.extraheader="AUTHORIZATION: bearer ${GITHUB_TOKEN}" \
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GITHUB_TOKEN" | base64 -w0)"
+          git -c "http.extraheader=AUTHORIZATION: basic ${AUTH_HEADER}" \
             clone --filter=blob:none --no-checkout --no-tags --sparse \
             "https://github.com/${GITHUB_REPOSITORY}.git" .
           git sparse-checkout set \
@@ -31,7 +32,7 @@ jobs:
           git checkout --detach "$GITHUB_SHA"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git config http.https://github.com/.extraheader "AUTHORIZATION: bearer ${GITHUB_TOKEN}"
+          git config http.https://github.com/.extraheader "AUTHORIZATION: basic ${AUTH_HEADER}"
 
       - name: Set up Python
         uses: actions/setup-python@v5
