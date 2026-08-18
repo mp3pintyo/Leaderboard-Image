@@ -1252,6 +1252,20 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'speed': 'fast',
         'website': 'https://qwen.ai',
     },
+    'model-086': {
+        'name': 'MAI-Image-2.6 Preview',
+        'filename': 'mai-image-2-6-pre',
+        'open_source': False,
+        'provider': 'Microsoft',
+        'release_date': '2026-08-10',
+        'type': 'image-generation',
+        'tags': ['general', 'photorealistic'],
+        'max_resolution': '1536x1536',
+        'pricing': '',
+        'api_available': True,
+        'speed': 'slow',
+        'website': '', 
+    },
 }
 
 # Engedélyezett képkiterjesztések listája

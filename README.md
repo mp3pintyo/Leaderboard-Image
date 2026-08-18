@@ -204,6 +204,7 @@ MODELS = {
 - Microsoft: MAI-Image-2.5 Pro
 - Alibaba: Qwen-Image 3.0
 - Alibaba: Qwen-Image 3.0 Pro
+- Microsoft: MAI-Image-2.6 Preview
 
 ## 🗄️ Adatbázis struktúra
 
