@@ -25,10 +25,10 @@ jobs:
           git -c "http.extraheader=AUTHORIZATION: basic ${AUTH_HEADER}" \
             clone --filter=blob:none --no-checkout --no-tags --sparse \
             "https://github.com/${GITHUB_REPOSITORY}.git" .
-          git sparse-checkout set \
-            /generate_manifest.py \
-            /sync_changed_data.py \
-            /data/manifest.json
+          git sparse-checkout set --no-cone \
+            generate_manifest.py \
+            sync_changed_data.py \
+            data/manifest.json
           git checkout --detach "$GITHUB_SHA"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
