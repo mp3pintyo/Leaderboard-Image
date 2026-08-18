@@ -5,25 +5,41 @@ on:
     branches:
       - main
 
+concurrency:
+  group: upload-to-r2-main
+  cancel-in-progress: false
+
 jobs:
   upload-to-r2:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     permissions:
       contents: write
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Fetch repository metadata without image blobs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git -c http.extraheader="AUTHORIZATION: bearer ${GITHUB_TOKEN}" \
+            clone --filter=blob:none --no-checkout --no-tags --sparse \
+            "https://github.com/${GITHUB_REPOSITORY}.git" .
+          git sparse-checkout set \
+            /generate_manifest.py \
+            /sync_changed_data.py \
+            /data/manifest.json
+          git checkout --detach "$GITHUB_SHA"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config http.https://github.com/.extraheader "AUTHORIZATION: bearer ${GITHUB_TOKEN}"
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Generate manifest.json
-        run: python generate_manifest.py
+      - name: Generate manifest from Git tree
+        run: python generate_manifest.py --git-tree "$GITHUB_SHA"
 
       - name: Commit updated manifest.json (if changed)
         run: |
@@ -34,27 +50,38 @@ jobs:
             echo "manifest.json unchanged, skipping commit."
           else
             git commit -m "chore: auto-update manifest.json [skip ci]"
-            git pull --rebase --autostash
+            git pull --rebase --autostash origin main
             git push
           fi
 
       - name: Verify AWS CLI installation
         run: aws --version
 
-      - name: Configure AWS credentials for R2
-        run: |
-          aws configure set aws_access_key_id ${{ secrets.UPLOAD_R2_ACCESS_KEY }}
-          aws configure set aws_secret_access_key ${{ secrets.UPLOAD_R2_SECRET_KEY }}
-          aws configure set default.region auto
+      - name: Upload changed data files to R2
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.UPLOAD_R2_ACCESS_KEY }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.UPLOAD_R2_SECRET_KEY }}
+          AWS_DEFAULT_REGION: auto
+          R2_BUCKET: ${{ secrets.UPLOAD_R2_BUCKET }}
+          R2_ACCOUNT_ID: ${{ secrets.UPLOAD_R2_ACCOUNT_ID }}
+          GIT_BEFORE: ${{ github.event.before }}
+          GIT_AFTER: ${{ github.sha }}
+        run: |
+          python sync_changed_data.py \
+            --before "$GIT_BEFORE" \
+            --after "$GIT_AFTER" \
+            --bucket "$R2_BUCKET" \
+            --endpoint-url "https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com"
 
-      - name: Upload data folder to R2
-        run: |
-          aws s3 sync ./data/ s3://${{ secrets.UPLOAD_R2_BUCKET }}/ --endpoint-url https://${{ secrets.UPLOAD_R2_ACCOUNT_ID }}.r2.cloudflarestorage.com --delete --cache-control "public,max-age=604800,stale-while-revalidate=86400"
+      - name: Upload current manifest to R2
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.UPLOAD_R2_ACCESS_KEY }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.UPLOAD_R2_SECRET_KEY }}
+          AWS_DEFAULT_REGION: auto
           R2_ACCOUNT_ID: ${{ secrets.UPLOAD_R2_ACCOUNT_ID }}
           R2_BUCKET: ${{ secrets.UPLOAD_R2_BUCKET }}
+        run: |
+          aws s3 cp data/manifest.json "s3://${R2_BUCKET}/manifest.json" \
+            --endpoint-url "https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com" \
+            --cache-control "public,max-age=604800,stale-while-revalidate=86400" \
+            --only-show-errors
