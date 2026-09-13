@@ -206,6 +206,7 @@ MODELS = {
 - Alibaba: Qwen-Image 3.0 Pro
 - Microsoft: MAI-Image-2.6 Preview
 - OpenAI: GPT Image 2.5 Sunburst 4k Max
+- OpenAI: GPT Image 2.5 Sunburst 1k Low
 
 ## 🗄️ Adatbázis struktúra
 

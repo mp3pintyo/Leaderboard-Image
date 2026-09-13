@@ -1280,6 +1280,21 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'speed': 'fast',
         'website': 'https://openai.com/hu-HU/index/introducing-chatgpt-images-2-5/', 
     },
+    'model-088': {
+        'name': 'GPT Image 2.5 Sunburst 1k Low',
+        'filename': 'gpt-image-2-5-sunburst-1k-low',
+        'open_source': False,
+        'provider': 'OpenAI',
+        'release_date': '2026-09-08',
+        'type': 'image-generation',
+        'tags': ['general', 'photorealistic'],
+        'max_resolution': '2880x2880',
+        'pricing': '$0.00474/image',
+        'min_api_price_per_image': 0.00474,
+        'api_available': True,
+        'speed': 'fast',
+        'website': 'https://openai.com/hu-HU/index/introducing-chatgpt-images-2-5/', 
+    }
 }
 
 # Engedélyezett képkiterjesztések listája
