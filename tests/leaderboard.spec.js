@@ -74,3 +74,28 @@ test('Leaderboard Quality vs. Price Top 10/20 flow', async ({ page }, testInfo) 
 
     expect(browserMessages, browserMessages.join('\n')).toEqual([]);
 });
+
+test('Expensive model does not compress affordable prices', async ({ page }) => {
+    await page.route('**/api/leaderboard?model_type=all', async (route) => {
+        const response = await route.fetch();
+        const rows = await response.json();
+        rows.sort((a, b) => b.elo - a.elo);
+        rows[4].price_per_1000 = 700;
+        await route.fulfill({ response, json: rows });
+    });
+    await page.goto('/');
+    const toggle = page.locator('.navbar-toggler');
+    if (await toggle.isVisible()) await toggle.click();
+    await page.getByRole('link', { name: 'Leaderboard', exact: true }).click();
+    await page.getByRole('tab', { name: /Minőség vs\. ár/ }).click();
+    await expect.poll(() => page.evaluate(() => {
+        const chart = window.Chart.getChart('quality-price-chart');
+        if (!chart) return false;
+        const x = chart.scales.x;
+        const spacing = (a, b) => x.getPixelForValue(b) - x.getPixelForValue(a);
+        return chart.data.datasets.some((dataset) => dataset.data.some((point) => point.x === 700))
+            && x.max >= 700
+            && spacing(10, 100) / x.width > 0.4
+            && Math.abs(spacing(10, 20) - spacing(100, 200)) < 0.01;
+    })).toBe(true);
+});

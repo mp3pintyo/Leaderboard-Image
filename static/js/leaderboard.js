@@ -220,7 +220,7 @@ async function loadQualityPriceData() {
 
     const eligible = Array.isArray(baseLeaderboard)
         ? baseLeaderboard
-            .filter((row) => Number.isFinite(row.price_per_1000))
+            .filter((row) => Number.isFinite(row.price_per_1000) && row.price_per_1000 > 0)
             .sort((a, b) => b.elo - a.elo)
             .slice(0, currentQualityPriceLimit)
         : [];
@@ -317,16 +317,16 @@ function renderQualityPriceChart(rows) {
             },
             scales: {
                 x: {
-                    beginAtZero: true,
+                    type: 'logarithmic',
                     title: {
                         display: true,
-                        text: 'API-ár (USD / 1 000 kép)',
+                        text: 'API-ár (USD / 1 000 kép, logaritmikus)',
                         font: { weight: 'bold' }
                     },
                     grid: { color: 'rgba(70, 82, 90, 0.12)' },
                     ticks: {
                         callback(value) {
-                            return `$${value}`;
+                            return `$${Number(value).toLocaleString('hu-HU')}`;
                         }
                     }
                 },
