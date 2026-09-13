@@ -1084,6 +1084,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'tags': ['general', 'multimodal', 'text-rendering'],
         'max_resolution': '2880x2880',
         'pricing': '$0,71157/image',
+        'min_api_price_per_image': 0.71157,
         'api_available': True,
         'speed': 'slow',
         'website': 'https://openai.com',
