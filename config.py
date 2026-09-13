@@ -1303,7 +1303,7 @@ FROZEN_BOTTOM_COUNT = 0  # Hány modellt fagyasszunk be az aljáról (0 = kikapc
 # NEW_MODEL_BOOST_WEIGHT-szer nagyobb eséllyel jelenik meg az egyik battle-slotban.
 # A másik slot teljesen véletlenszerű marad. 50 meccs felett visszaáll a normál random.
 NEW_MODEL_BOOST_THRESHOLD = 50  # Ennyi meccs alatt aktív a boost
-NEW_MODEL_BOOST_WEIGHT = 5       # Hányszoros esély az átlagos modellhez képest
+NEW_MODEL_BOOST_WEIGHT = 20       # Hányszoros esély az átlagos modellhez képest
 
 # Authentication beállítások
 DEFAULT_SECRET_KEY = 'dev-secret-key-change-in-production'
