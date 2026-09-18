@@ -267,3 +267,14 @@ A rendszer a következő API végpontokat biztosítja:
 ## 📚 További dokumentáció
 
 A részletes dokumentáció a `docs/index.html` fájlban található.
+### Modellenkénti YouTube-link
+
+A `config.py` minden modelljénél a `video_url` mező szerkeszthető. Jelenleg mindegyik
+értéke `https://www.youtube.com/@pinterzsoltai`, amelyet a `DEFAULT_VIDEO_URL` is megad.
+Ha elkészült egy modell videója, annak `video_url` értékét írd át a videó URL-jére.
+A hiányzó vagy üres érték automatikusan az alapértelmezett csatornára mutat.
+
+A Leaderboard **Opcionális oszlopok → Videó** kapcsolója megjeleníti a linkeket;
+a választást a böngésző megjegyzi. Az Összehasonlítás modellkártyáin mindig látszik
+a link. A szürke **YouTube-csatorna** az alapértelmezett cím, a piros **Egyedi videó**
+az átírt cím. Mindkettő YouTube-ikonnal jelenik meg, és új lapon nyílik meg.

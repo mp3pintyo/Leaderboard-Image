@@ -10,6 +10,8 @@ DATABASE = os.environ.get('DATABASE_PATH', 'votes.db')
 # Az adatmappák elérési útja
 DATA_DIR = 'data'
 
+DEFAULT_VIDEO_URL = 'https://www.youtube.com/@pinterzsoltai'
+
 # Modell nevek és a hozzájuk tartozó adatok
 # Minden modell egy szótár, ami tartalmazza:
 # - 'name': A modell megjelenítési neve
@@ -24,11 +26,13 @@ DATA_DIR = 'data'
 # - 'min_api_price_per_image': A legolcsóbb ismert API-ár USD-ben egy képre, ha van
 # - 'api_available': Elérhető-e API-n keresztül
 # - 'speed': Generálási sebesség (pl. 'fast', 'medium', 'slow')
+# - 'video_url': YouTube-link; egyedi videóhoz írd át a modellnél megadott URL-t
 # - 'website': A modell/szolgáltató weboldala (URL vagy None)
 MODELS: Dict[str, Dict[str, Any]] = {
     'model-001': {
         'name': 'Grok',
         'filename': 'grok',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': False,
         'provider': 'xAI',
         'release_date': '2024-08-13',
@@ -43,6 +47,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-002': {
         'name': 'Gemini Flash 2.0',
         'filename': 'gemini-flash',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': False,
         'provider': 'Google',
         'release_date': '2024-12-11',
@@ -57,6 +62,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-003': {
         'name': 'Imagen 3',
         'filename': 'imagen3',
+        'video_url': 'https://youtu.be/meYXpnE1Exw',
         'open_source': False,
         'provider': 'Google',
         'release_date': '2024-05-14',
@@ -72,6 +78,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-004': {
         'name': 'GPT Image 1',
         'filename': 'gpt-image-1',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': False,
         'provider': 'OpenAI',
         'release_date': '2025-03-25',
@@ -87,6 +94,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-005': {
         'name': 'v6.1',
         'filename': 'midjourneyv61',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': False,
         'provider': 'Midjourney',
         'release_date': '2024-07-30',
@@ -101,6 +109,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-006': {
         'name': 'v7',
         'filename': 'midjourneyv7',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': False,
         'provider': 'Midjourney',
         'release_date': '2025-04-03',
@@ -115,6 +124,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-007': {
         'name': 'Reve',
         'filename': 'reve',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': False,
         'provider': 'Reve',
         'release_date': '2025-03-25',
@@ -129,6 +139,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-008': {
         'name': 'I1',
         'filename': 'hidreami1',
+        'video_url': 'https://youtu.be/qBdoKX3vmBE',
         'open_source': True,
         'provider': 'HiDream',
         'release_date': '2025-04-07',
@@ -143,6 +154,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-009': {
         'name': 'Lumina-Image-2.0',
         'filename': 'lumina2',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': True,
         'provider': 'Alpha-VLLM',
         'release_date': '2025-01-25',
@@ -157,6 +169,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-010': {
         'name': 'Seedream 2.0 (CapCut Dreamina Image 2.0 Pro)',
         'filename': 'dreamina-image20pro',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': False,
         'provider': 'ByteDance',
         'release_date': '2024-09-09',
@@ -171,6 +184,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-011': {
         'name': 'Juggernaut XI',
         'filename': 'juggernautxl',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': True,
         'provider': 'RunDiffusion',
         'release_date': '2024-08-29',
@@ -185,6 +199,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-012': {
         'name': 'Fluxmania V',
         'filename': 'fluxmaniaV',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': True,
         'provider': 'Community',
         'release_date': '2025-04-01',
@@ -199,6 +214,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-013': {
         'name': 'Tengr.ai',
         'filename': 'tengrai',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': False,
         'provider': 'Tengr.ai',
         'release_date': '2024-04-30',
@@ -213,6 +229,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-014': {
         'name': 'Quantum',
         'filename': 'tengrai-q',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': False,
         'provider': 'Tengr.ai',
         'release_date': '2025-02-11',
@@ -227,6 +244,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-015': {
         'name': 'Firefly Image 4',
         'filename': 'firefly4',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': False,
         'provider': 'Adobe',
         'release_date': '2025-04-24',
@@ -241,6 +259,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-016': {
         'name': 'Dreamina Seedream 3.0',
         'filename': 'dreamina-image3',
+        'video_url': 'https://youtu.be/2UQCeb1h1hg',
         'open_source': False,
         'provider': 'ByteDance',
         'release_date': '2025-04-16',
@@ -255,6 +274,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-017': {
         'name': '3.0',
         'filename': 'ideogram3',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': False,
         'provider': 'Ideogram',
         'release_date': '2025-03-26',
@@ -269,6 +289,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-018': {
         'name': 'Realistic V2',
         'filename': 'piclumen-realistic-v2',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': False,
         'provider': 'Piclumen',
         'release_date': '2024-11-12',
@@ -283,6 +304,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-019': {
         'name': 'F Lite Standard',
         'filename': 'f-lite-standard',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': True,
         'provider': 'Community',
         'release_date': '2025-04-29',
@@ -297,6 +319,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-020': {
         'name': 'Gemini Flash 2.0 Preview 0507',
         'filename': 'gemini-2.0-flash-0507',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': False,
         'provider': 'Google',
         'release_date': '2025-05-07',
@@ -311,6 +334,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-021': {
         'name': 'v7 20250501',
         'filename': 'midjourneyv7-20250501',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': False,
         'provider': 'Midjourney',
         'release_date': '2025-05-01',
@@ -325,6 +349,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-022': {
         'name': 'Hunyuan Image 2.0',
         'filename': 'hunyuan-image-2.0',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': False,
         'provider': 'Tencent',
         'release_date': '2025-05-16',
@@ -340,6 +365,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-023': {
         'name': 'Imagen 4',
         'filename': 'imagen4',
+        'video_url': 'https://youtu.be/KApbyS09Rp8',
         'open_source': False,
         'provider': 'Google',
         'release_date': '2025-05-20',
@@ -355,6 +381,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-024': {
         'name': 'V3 Raw',
         'filename': 'recraft-v3-raw',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': False,
         'provider': 'Recraft',
         'release_date': '2024-10-30',
@@ -369,6 +396,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-025': {
         'name': 'BAGEL',
         'filename': 'bagel',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': True,
         'provider': 'ByteDance',
         'release_date': '2025-05-20',
@@ -383,6 +411,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-026': {
         'name': 'FLUX.1 Kontext [pro]',
         'filename': 'flux1-kontext-pro',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': False,
         'provider': 'Black Forest Labs',
         'release_date': '2025-05-29',
@@ -398,6 +427,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-027': {
         'name': 'Chroma v34',
         'filename': 'chroma-34',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': True,
         'provider': 'Community',
         'release_date': '2025-06-03',
@@ -412,6 +442,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-028': {
         'name': 'Ernie 4.5 Turbo',
         'filename': 'ernie-45turbo',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': False,
         'provider': 'Baidu',
         'release_date': '2025-04-25',
@@ -426,6 +457,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-029': {
         'name': 'Imagen 4 Ultra',
         'filename': 'imagen4ultra',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': False,
         'provider': 'Google',
         'release_date': '2025-07-24',
@@ -441,6 +473,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-030': {
         'name': 'Qwen-Image',
         'filename': 'qwen-image',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': True,
         'provider': 'Alibaba Cloud',
         'release_date': '2025-08-04',
@@ -455,6 +488,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-031': {
         'name': 'Gemini 2.5 Flash Image Preview',
         'filename': 'gemini25flashimagepreview',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': False,
         'provider': 'Google',
         'release_date': '2025-08-26',
@@ -470,6 +504,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-032': {
         'name': 'FLUX.1 Krea',
         'filename': 'flux1-krea',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': True,
         'provider': 'Krea AI',
         'release_date': '2025-07-31',
@@ -484,6 +519,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-033': {
         'name': 'Hunyuan Image 2.1',
         'filename': 'hunyuan-image-2.1',
+        'video_url': 'https://youtu.be/dpIehQB8JGw',
         'open_source': True,
         'provider': 'Tencent',
         'release_date': '2025-09-08',
@@ -498,6 +534,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-034': {
         'name': 'Seedream 4.0 4k',
         'filename': 'seedream-4.0-4k',
+        'video_url': 'https://youtu.be/94qxo-hC1Fc',
         'open_source': False,
         'provider': 'ByteDance',
         'release_date': '2025-09-09',
@@ -513,6 +550,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-035': {
         'name': 'KOLORS 2.1',
         'filename': 'klingai-kolors-2.1',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': False,
         'provider': 'Kling AI',
         'release_date': '2025-07-08',
@@ -527,6 +565,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-036': {
         'name': 'HunyuanImage-3.0',
         'filename': 'hunyuan-image-3.0',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': True,
         'provider': 'Tencent',
         'release_date': '2025-09-28',
@@ -541,6 +580,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-037': {
         'name': 'GPT-5 Image Mini High',
         'filename': 'gpt-5-image-mini-high',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': False,
         'provider': 'OpenAI',
         'release_date': '2025-08-07',
@@ -556,6 +596,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-038': {
         'name': 'GPT-5 Image Mini Low',
         'filename': 'gpt-5-image-mini-low',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': False,
         'provider': 'OpenAI',
         'release_date': '2025-08-07',
@@ -571,6 +612,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-039': {
         'name': 'GPT-5 Image Mini Medium',
         'filename': 'gpt-5-image-mini-medium',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': False,
         'provider': 'OpenAI',
         'release_date': '2025-08-07',
@@ -586,6 +628,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-040': {
         'name': 'MAI-Image-1',
         'filename': 'mai-image-1',
+        'video_url': 'https://youtu.be/fG-AshWj1tU',
         'open_source': False,
         'provider': 'Microsoft',
         'release_date': '2025-10-13',
@@ -601,6 +644,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-041': {
         'name': 'Nano Banana Pro (Gemini 3 Pro Image)',
         'filename': 'nanobananapro-4k',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': False,
         'provider': 'Google',
         'release_date': '2025-11-20',
@@ -616,6 +660,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-042': {
         'name': 'Z Image Turbo',
         'filename': 'z-image-turbo',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': True,
         'provider': 'Alibaba Cloud',
         'release_date': '2025-11-25',
@@ -630,6 +675,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-043': {
         'name': 'FLUX.2 [pro]',
         'filename': 'flux2-pro-2k',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': False,
         'provider': 'Black Forest Labs',
         'release_date': '2025-11-25',
@@ -645,6 +691,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-044': {
         'name': 'FLUX.2 [dev]',
         'filename': 'flux2-dev',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': True,
         'provider': 'Black Forest Labs',
         'release_date': '2025-11-25',
@@ -659,6 +706,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-045': {
         'name': 'Omni Image 1.0',
         'filename': 'klingai-omni-image-1.0',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': False,
         'provider': 'Kling AI',
         'release_date': '2025-12-01',
@@ -673,6 +721,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-046': {
         'name': 'FLUX.2 [flex]',
         'filename': 'flux2-flex-2k',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': False,
         'provider': 'Black Forest Labs',
         'release_date': '2025-11-25',
@@ -688,6 +737,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-047': {
         'name': 'Seedream 4.5 4k',
         'filename': 'seedream-4.5-4k',
+        'video_url': 'https://youtu.be/21_q6vUyUEU',
         'open_source': False,
         'provider': 'ByteDance',
         'release_date': '2025-12-03',
@@ -703,6 +753,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-048': {
         'name': 'GPT Image 1.5',
         'filename': 'gpt-image-1.5',
+        'video_url': 'https://youtu.be/9KU74-9pDEw',
         'open_source': False,
         'provider': 'OpenAI',
         'release_date': '2025-12-16',
@@ -718,6 +769,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-049': {
         'name': 'Qwen-Image-2512',
         'filename': 'qwen-image-2512',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': True,
         'provider': 'Alibaba Cloud',
         'release_date': '2025-12-31',
@@ -732,6 +784,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-050': {
         'name': 'GLM-Image',
         'filename': 'glm-image',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': True,
         'provider': 'Z.ai',
         'release_date': '2026-01-14',
@@ -746,6 +799,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-051': {
         'name': 'FLUX.2 [klein base] 9B',
         'filename': 'flux2-klein-base-9b',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': True,
         'provider': 'Black Forest Labs',
         'release_date': '2026-01-15',
@@ -760,6 +814,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-052': {
         'name': 'FLUX.2 [klein distilled] 9B',
         'filename': 'flux2-klein-9b',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': True,
         'provider': 'Black Forest Labs',
         'release_date': '2026-01-16',
@@ -774,6 +829,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-053': {
         'name': 'FLUX.2 [klein base] 4B',
         'filename': 'flux2-klein-base-4b',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': True,
         'provider': 'Black Forest Labs',
         'release_date': '2026-01-15',
@@ -788,6 +844,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-054': {
         'name': 'FLUX.2 [klein distilled] 4B',
         'filename': 'flux2-klein-4b',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': True,
         'provider': 'Black Forest Labs',
         'release_date': '2026-01-15',
@@ -802,6 +859,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-055': {
         'name': 'Z-Image Base',
         'filename': 'z-image-base',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': True,
         'provider': 'Alibaba Cloud',
         'release_date': '2026-01-27',
@@ -816,6 +874,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-056': {
         'name': 'Grok Imagine Image 20260201',
         'filename': 'grok-imagine-image-20260201',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': False,
         'provider': 'xAI',
         'release_date': '2026-02-01',
@@ -830,6 +889,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-057': {
         'name': 'Qwen-Image 2.0',
         'filename': 'qwen-image-2.0',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': False,
         'provider': 'Alibaba Cloud',
         'release_date': '2026-02-10',
@@ -845,6 +905,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-058': {
         'name': 'BitDance',
         'filename': 'bitdance',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': True,
         'provider': 'ByteDance',
         'release_date': '2026-02-17',
@@ -859,6 +920,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-059': {
         'name': 'V4',
         'filename': 'recraft-v4',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': False,
         'provider': 'Recraft',
         'release_date': '2026-02-17',
@@ -874,6 +936,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-060': {
         'name': 'Seedream 5.0 lite 3k',
         'filename': 'seedream-5.0-lite',
+        'video_url': 'https://youtu.be/aAdJhyTBT3A',
         'open_source': False,
         'provider': 'ByteDance',
         'release_date': '2026-02-13',
@@ -889,6 +952,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-061': {
         'name': 'Nano Banana 2 4k',
         'filename': 'nanobanana-2-4k',
+        'video_url': 'https://youtu.be/y3BH8sTo2nY',
         'open_source': False,
         'provider': 'Google',
         'release_date': '2026-02-26',
@@ -904,6 +968,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-062': {
         'name': 'Firefly Image 5 preview',
         'filename': 'firefly-image-5-preview',
+        'video_url': 'https://youtu.be/vghXaZUSd5E',
         'open_source': False,
         'provider': 'Adobe',
         'release_date': '2025-10-28',
@@ -918,6 +983,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-063': {
         'name': 'HunyuanImage-3.0 Instruct',
         'filename': 'hunyuan-image-3.0-instruct',
+        'video_url': 'https://youtu.be/WzU8jbmBvac',
         'open_source': True,
         'provider': 'Tencent',
         'release_date': '2026-01-26',
@@ -932,6 +998,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-064': {
         'name': 'FLUX.2 [max]',
         'filename': 'flux2-max-2k',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': False,
         'provider': 'Black Forest Labs',
         'release_date': '2025-11-25',
@@ -947,6 +1014,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-065': {
         'name': 'v8 alpha',
         'filename': 'midjourneyv8alpha',
+        'video_url': 'https://youtu.be/oJm0V3_dzss',
         'open_source': False,
         'provider': 'Midjourney',
         'release_date': '2026-03-17',
@@ -961,6 +1029,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-066': {
         'name': 'MAI-Image-2',
         'filename': 'mai-image-2',
+        'video_url': 'https://youtu.be/AkyoqcjUEIg',
         'open_source': False,
         'provider': 'Microsoft',
         'release_date': '2026-03-19',
@@ -975,6 +1044,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-067': {
         'name': 'Reve v1.5',
         'filename': 'reve-1.5',
+        'video_url': 'https://youtu.be/OhWg3JVU_cw',
         'open_source': False,
         'provider': 'Reve AI',
         'release_date': '2026-02-23',
@@ -990,6 +1060,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-068': {
         'name': 'Uni-1',
         'filename': 'uni-1',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': False,
         'provider': 'Luma AI',
         'release_date': '2026-03-23',
@@ -1005,6 +1076,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-069': {
         'name': 'Wan 2.7-Image Pro 2k',
         'filename': 'wan-2-7-pro-2k',
+        'video_url': 'https://youtu.be/ZV9QW-jR630',
         'open_source': False,
         'provider': 'Alibaba',
         'release_date': '2026-04-01',
@@ -1020,6 +1092,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-070': {
         'name': 'v8.1 alpha',
         'filename': 'midjourney-v8.1-alpha',
+        'video_url': 'https://youtu.be/mq0fLeYRyvg',
         'open_source': False,
         'provider': 'Midjourney',
         'release_date': '2026-04-14',
@@ -1034,6 +1107,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-071': {
         'name': 'ERNIE-Image',
         'filename': 'ernie-image',
+        'video_url': 'https://youtu.be/3EZmR0fHPHs',
         'open_source': True,
         'provider': 'Baidu',
         'release_date': '2026-04-15',
@@ -1048,6 +1122,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-072': {
         'name': 'ERNIE-Image Turbo',
         'filename': 'ernie-image-turbo',
+        'video_url': 'https://youtu.be/r4nAjCkeSls',
         'open_source': True,
         'provider': 'Baidu',
         'release_date': '2026-04-15',
@@ -1062,6 +1137,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-073': {
         'name': 'ImagineArt 2.0',
         'filename': 'imagineart-2-0',
+        'video_url': 'https://youtu.be/WNyEoTg7NeA',
         'open_source': False,
         'provider': 'ImagineArt',
         'release_date': '2026-04-16',
@@ -1077,6 +1153,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-074': {
         'name': 'GPT Image 2 3k',
         'filename': 'gpt-image-2-3k',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': False,
         'provider': 'OpenAI',
         'release_date': '2026-04-21',
@@ -1092,6 +1169,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-075': {
         'name': 'GPT Image 2 ChatGPT',
         'filename': 'gpt-image-2-chatgpt',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': False,
         'provider': 'OpenAI',
         'release_date': '2026-04-21',
@@ -1106,6 +1184,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-076': {
         'name': 'Uni-1.1',
         'filename': 'uni-1.1',
+        'video_url': 'https://youtu.be/P3j472o2J5Q',
         'open_source': False,
         'provider': 'Luma AI',
         'release_date': '2026-05-05',
@@ -1121,6 +1200,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-077': {
         'name': 'Lens',
         'filename': 'lens',
+        'video_url': 'https://youtu.be/Eg-Z5XDvs38',
         'open_source': True,
         'provider': 'Microsoft',
         'release_date': '2026-05-15',
@@ -1135,6 +1215,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-078': {
         'name': 'Krea 2 Turbo (INT8)',
         'filename': 'krea2-turbo-int8',
+        'video_url': 'https://youtu.be/6yaE9CQ8Ly0',
         'open_source': True,
         'provider': 'Krea.ai',
         'release_date': '2026-06-22',
@@ -1149,6 +1230,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-079': {
         'name': 'Uni-1.1 Max',
         'filename': 'uni-1.1-max',
+        'video_url': 'https://youtu.be/P3j472o2J5Q',
         'open_source': False,
         'provider': 'Luma AI',
         'release_date': '2026-05-05',
@@ -1164,6 +1246,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-080': {
         'name': 'Seedream 5.0 Pro',
         'filename': 'seedream-5.0-pro',
+        'video_url': 'https://youtu.be/Rt7p_oIBQB0',
         'open_source': False,
         'provider': 'ByteDance',
         'release_date': '2026-07-08',
@@ -1179,6 +1262,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-081': {
         'name': 'MAI-Image-2.5',
         'filename': 'mai-image-2-5',
+        'video_url': 'https://youtu.be/G29mcWF8wWQ',
         'open_source': False,
         'provider': 'Microsoft',
         'release_date': '2026-06-02',
@@ -1194,6 +1278,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-082': {
         'name': 'MAI-Image-2.5 Flash',
         'filename': 'mai-image-2-5-flash',
+        'video_url': 'https://youtu.be/ybzlsMyR6Ug',
         'open_source': False,
         'provider': 'Microsoft',
         'release_date': '2026-06-02',
@@ -1209,6 +1294,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-083': {
         'name': 'MAI-Image-2.5 Pro',
         'filename': 'mai-image-2-5-pro',
+        'video_url': 'https://youtu.be/UCW9KxwRDNU',
         'open_source': False,
         'provider': 'Microsoft',
         'release_date': '2026-06-02',
@@ -1224,6 +1310,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-084': {
         'name': 'Qwen-Image 3.0',
         'filename': 'qwen-image-3.0',
+        'video_url': 'https://youtu.be/AteWNuXVQWc',
         'open_source': False,
         'provider': 'Alibaba Cloud',
         'release_date': '2026-07-21',
@@ -1239,6 +1326,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-085': {
         'name': 'Qwen-Image 3.0 Pro',
         'filename': 'qwen-image-3.0-pro',
+        'video_url': 'https://youtu.be/AteWNuXVQWc',
         'open_source': False,
         'provider': 'Alibaba Cloud',
         'release_date': '2026-07-21',
@@ -1254,6 +1342,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-086': {
         'name': 'MAI-Image-2.6 Preview',
         'filename': 'mai-image-2-6-pre',
+        'video_url': 'https://youtu.be/x9XVXBxq_6s',
         'open_source': False,
         'provider': 'Microsoft',
         'release_date': '2026-08-10',
@@ -1268,6 +1357,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-087': {
         'name': 'GPT Image 2.5 Sunburst 4k Max',
         'filename': 'gpt-image-2-5-sunburst-4k-max',
+        'video_url': 'https://youtu.be/MWB3MH1lfho',
         'open_source': False,
         'provider': 'OpenAI',
         'release_date': '2026-09-08',
@@ -1283,12 +1373,13 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-088': {
         'name': 'GPT Image 2.5 Sunburst 1k Low',
         'filename': 'gpt-image-2-5-sunburst-1k-low',
+        'video_url': 'https://youtu.be/tY6dn7RwQmw',
         'open_source': False,
         'provider': 'OpenAI',
         'release_date': '2026-09-08',
         'type': 'image-generation',
         'tags': ['general', 'photorealistic'],
-        'max_resolution': '2880x2880',
+        'max_resolution': '1536x1024',
         'pricing': '$0.00474/image',
         'min_api_price_per_image': 0.00474,
         'api_available': True,

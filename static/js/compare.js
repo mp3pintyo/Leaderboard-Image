@@ -1,3 +1,4 @@
+import { createVideoLink } from './videoLink.js';
 import { fetchData } from './api.js';
 
 // DOM elemek
@@ -97,6 +98,7 @@ function renderModelCard(model, side) {
                         <tr><td class="fw-bold">Árazás</td><td>${escapeHtml(model.pricing || 'N/A')}</td></tr>
                         <tr><td class="fw-bold">API</td><td>${apiAvailable}</td></tr>
                         <tr><td class="fw-bold">Sebesség</td><td>${getSpeedBadge(model.speed)}</td></tr>
+                        <tr><td class="fw-bold">Videó</td><td>${createVideoLink(model).outerHTML}</td></tr>
                         <tr><td class="fw-bold">Weboldal</td><td>${website}</td></tr>
                         <tr><td class="fw-bold">Címkék</td><td>${tags || '<span class="text-muted">Nincs</span>'}</td></tr>
                     </tbody>

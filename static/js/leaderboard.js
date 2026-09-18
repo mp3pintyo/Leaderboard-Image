@@ -1,3 +1,4 @@
+import { createVideoLink } from './videoLink.js';
 import { fetchData } from './api.js';
 
 const leaderboardTableBody = document.getElementById('leaderboard-table-body');
@@ -14,7 +15,7 @@ const columnToggles = document.querySelectorAll('.leaderboard-column-toggle');
 const columnHeaders = document.querySelectorAll('[data-column-header]');
 
 const leaderboardColumnsStorageKey = 'leaderboard-visible-columns';
-const optionalColumns = ['release_date', 'max_resolution', 'pricing'];
+const optionalColumns = ['release_date', 'max_resolution', 'pricing', 'video_url'];
 let visibleColumns = new Set();
 
 let currentModelType = 'all';
@@ -107,7 +108,9 @@ function renderRows(rows) {
 
         optionalColumns.forEach((column) => {
             if (!visibleColumns.has(column)) return;
-            tr.appendChild(createCell(row[column] || 'N/A'));
+            const cell = createCell(column === 'video_url' ? '' : (row[column] || 'N/A'));
+            if (column === 'video_url') cell.appendChild(createVideoLink(row));
+            tr.appendChild(cell);
         });
 
         leaderboardTableBody.appendChild(tr);

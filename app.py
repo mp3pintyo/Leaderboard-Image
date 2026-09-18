@@ -7,10 +7,18 @@ import datetime
 from flask import Flask, render_template, jsonify, request, send_from_directory, abort, redirect, url_for, session
 from werkzeug.middleware.proxy_fix import ProxyFix
 from database import close_db, get_db, init_db, get_prompt_ids, update_elo
-from config import (DATA_DIR, ALLOWED_EXTENSIONS, DEFAULT_ELO, MODELS, REVEAL_DELAY_MS, FROZEN_BOTTOM_COUNT,
+from config import (DATA_DIR, ALLOWED_EXTENSIONS, DEFAULT_ELO, MODELS, DEFAULT_VIDEO_URL, REVEAL_DELAY_MS, FROZEN_BOTTOM_COUNT,
                      NEW_MODEL_BOOST_THRESHOLD, NEW_MODEL_BOOST_WEIGHT,
                      DEFAULT_SECRET_KEY, SECRET_KEY, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET)
 from auth import csrf_protect, get_csrf_token, oauth, init_oauth, login_required, get_current_user, save_user
+
+def get_model_video(model):
+    url = (model.get('video_url') or DEFAULT_VIDEO_URL).strip() or DEFAULT_VIDEO_URL
+    return {
+        "video_url": url,
+        "video_is_custom": url.rstrip('/') != DEFAULT_VIDEO_URL.rstrip('/'),
+    }
+
 
 app = Flask(__name__)
 app.config['DATA_DIR'] = DATA_DIR # Flask konfigurációban is tároljuk
@@ -694,6 +702,7 @@ def get_leaderboard():
             leaderboard.append({
                 "id": model_id,
                 "name": model['name'],
+                **get_model_video(model),
                 "display": f"{model.get('provider')}: {model['name']}" if model.get('provider') else model['name'],
                 "provider": model.get('provider') or '',
                 "release_date": model.get('release_date') or '',
@@ -740,6 +749,7 @@ def get_personal_leaderboard():
                 {
                     "id": model_id,
                     "name": model['name'],
+                    **get_model_video(model),
                     "wins": 0, "matches": 0, "win_rate": 0.0,
                     "elo": DEFAULT_ELO,
                     "open_source": model['open_source'],
@@ -784,6 +794,7 @@ def get_personal_leaderboard():
             leaderboard.append({
                 "id": model_id,
                 "name": model['name'],
+                **get_model_video(model),
                 "display": f"{model.get('provider')}: {model['name']}" if model.get('provider') else model['name'],
                 "provider": model.get('provider') or '',
                 "release_date": model.get('release_date') or '',
@@ -949,6 +960,7 @@ def get_model_info():
             "api_available": m.get('api_available', False),
             "speed": m.get('speed'),
             "website": m.get('website'),
+            **get_model_video(m),
         }
 
     result = {"model1": build_model_info(model1_id)}
