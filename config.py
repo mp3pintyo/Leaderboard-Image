@@ -488,7 +488,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-031': {
         'name': 'Gemini 2.5 Flash Image Preview',
         'filename': 'gemini25flashimagepreview',
-        'video_url': 'https://www.youtube.com/@pinterzsoltai',
+        'video_url': 'https://youtu.be/79r6twx7QPg',
         'open_source': False,
         'provider': 'Google',
         'release_date': '2025-08-26',
@@ -565,7 +565,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-036': {
         'name': 'HunyuanImage-3.0',
         'filename': 'hunyuan-image-3.0',
-        'video_url': 'https://www.youtube.com/@pinterzsoltai',
+        'video_url': 'https://youtu.be/WzU8jbmBvac',
         'open_source': True,
         'provider': 'Tencent',
         'release_date': '2025-09-28',
@@ -644,7 +644,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-041': {
         'name': 'Nano Banana Pro (Gemini 3 Pro Image)',
         'filename': 'nanobananapro-4k',
-        'video_url': 'https://www.youtube.com/@pinterzsoltai',
+        'video_url': 'https://youtu.be/CViiBYZbveg',
         'open_source': False,
         'provider': 'Google',
         'release_date': '2025-11-20',
@@ -660,7 +660,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-042': {
         'name': 'Z Image Turbo',
         'filename': 'z-image-turbo',
-        'video_url': 'https://www.youtube.com/@pinterzsoltai',
+        'video_url': 'https://youtu.be/AgPPF8MG3Ys',
         'open_source': True,
         'provider': 'Alibaba Cloud',
         'release_date': '2025-11-25',
@@ -675,7 +675,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-043': {
         'name': 'FLUX.2 [pro]',
         'filename': 'flux2-pro-2k',
-        'video_url': 'https://www.youtube.com/@pinterzsoltai',
+        'video_url': 'https://youtu.be/MKkxxzrYwyc',
         'open_source': False,
         'provider': 'Black Forest Labs',
         'release_date': '2025-11-25',
@@ -691,7 +691,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-044': {
         'name': 'FLUX.2 [dev]',
         'filename': 'flux2-dev',
-        'video_url': 'https://www.youtube.com/@pinterzsoltai',
+        'video_url': 'https://youtu.be/xWzMxKeFyQg',
         'open_source': True,
         'provider': 'Black Forest Labs',
         'release_date': '2025-11-25',
@@ -721,7 +721,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-046': {
         'name': 'FLUX.2 [flex]',
         'filename': 'flux2-flex-2k',
-        'video_url': 'https://www.youtube.com/@pinterzsoltai',
+        'video_url': 'https://youtu.be/bd20xOOx7ZI',
         'open_source': False,
         'provider': 'Black Forest Labs',
         'release_date': '2025-11-25',
@@ -769,7 +769,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-049': {
         'name': 'Qwen-Image-2512',
         'filename': 'qwen-image-2512',
-        'video_url': 'https://www.youtube.com/@pinterzsoltai',
+        'video_url': 'https://youtu.be/X38MF3XmUAQ',
         'open_source': True,
         'provider': 'Alibaba Cloud',
         'release_date': '2025-12-31',
@@ -859,7 +859,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-055': {
         'name': 'Z-Image Base',
         'filename': 'z-image-base',
-        'video_url': 'https://www.youtube.com/@pinterzsoltai',
+        'video_url': 'https://youtu.be/XOCWk3Ys4OI',
         'open_source': True,
         'provider': 'Alibaba Cloud',
         'release_date': '2026-01-27',
@@ -889,7 +889,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     'model-057': {
         'name': 'Qwen-Image 2.0',
         'filename': 'qwen-image-2.0',
-        'video_url': 'https://www.youtube.com/@pinterzsoltai',
+        'video_url': 'https://youtu.be/Bvmb53u8Kqk',
         'open_source': False,
         'provider': 'Alibaba Cloud',
         'release_date': '2026-02-10',
