@@ -1388,7 +1388,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     },
     'model-089': {
         'name': 'Qwen-Image 2.1',
-        'filename': 'qwen-image-2-1',
+        'filename': 'qwen-image-2.1',
         'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': True,
         'provider': 'Alibaba Cloud',
