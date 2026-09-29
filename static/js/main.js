@@ -52,8 +52,17 @@ document.addEventListener('DOMContentLoaded', function() {
             showMode(mode);
 
             const navbarCollapse = document.getElementById('navbarNav');
-            if (navbarCollapse?.classList.contains('show') && window.bootstrap?.Collapse) {
-                window.bootstrap.Collapse.getOrCreateInstance(navbarCollapse).hide();
+            if (navbarCollapse?.classList.contains('collapsing') && window.bootstrap?.Collapse) {
+                navbarCollapse.addEventListener('shown.bs.collapse', () => {
+                    window.bootstrap.Collapse.getOrCreateInstance(navbarCollapse).hide();
+                }, { once: true });
+            } else if (navbarCollapse?.classList.contains('show')) {
+                if (window.bootstrap?.Collapse) {
+                    window.bootstrap.Collapse.getOrCreateInstance(navbarCollapse).hide();
+                } else {
+                    navbarCollapse.classList.remove('show');
+                    document.querySelector('.navbar-toggler')?.setAttribute('aria-expanded', 'false');
+                }
             }
 
             // Az aktuális mód adatainak betöltése

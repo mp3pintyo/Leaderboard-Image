@@ -330,6 +330,9 @@ body {
 #side-by-side-mode {
     overflow: hidden;
 }
+#side-by-side-mode #sbs-model3-container[hidden] {
+    display: none !important;
+}
 #side-by-side-mode #sbs-prompt {
     margin-bottom: 0 !important;
     font-size: 0.85rem;
@@ -351,6 +354,33 @@ body {
     width: auto;
     height: auto;
     object-fit: contain;
+}
+
+@media (max-width: 767.98px) {
+    #side-by-side-mode {
+        overflow: visible;
+    }
+
+    #side-by-side-mode > .row.flex-grow-1 {
+        flex-grow: 0 !important;
+        overflow: visible !important;
+        align-items: stretch !important;
+    }
+
+    #side-by-side-mode > .row.flex-grow-1 > div {
+        height: auto !important;
+        margin-bottom: 1rem;
+    }
+
+    #side-by-side-mode .sbs-image-wrapper {
+        flex-grow: 0 !important;
+        overflow: visible;
+    }
+
+    #side-by-side-mode .arena-image {
+        min-height: 0;
+        max-height: none !important;
+    }
 }
 
 /* Opcionális: Betöltés animáció a képek helyén */

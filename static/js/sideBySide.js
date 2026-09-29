@@ -24,6 +24,11 @@ export function adjustImageHeight() {
         return;
     }
 
+    if (window.matchMedia('(max-width: 767.98px)').matches) {
+        sbsModeDiv.style.height = 'auto';
+        return;
+    }
+
     // Fit side-by-side exactly into visible viewport space under the fixed navbar.
     const topOffset = sbsModeDiv.getBoundingClientRect().top;
     const availableHeight = Math.floor(window.innerHeight - topOffset - 4);
@@ -132,13 +137,13 @@ async function loadSideBySideData() {
     sbsModel2Name.textContent = getModelNameById(currentSbsModel2);
 
     if (currentSbsModel3) {
-        sbsModel3Container.style.display = 'block';
+        sbsModel3Container.hidden = false;
         sbsImage3.src = "";
         sbsImage3.alt = `${getModelNameById(currentSbsModel3)} képének betöltése...`;
         sbsModel3Name.textContent = getModelNameById(currentSbsModel3);
         adjustColumnSizes(3);
     } else {
-        sbsModel3Container.style.display = 'none';
+        sbsModel3Container.hidden = true;
         adjustColumnSizes(2);
     }
 
@@ -166,13 +171,13 @@ async function loadSideBySideData() {
         sbsModel2Name.textContent = data.model2.name;
 
         if (data.model3) {
-            sbsModel3Container.style.display = 'block';
+            sbsModel3Container.hidden = false;
             sbsImage3.src = data.model3.image_url;
             sbsImage3.alt = `${data.model3.name} képe`;
             sbsModel3Name.textContent = data.model3.name;
             adjustColumnSizes(3);
         } else {
-            sbsModel3Container.style.display = 'none';
+            sbsModel3Container.hidden = true;
             adjustColumnSizes(2);
         }
 
@@ -269,13 +274,13 @@ async function loadNextPromptData() {
     sbsModel2Name.textContent = getModelNameById(currentSbsModel2);
 
     if (currentSbsModel3 && img3) {
-        sbsModel3Container.style.display = 'block';
+        sbsModel3Container.hidden = false;
         sbsImage3.src = img3.image_url || '';
         sbsImage3.alt = `${getModelNameById(currentSbsModel3)} képe`;
         sbsModel3Name.textContent = getModelNameById(currentSbsModel3);
         adjustColumnSizes(3);
     } else {
-        sbsModel3Container.style.display = 'none';
+        sbsModel3Container.hidden = true;
         sbsImage3.src = '';
         adjustColumnSizes(2);
     }
@@ -317,7 +322,7 @@ export function initSideBySideMode() {
                 currentSbsModel3 = newModelId;
                 imageElement = sbsImage3;
                 modelNameElement = sbsModel3Name;
-                sbsModel3Container.style.display = newModelId ? 'block' : 'none';
+                sbsModel3Container.hidden = !newModelId;
                 adjustColumnSizes(newModelId ? 3 : 2);
                 break;
         }
@@ -348,7 +353,7 @@ export function initSideBySideMode() {
     currentSbsModel2 = sbsModel2Select.value;
     currentSbsModel3 = sbsModel3Select.value;
     if (currentSbsModel3) {
-        sbsModel3Container.style.display = 'block';
+        sbsModel3Container.hidden = false;
         adjustColumnSizes(3);
     } else {
         adjustColumnSizes(2);
