@@ -4,80 +4,151 @@
 
 ## 🚀 Áttekintés
 
-A Képgenerátor Aréna egy web-alapú alkalmazás, amely lehetővé teszi különböző AI képgenerátorok által létrehozott képek összehasonlítását és értékelését. A rendszer négy fő módot kínál:
+A Képgenerátor Aréna egy webalkalmazás, amelyben AI képgenerátorok ugyanarra a promptra készült képeit lehet vakon összehasonlítani és rangsorolni. Öt nézete van:
 
-- **Arena Battle:** Két kép közvetlen összehasonlítása, ahol a felhasználók a jobbnak ítélt képre szavazhatnak
-- **Side-by-Side:** Két kiválasztott modell képeinek összehasonlítása egymás mellett
-- **Leaderboard:** A modellek ranglistája az ELO pontszámok és egyéb statisztikák alapján
-- **ELO Fejlődés:** Grafikon, amely az egyes modellek ELO pontszámának időbeli változását mutatja
+- **Arena Battle:** két névtelen kép ugyanarra a promptra; a látogató szavaz (*A a jobb*, *B a jobb*, *Döntetlen*, *Mindkettő rossz* vagy *Kihagyás*), a modellek neve csak utána derül ki.
+- **Side-by-Side:** 2–3 kiválasztott modell képei egymás mellett, promptonként lapozva.
+- **Leaderboard:** Bradley-Terry rangsor 95%-os konfidenciaintervallummal, minőség–ár térkép és párharc-mátrix.
+- **ELO fejlődés:** az online ELO időbeli alakulása a top modelleknél.
+- **Összehasonlítás:** két modell adatlapja, pontszáma, egymás elleni eredménye és promptonkénti képei.
+
+Minden nézet saját, megosztható linket kap (lásd [Útvonalak](#-útvonalak-megosztható-linkek)).
 
 ## ✨ Funkciók
 
-- 🏆 **ELO Rating:** Fejlett pontrendszer, amely figyelembe veszi az ellenfelek erősségét
-- 🖼️ **Több formátum támogatása:** JPG, JPEG, PNG és WEBP
-- ⚙️ **Konfigurálhatóság:** Modellek, fájlformátumok és alapbeállítások külön konfigurációs fájlban
-- 👁️‍🗨️ **Vak szavazás:** Arena Battle módban a modellek nevei csak a szavazás után jelennek meg
-- 📊 **Részletes statisztikák:** ELO pontszámok, győzelmek, mérkőzések száma és győzelmi arányok
-- 🔍 **Modell típus szűrés:** Leaderboard nézeten szűrhetők a modellek open source/zárt forrás szerint
+- 🏆 **Bradley-Terry rangsor:** az összes szavazatra illesztett maximum likelihood becslés (mint az LMArena-n), bootstrap konfidenciaintervallummal, helyezéssávval és „Előzetes” jelöléssel a kevés adatú modelleknél.
+- 🔒 **Manipuláció elleni védelem:** szerveroldali, egyszer felhasználható battle-ök; a modellek neve és a képfájl neve sem látszik szavazás előtt; minimális nézési idő, napi szavazatlimit és kéréskorlát.
+- 🎯 **Okos párosítás:** a ritkán látott modellpárok és az új modellek gyakrabban kerülnek elő; csak olyan pár és prompt jön, amelyhez mindkét modellnek van képe.
+- ⚖️ **Oldaltorzítás mérése:** minden szavazatnál rögzül, melyik modell volt balra; a leaderboard módszertani paneljén látszik a bal oldal nyerési aránya.
+- 🧮 **Párharc-mátrix:** tényleges és várt győzelmi arány, meccsszám a top modellek között.
+- 👤 **Saját toplista:** 30 saját szavazat után a saját ízlésed szerinti rangsor.
+- 🔍 **Képnagyító:** teljes képernyő, görgős/csípéses nagyítás, húzás, lapozás.
+- 🌗 **Sötét mód**, billentyűparancsok, akadálymentes vezérlők, mobilbarát elrendezés.
+- 🖼️ **Több formátum:** JPG, JPEG, PNG és WEBP – a képek eredeti méretben és formátumban töltődnek.
 
 ## 🛠️ Telepítés
 
 ### Követelmények
 
-- Python 3.6+
-- pip (Python csomagkezelő)
-- Git (opcionális)
+- Python 3.10+
+- pip
+- (opcionális) Node.js a Playwright e2e tesztekhez
 
-### Telepítési lépések
+### Lépések
 
 ```bash
-# 1. Klónozd vagy töltsd le a repository-t
-git clone https://github.com/yourusername/image-leaderboard.git
-cd image-leaderboard
-
-# 2. Függőségek telepítése
+git clone https://github.com/mp3pintyo/Leaderboard-Image.git
+cd Leaderboard-Image
 pip install -r requirements.txt
 
-# 3. Adatbázis inicializálása
-python database.py
-
-# 4. Alkalmazás indítása
-flask run --host=0.0.0.0
-
-# Az alkalmazás alapértelmezetten a következő címen érhető el:
-# http://localhost:5000
+# Fejlesztői indítás (debug mód, „Dev Login” bejelentkezéssel)
+python app.py
+# → http://localhost:5000
 ```
+
+Az adatbázis és a sémamigrációk induláskor automatikusan létrejönnek/lefutnak.
+
+### Környezeti változók
+
+| Változó | Leírás |
+| --- | --- |
+| `SECRET_KEY` | **Kötelező éles környezetben** (a session és a CSRF aláírásához). |
+| `DATABASE_PATH` | Az SQLite adatbázis helye (Renderen pl. `/var/data/votes.db` Persistent Diskkel). |
+| `DATA_MODE` | A képek nyilvános alap-URL-je (Cloudflare R2). Ha be van állítva, a képek innen töltődnek a `data/manifest.json` alapján. |
+| `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` | Google bejelentkezés. |
+| `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET` | GitHub bejelentkezés. |
+| `WEB_CONCURRENCY`, `PORT` | Gunicorn beállítások (`gunicorn.conf.py`). |
+
+Éles futtatás: `gunicorn app:app` (a `gunicorn.conf.py` automatikusan betöltődik).
 
 ## 📋 Használat
 
-### 1. Arena Battle
+### Arena Battle
 
-Az Arena Battle a rendszer fő módja, ahol két véletlenszerűen kiválasztott modell által generált kép jelenik meg egymás mellett. A felhasználók kiválaszthatják, melyik kép tetszik jobban, vagy döntetlen/kihagyás opciót választhatnak.
+Két véletlenszerűen párosított modell képe jelenik meg ugyanarra a promptra. Szavazni bejelentkezve lehet.
 
-A modellek nevei csak a szavazás után jelennek meg, így biztosítva az elfogulatlan értékelést.
+| Művelet | Gomb | Billentyű |
+| --- | --- | --- |
+| A bal oldali kép a jobb | *A a jobb* | `1` vagy `←` |
+| A jobb oldali kép a jobb | *B a jobb* | `2` vagy `→` |
+| Egyformán jók | *Döntetlen* | `0` vagy `T` |
+| Egyik sem jó | *Mindkettő rossz* | `X` |
+| Új pár szavazat nélkül | *Kihagyás* | `S` |
 
-### 2. Side-by-Side
+Szavazás után megjelenik a két modell neve és az ELO-változás, közben már töltődik a következő pár. Bármelyik képre kattintva nagyítható.
 
-A Side-by-Side módban a felhasználók maguk választhatják ki, melyik két modellt szeretnék összehasonlítani. Ez a mód elsősorban vizuális összehasonlításra szolgál, nincs szavazás.
+### Side-by-Side
 
-### 3. Leaderboard
+Válassz 2–3 modellt; a *Betöltés / Új prompt* véletlen közös promptot tölt be, a *Következő prompt* sorban lapoz. Csak olyan prompt jelenik meg, amelyhez minden kiválasztott modellnek van képe.
 
-A Leaderboard a modellek ranglistáját mutatja ELO pontszám szerint csökkenő sorrendben. A táblázat tartalmazza az ELO értékeket, a győzelmek számát, az összes mérkőzés számát és a győzelmi arányt.
+### Leaderboard
 
 ![Leaderboard](docs/images/leaderboard.png)
 
-### 4. ELO Fejlődés
+- **Rangsor:** pontszám, 95% CI, helyezéssáv, szavazatszám, győzelmi arány. Kereshető, szolgáltató szerint szűrhető, bármely oszlop szerint rendezhető; opcionális oszlopok: Gy/D/V, online ELO, megjelenés, felbontás, árazás, videó.
+- **Minőség vs. ár:** pontszám és fix API-ár 1 000 képre, logaritmikus ártengely, Pareto élvonal.
+- **Párharcok:** győzelmi arány / meccsszám / várt arány mátrix a top 8–20 modellre.
+- **Saját toplista:** 30 saját szavazat után nyílik meg.
 
-Az ELO Fejlődés nézet egy interaktív vonaldiagramot kínál, amely megjeleníti a modellek ELO pontszámának változását az idő múlásával. Ez lehetővé teszi a felhasználók számára, hogy nyomon kövessék, hogyan teljesítenek a modellek hosszabb időtávon.
-
-Főbb jellemzők:
-- Minden modellhez külön színezett vonal
-- Interaktív információs dobozok a pontos értékek megjelenítésére
-- Időalapú x-tengely a fejlődés kronológiai nyomon követéséhez
-- Frissítési lehetőség a legfrissebb adatok betöltéséhez
-- Új interaktív funkció: ha az egeret lenyomva tartjuk a legendában egy modell nevére vagy jelölőjére, a többi modell grafikonja és jelölői 10%-os átlátszóságúvá halványulnak, felengedéskor visszaáll az eredeti állapot
+### ELO fejlődés
 
 ![ELO Fejlődés](docs/images/elo-history.png)
+
+Az online ELO alakulása időtengelyen (1 hét – teljes időszak), a top 1–30 modellre. A jelmagyarázat fölé húzott egérrel egy modell kiemelhető.
+
+### Összehasonlítás
+
+Két modell adatlapja, Arena pontszáma CI-vel, győzelmi aránya, egymás elleni eredménye (döntetlenekkel), promptonkénti győzelmi aránya és – egy promptra kattintva – a két kép egymás mellett.
+
+## 📐 Rangsorolási módszertan
+
+- **Bradley-Terry modell** (`ranking.py`): minden modellnek van egy erőssége; annak esélye, hogy *i* legyőzi *j*-t: `p_i / (p_i + p_j)`. Az erősségeket az összes szavazatra egyszerre illesztjük (Newton-módszer), így – az online ELO-val ellentétben – az eredmény nem függ a szavazatok sorrendjétől. A pontszám ELO-skálán van: `1500 + 400 · log10(p)`.
+- **Döntetlen és „mindkettő rossz”:** fél győzelem mindkét félnek.
+- **Prior:** minden modell kap `BT_PRIOR_GAMES` virtuális döntetlent egy 1500-as ellenféllel – ez a kevés adatú modelleket az átlag felé húzza.
+- **95% CI:** `BT_BOOTSTRAP_ROUNDS` (100) bootstrap újramintavételezés 2,5/97,5 percentilise.
+- **Helyezéssáv:** legjobb helyezés = 1 + a statisztikailag biztosan jobb modellek száma; legrosszabb = az átfedő vagy jobb intervallumú modellek száma.
+- **Előzetes:** `PRELIMINARY_MATCH_THRESHOLD` (30) meccs alatt.
+- Az **online ELO** (K = 32) továbbra is frissül minden szavazatnál – ez adja az ELO-történet grafikont és a befagyasztási logikát.
+
+## ⚙️ Konfiguráció (`config.py`)
+
+| Beállítás | Alapérték | Jelentés |
+| --- | --- | --- |
+| `REVEAL_DELAY_MS` | 2000 | Ennyi ideig látszik az eredmény szavazás után. |
+| `MIN_VOTE_DELAY_MS` | 1200 | Minimális idő a battle kiadása és a szavazat között. |
+| `DAILY_VOTE_LIMIT` | 500 | Napi szavazatlimit felhasználónként (UTC nap). |
+| `BATTLE_RATE_LIMIT_PER_MINUTE` | 60 | Új battle-kérések percenként (felhasználó / session). |
+| `MAX_OPEN_BATTLES` | 3 | Egyszerre nyitott battle-ök sessionönként (előtöltéshez). |
+| `BATTLE_TTL_SECONDS` | 3600 | Ennyi ideig szavazható egy kiadott battle. |
+| `NEW_MODEL_BOOST_THRESHOLD` / `_WEIGHT` | 50 / 20 | Új modellek párjainak extra esélye. |
+| `FROZEN_BOTTOM_COUNT` | 0 | Az online ELO szerinti alsó N modell kimarad a Battle-ből. |
+| `BT_BOOTSTRAP_ROUNDS` | 100 | Bootstrap körök a CI-hez. |
+| `BT_PRIOR_GAMES` | 1.0 | Virtuális döntetlenek száma a priorban. |
+| `PRELIMINARY_MATCH_THRESHOLD` | 30 | „Előzetes” jelölés határa. |
+| `PERSONAL_LEADERBOARD_MIN_VOTES` | 30 | A saját toplista megnyitásához szükséges szavazatok. |
+
+## 🔗 Útvonalak (megosztható linkek)
+
+| Útvonal | Nézet |
+| --- | --- |
+| `#/battle` | Arena Battle |
+| `#/side-by-side?m1=model-001&m2=model-002&m3=…&p=003` | Side-by-Side adott modellekkel és prompttal |
+| `#/leaderboard`, `#/leaderboard/quality-price`, `#/leaderboard/matrix` | Leaderboard fülek |
+| `#/elo-history` | ELO fejlődés |
+| `#/compare?a=model-001&b=model-002` | Két modell összehasonlítása |
+
+## 🖼️ Képek és Cloudflare R2
+
+- Helyi futtatáskor a képek a `data/<prompt_id>/` mappából töltődnek (`/images/<prompt_id>/<fájl>`).
+- Éles környezetben (`DATA_MODE`) a képek a Cloudflare R2-ről jönnek, **tartalom-alapú kulccsal**: `img/<git blob sha>`. Így az URL szavazás előtt nem árulja el a modell nevét, és a képek egy évig cache-elhetők (`immutable`). A képek eredeti méretben és formátumban töltődnek le.
+- A `main` ágra történő push után a GitHub Actions (`.github/workflows/upload-to-r2.yml`):
+  1. a Git fából (a képek letöltése nélkül) legenerálja a `data/manifest.json`-t a kulcsokkal,
+  2. a változatlan képeket az R2-n szerveroldalon átmásolja az új kulcsra, a változottakat feltölti (`sync_changed_data.py`, párhuzamosan),
+  3. csak ezután commitolja a manifestet – így a deploy-olt app sosem hivatkozik még fel nem töltött képre.
+- A régi `<prompt>/<fájl>` kulcsú képek az átállás után is megmaradnak; ha már nincs rájuk szükség, a `python sync_changed_data.py … --prune-legacy-images` törli őket.
+- A manifest helyben is generálható: `python generate_manifest.py` (vagy `--git-tree <ref>`).
+
+**Megjegyzés:** a kulcs a kép tartalmából képzett hash. Aki a nyilvános repóból kiszámolja a képek hash-ét, összepárosíthatja őket – a cél az, hogy szavazás közben a modell ne legyen egyszerűen leolvasható, nem a tökéletes titkosság.
 
 ## ⚙️ Parancssori funkciók
 
@@ -87,35 +158,39 @@ Főbb jellemzők:
 python app.py reset-votes
 ```
 
-Ez a parancs törli az összes eddigi szavazatot és visszaállítja az ELO pontszámokat az alapértelmezett értékre. Ezt akkor érdemes használni, ha:
-- Teljesen új versenyt akarsz indítani
-- Tesztadatok után szeretnéd az éles adatgyűjtést elkezdeni
-- Problémás szavazatok kerültek a rendszerbe
+Törli az összes szavazatot, battle-t és ELO-előzményt, és minden modellt 1500-ra állít vissza.
 
-**Fontos:** A parancs az `elo_history` tábla tartalmát is törli, így a grafikon is tiszta lappal indul újra. Az ELO fejlődés grafikonon minden modell újra az alapértelmezett ELO pontszámról (1500) fog indulni.
+## 🧪 Tesztek
 
+```bash
+# Backend (pytest): szavazási folyamat, visszajátszás elleni védelem, limitek, rangsor, R2 szinkron terv
+python -m pytest tests
+
+# E2E (Playwright, asztali és mobil Chromium; ideiglenes adatbázissal)
+npm install
+npx playwright install chromium
+npm test
+```
 
 ## 📁 Rugalmas fájlkezelés
 
-A rendszer képes rugalmasan kezelni a képfájlok kiterjesztéseit. Ez azt jelenti, hogy:
-
 - ✅ Ugyanazon modell képei különböző kiterjesztésekkel szerepelhetnek különböző prompt mappákban
 - ✅ Támogatott kiterjesztések: `.jpg`, `.jpeg`, `.png`, `.webp`
-- ⚠️ A fájlnév alaprésze (kiterjesztés nélkül) mindig meg kell hogy egyezzen a konfigurációban beállítottal
+- ⚠️ A fájlnév alaprésze (kiterjesztés nélkül) meg kell egyezzen a `config.py`-ban megadott `filename` értékkel
+- ℹ️ Nem kell minden modellnek minden prompthoz képpel rendelkeznie: a párosítás és a Side-by-Side csak közös promptokat használ
 
-Példa konfiguráció:
-```python
-# Modell nevek és a hozzájuk tartozó adatok
-# Minden modell egy szótár, ami tartalmazza:
-# - 'filename': A fájlnév alaprésze kiterjesztés nélkül
-# - 'open_source': Boolean érték, True ha letölthető/open source modell, False ha zárt/nem letölthető
-MODELS = {
-    'model-001': {'name': 'Grok', 'filename': 'grok', 'open_source': False},
-    'model-002': {'name': 'Google Gemini Flash 2.0', 'filename': 'gemini-flash', 'open_source': False},
-    'model-003': {'name': 'Google Imagen 3', 'filename': 'imagen3', 'open_source': False},
-    # ... további modellek a config.py alapján ...
-}
-```
+Új modell felvétele: add hozzá a `MODELS` szótárhoz a `config.py`-ban (egyedi `model-XXX` azonosítóval), és tedd a képeit a `data/<prompt_id>/` mappákba a `filename` alapnévvel.
+
+### Modellenkénti YouTube-link
+
+A `config.py` minden modelljénél a `video_url` mező szerkeszthető. Az alapértelmezett érték
+`https://www.youtube.com/@pinterzsoltai` (`DEFAULT_VIDEO_URL`). Ha elkészült egy modell videója,
+annak `video_url` értékét írd át a videó URL-jére; a hiányzó vagy üres érték az alapértelmezett csatornára mutat.
+
+A Leaderboard **Opcionális oszlopok → Videó** kapcsolója megjeleníti a linkeket;
+a választást a böngésző megjegyzi. Az Összehasonlítás modellkártyáin mindig látszik
+a link. A szürke **YouTube-csatorna** az alapértelmezett cím, a piros **Egyedi videó**
+az átírt cím.
 
 ## 🌟 Jelenleg támogatott modellek
 
@@ -209,57 +284,49 @@ MODELS = {
 - OpenAI: GPT Image 2.5 Sunburst 1k Low
 - Alibaba: Qwen-Image-2.1
 
-## 🗄️ Adatbázis struktúra
+## 🗄️ Adatbázis
 
-A rendszer három fő táblát használ:
+SQLite, WAL módban. A séma verzióját a `PRAGMA user_version` jelzi; a migrációk induláskor automatikusan lefutnak (`database.py`). Minden időbélyeg ISO 8601 UTC (`2026-09-30T12:34:56.789Z`).
 
-1.  **votes** - A felhasználói szavazatok tárolására
-    ```sql
-    CREATE TABLE votes (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        prompt_id TEXT NOT NULL,
-        winner TEXT NOT NULL, -- Modell azonosító (pl. 'model-001')
-        loser TEXT NOT NULL,  -- Modell azonosító (pl. 'model-002')
-        voted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );
-    ```
-
-2.  **model_elo** - A modellek aktuális ELO pontszámainak tárolására
-    ```sql
-    CREATE TABLE model_elo (
-        model TEXT PRIMARY KEY, -- Modell azonosító (pl. 'model-001')
-        elo REAL NOT NULL,
-        last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );
-    ```
-
-3.  **elo_history** - Az ELO pontszámok változásának történeti nyomon követésére
-    ```sql
-    CREATE TABLE elo_history (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        model TEXT NOT NULL, -- Modell azonosító (pl. 'model-001')
-        elo REAL NOT NULL,
-        timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );
-    ```
+| Tábla | Tartalom |
+| --- | --- |
+| `votes` | Szavazatok: `prompt_id`, `winner`, `loser`, `outcome` (`win` / `tie` / `both_bad`; döntetlennél winner = bal, loser = jobb), `left_model`, `battle_id`, `user_id`, `voted_at` |
+| `battles` | Kiadott battle-ök: `id` (véletlen token), `session_key`, `user_id`, `prompt_id`, `model_a` (bal), `model_b` (jobb), `issued_at`, `resolved_at`, `outcome` |
+| `model_elo` | Online ELO modellenként, `frozen` jelzővel |
+| `elo_history` | Online ELO minden változása (az ELO-történet grafikonhoz) |
+| `users` | OAuth felhasználók (`provider`, `provider_id`, `email`, `name`) |
 
 ## 🔌 API végpontok
 
-A rendszer a következő API végpontokat biztosítja:
+| Végpont | Metódus | Leírás |
+| --- | --- | --- |
+| `/api/battle_data` | GET | Új vak battle: `battle_id`, prompt, két kép URL, `vote_delay_ms` (modellnév nélkül). |
+| `/api/vote` | POST | Szavazat: `{battle_id, choice: a / b / tie / both_bad}` – bejelentkezés + CSRF token szükséges; a válasz felfedi a modelleket és az ELO-változást. |
+| `/api/battle/skip` | POST | Battle kihagyása (CSRF): lezárja a párt és felfedi a modelleket. |
+| `/api/side_by_side_data` | GET | `model1`, `model2`, [`model3`] + `prompt_id` / `after` / `previous_prompt_id`. |
+| `/api/get_image` | GET | Egy modell képének URL-je egy prompthoz. |
+| `/api/leaderboard` | GET | Rangsor (`model_type`: all / open-source / closed-source): `score`, `ci_lower`, `ci_upper`, `rank`, `rank_worst`, `preliminary`, `matches`, `win_rate`, `elo`, … |
+| `/api/leaderboard/mine` | GET | Saját toplista (bejelentkezve): `unlocked`, `vote_count`, `min_votes`, `leaderboard`. |
+| `/api/leaderboard/stats` | GET | Összesítők, oldaltorzítás, módszertani paraméterek. |
+| `/api/leaderboard/matrix` | GET | Párharc-mátrix a top N modellre (`top`, `model_type`). |
+| `/api/elo_history` | GET | Ritkított online ELO-történet (`range`: 1w / 2w / 1m / 3m / all, `top`). |
+| `/api/compare_stats` | GET | Két modell statisztikái, egymás elleni és promptonkénti eredmények. |
+| `/api/model_info` | GET | Modell-adatlap(ok). |
+| `/api/prompt_ids`, `/api/prompt_text` | GET | Promptok listája és szövege. |
+| `/api/auth/status` | GET | Bejelentkezési állapot. |
 
-| Végpont                                 | Metódus | Leírás                                                                                                                               |
-| --------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| `/`                                     | GET     | A főoldal megjelenítése.                                                                                                             |
-| `/images/<prompt_id>/<filename>`        | GET     | Képfájlok kiszolgálása a `data` mappából.                                                                                            |
-| `/api/battle_data`                      | GET     | Adatokat ad vissza az Arena Battle módhoz (prompt, két véletlenszerű modell képei és nevei).                                          |
-| `/api/side_by_side_data`                | GET     | Adatokat ad vissza a Side-by-Side módhoz (prompt, két kiválasztott modell képei és nevei).                                            |
-| `/api/get_image`                        | GET     | Visszaadja egy adott modell képének URL-jét egy adott prompt ID-hoz (Side-by-Side módhoz használt).                                   |
-| `/api/vote`                             | POST    | Rögzíti a felhasználó szavazatát (győztes, vesztes) és frissíti az ELO értékeket.                                                      |
-| `/api/leaderboard`                      | GET     | Visszaadja az aktuális Leaderboard adatokat (modellek neve, ELO, győzelmek, meccsek, győzelmi arány, open source státusz).             |
-| `/api/elo_history`                      | GET     | (Elavult lehet) Visszaadja az ELO értékek időbeli változásait a modellek grafikonos megjelenítéséhez.                                  |
-| `/api/elo_history_with_current_elo`     | GET     | Visszaadja az ELO értékek időbeli változásait (`history`) és az aktuális ELO pontszámokat (`current_elos`) a grafikonhoz és szűréshez. |
-| `/api/prompt_ids`                       | GET     | Visszaadja az összes elérhető prompt ID-t.                                                                                           |
-| `/api/prompt_text`                      | GET     | Visszaadja a prompt szövegét egy adott prompt_id-hoz.                                                                                |
+Hibák esetén a válasz `{"error": "...", "code": "..."}` formátumú (pl. `too_fast`, `daily_limit`, `battle_closed`, `login_required`).
+
+## 🔐 Biztonság
+
+- Szerveroldali, egyszer felhasználható battle-ök; a régi session cookie visszajátszása nem ad új szavazatot.
+- CSRF token minden állapotváltoztató kéréshez, `HttpOnly` / `SameSite=Lax` (élesben `Secure`) session cookie.
+- `Content-Security-Policy`, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy` fejlécek.
+- CDN könyvtárak fix verzióval és SRI integritás-hash-sel.
+
+## 📝 Változásnapló
+
+Lásd: [CHANGELOG.md](CHANGELOG.md) (magyar / angol).
 
 ## 📝 Licenc
 
@@ -268,14 +335,3 @@ A rendszer a következő API végpontokat biztosítja:
 ## 📚 További dokumentáció
 
 A részletes dokumentáció a `docs/index.html` fájlban található.
-### Modellenkénti YouTube-link
-
-A `config.py` minden modelljénél a `video_url` mező szerkeszthető. Jelenleg mindegyik
-értéke `https://www.youtube.com/@pinterzsoltai`, amelyet a `DEFAULT_VIDEO_URL` is megad.
-Ha elkészült egy modell videója, annak `video_url` értékét írd át a videó URL-jére.
-A hiányzó vagy üres érték automatikusan az alapértelmezett csatornára mutat.
-
-A Leaderboard **Opcionális oszlopok → Videó** kapcsolója megjeleníti a linkeket;
-a választást a böngésző megjegyzi. Az Összehasonlítás modellkártyáin mindig látszik
-a link. A szürke **YouTube-csatorna** az alapértelmezett cím, a piros **Egyedi videó**
-az átírt cím. Mindkettő YouTube-ikonnal jelenik meg, és új lapon nyílik meg.

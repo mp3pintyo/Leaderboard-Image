@@ -272,3 +272,34 @@ def test_stats_matrix_and_history_endpoints():
     history = client.get('/api/elo_history?range=all&top=3').json
     assert len(history['series']) == 3
     assert all(p['x'].endswith('Z') for s in history['series'] for p in s['points'])
+
+
+# --- Tartalom-alapú képkulcsok (DATA_MODE) ---
+
+def test_data_mode_uses_content_addressed_keys(monkeypatch):
+    monkeypatch.setattr(arena, 'DATA_MODE', 'https://cdn.example.com')
+    monkeypatch.setattr(arena, '_manifest_cache', {
+        '001': {
+            'grok': {'file': 'grok.jpg', 'key': 'img/abc123'},
+            'imagen3': 'imagen3.png',  # régi formátum: csak fájlnév
+        },
+    })
+    monkeypatch.setattr(arena, '_prompt_model_files_cache', {})
+    assert arena.get_model_image_url('001', 'model-001') == 'https://cdn.example.com/img/abc123'
+    assert arena.get_model_image_url('001', 'model-003') == 'https://cdn.example.com/001/imagen3.png'
+    assert arena.get_model_image_url('001', 'model-004') is None
+
+
+def test_r2_sync_plan_copies_unchanged_and_uploads_changed():
+    import sync_changed_data as sync
+    images = {'img/aaa': 'data/001/grok.jpg', 'img/bbb': 'data/001/new.png', 'img/ccc': 'data/002/x.png'}
+    existing = {'001/grok.jpg', 'img/ccc', '001/old.png', '001/prompt.txt'}
+    changes = [('A', 'data/001/new.png'), ('D', 'data/001/old.png'), ('M', 'data/001/prompt.txt')]
+    actions = sync.plan(changes, existing, images, ['data/001/prompt.txt', 'data/002/prompt.txt'])
+    assert ('copy', '001/grok.jpg', 'img/aaa', 'data/001/grok.jpg') in actions
+    assert ('upload', 'data/001/new.png', 'img/bbb', sync.IMMUTABLE_CACHE_CONTROL) in actions
+    assert ('delete', '001/old.png') in actions
+    assert ('upload', 'data/001/prompt.txt', '001/prompt.txt', sync.CACHE_CONTROL) in actions
+    assert ('upload', 'data/002/prompt.txt', '002/prompt.txt', sync.CACHE_CONTROL) in actions
+    assert not any(a[0] == 'upload' and a[1] == 'data/001/grok.jpg' for a in actions)
+    assert not any(len(a) > 2 and a[2] == 'img/ccc' for a in actions)

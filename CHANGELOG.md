@@ -2,6 +2,38 @@
 
 Minden jelentős változás ebben a fájlban szerepel. / All notable changes are documented in this file.
 
+## [1.4.0] – 2026-09-30
+
+### 🇭🇺 Magyar
+
+**Tartalom-alapú képkulcsok a Cloudflare R2-n**
+- A képek nyilvános URL-je már nem tartalmazza a fájlnevet (pl. `…/001/nanobanana-2-4k.png`), hanem a kép tartalmából képzett kulcsot: `…/img/<git blob sha>`. Így szavazás előtt a böngésző hálózati lapján sem olvasható le egyszerűen a modell neve.
+- A képek eredeti méretben és formátumban töltődnek, a helyes `Content-Type`-pal.
+- Mivel a kulcs a tartalomtól függ, egy kép cseréjekor új URL keletkezik – ezért a képek egy évig cache-elhetők (`Cache-Control: immutable`), az ismételt megjelenéseknél a böngésző gyorsítótárából jönnek.
+- `generate_manifest.py`: a manifest bejegyzései `{"file": ..., "key": "img/<sha>"}` formájúak; a SHA-t a Git fából vagy az indexből veszi (a képeket nem kell letölteni vagy újra hash-elni). A régi (csak fájlnév) formátumot az app továbbra is kezeli.
+- `sync_changed_data.py`: a hiányzó kulcsokat a változatlan képeknél **szerveroldali R2 másolással** hozza létre (nincs le- és feltöltés), a változott képeket Gitből tölti fel; párhuzamos végrehajtás, `--dry-run` mód, opcionális `--prune-legacy-images` a régi kulcsok törlésére.
+- A GitHub Actions munkafolyamat sorrendje megváltozott: a manifest csak a sikeres R2 szinkron **után** kerül commitolásra, így a deploy-olt app sosem hivatkozik még fel nem töltött képre. Hiba esetén az app a régi URL-eket használja tovább.
+- Megjegyzés: a kulcs a tartalom hash-e; aki a nyilvános repó képeinek hash-ét kiszámolja, összepárosíthatja őket. A cél a modell egyszerű leolvashatóságának megszüntetése szavazás közben.
+
+**Dokumentáció**
+- Teljesen frissített README: módszertan, konfiguráció, útvonalak, R2 folyamat, tesztek, API, adatbázis, biztonság.
+- Frissített fejlesztői útmutató (`.github/copilot-instructions.md`).
+
+### 🇬🇧 English
+
+**Content-addressed image keys on Cloudflare R2**
+- Public image URLs no longer contain the file name (e.g. `…/001/nanobanana-2-4k.png`) but a key derived from the image content: `…/img/<git blob sha>`. The model name can no longer be read from the browser's network tab before voting.
+- Images are still delivered in their original size and format, with the correct `Content-Type`.
+- Because the key depends on the content, replacing an image creates a new URL – so images can be cached for a year (`Cache-Control: immutable`) and repeat appearances come from the browser cache.
+- `generate_manifest.py`: manifest entries are `{"file": ..., "key": "img/<sha>"}`; the SHA comes from the Git tree or index (no image download or re-hashing needed). The legacy (file name only) format is still supported by the app.
+- `sync_changed_data.py`: missing keys for unchanged images are created with a **server-side R2 copy** (no download/upload), changed images are uploaded from Git; parallel execution, `--dry-run` mode, optional `--prune-legacy-images` to delete legacy keys.
+- The GitHub Actions workflow order changed: the manifest is committed only **after** a successful R2 sync, so the deployed app never references an image that is not uploaded yet. On failure the app keeps using the legacy URLs.
+- Note: the key is a content hash; someone hashing the images of the public repository could still match them. The goal is that the model is not trivially readable while voting.
+
+**Documentation**
+- Fully updated README: methodology, configuration, routes, R2 pipeline, tests, API, database, security.
+- Updated developer guide (`.github/copilot-instructions.md`).
+
 ## [1.3.0] – 2026-09-30
 
 ### 🇭🇺 Magyar

@@ -258,8 +258,17 @@ def get_image_url(prompt_id, filename):
 
 
 def get_model_image_url(prompt_id, model_id):
+    """A modell képének URL-je. DATA_MODE-ban, ha a manifest tartalmaz tartalom-alapú kulcsot
+    (img/<blob sha>), azt használjuk: így az URL nem árulja el a modell nevét szavazás előtt."""
     filename = get_prompt_model_files(prompt_id).get(model_id)
-    return get_image_url(prompt_id, filename) if filename else None
+    if not filename:
+        return None
+    if DATA_MODE:
+        entry = load_manifest().get(prompt_id, {}).get(MODELS[model_id]['filename'])
+        key = entry.get('key') if isinstance(entry, dict) else None
+        if key:
+            return f"{DATA_MODE}/{key}"
+    return get_image_url(prompt_id, filename)
 
 
 def read_prompt_text(prompt_id):
