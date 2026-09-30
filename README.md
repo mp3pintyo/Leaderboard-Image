@@ -18,7 +18,7 @@ Minden nézet saját, megosztható linket kap (lásd [Útvonalak](#-útvonalak-m
 
 - 🏆 **Bradley-Terry rangsor:** az összes szavazatra illesztett maximum likelihood becslés (mint az LMArena-n), bootstrap konfidenciaintervallummal, helyezéssávval és „Előzetes” jelöléssel a kevés adatú modelleknél.
 - 🔒 **Manipuláció elleni védelem:** szerveroldali, egyszer felhasználható battle-ök; a modellek neve és a képfájl neve sem látszik szavazás előtt; minimális nézési idő, napi szavazatlimit és kéréskorlát.
-- 🎯 **Okos párosítás:** a ritkán látott modellpárok és az új modellek gyakrabban kerülnek elő; csak olyan pár és prompt jön, amelyhez mindkét modellnek van képe.
+- 🎯 **Célzott párosítás:** a legtöbb információt adó párok (közeli pontszám, bizonytalan helyezés), a ritkán látott párok és az új modellek gyakrabban kerülnek elő; csak olyan pár és prompt jön, amelyhez mindkét modellnek van képe.
 - ⚖️ **Oldaltorzítás mérése:** minden szavazatnál rögzül, melyik modell volt balra; a leaderboard módszertani paneljén látszik a bal oldal nyerési aránya.
 - 🧮 **Párharc-mátrix:** tényleges és várt győzelmi arány, meccsszám a top modellek között.
 - 👤 **Saját toplista:** 30 saját szavazat után a saját ízlésed szerinti rangsor.
@@ -106,7 +106,8 @@ Két modell adatlapja, Arena pontszáma CI-vel, győzelmi aránya, egymás ellen
 - **Döntetlen és „mindkettő rossz”:** fél győzelem mindkét félnek.
 - **Prior:** minden modell kap `BT_PRIOR_GAMES` virtuális döntetlent egy 1500-as ellenféllel – ez a kevés adatú modelleket az átlag felé húzza.
 - **95% CI:** `BT_BOOTSTRAP_ROUNDS` (100) bootstrap újramintavételezés 2,5/97,5 percentilise.
-- **Helyezéssáv:** legjobb helyezés = 1 + a statisztikailag biztosan jobb modellek száma; legrosszabb = az átfedő vagy jobb intervallumú modellek száma.
+- **Helyezés (#):** sorszám a pontszám szerinti listában. A **helyezéssáv** (tooltipben): legjobb helyezés = 1 + a statisztikailag biztosan jobb modellek száma; legrosszabb = az átfedő vagy jobb intervallumú modellek száma.
+- **Célzott párosítás:** a pár súlya `(1 + TARGETED_PAIRING_STRENGTH · információ) / (1 + eddigi meccsek)`, ahol az információ a kimenet bizonytalanságából (közeli pontszám) és a két modell CI-szélességéből adódik.
 - **Előzetes:** `PRELIMINARY_MATCH_THRESHOLD` (30) meccs alatt.
 - Az **online ELO** (K = 32) továbbra is frissül minden szavazatnál – ez adja az ELO-történet grafikont és a befagyasztási logikát.
 
@@ -121,6 +122,7 @@ Két modell adatlapja, Arena pontszáma CI-vel, győzelmi aránya, egymás ellen
 | `MAX_OPEN_BATTLES` | 3 | Egyszerre nyitott battle-ök sessionönként (előtöltéshez). |
 | `BATTLE_TTL_SECONDS` | 3600 | Ennyi ideig szavazható egy kiadott battle. |
 | `NEW_MODEL_BOOST_THRESHOLD` / `_WEIGHT` | 50 / 20 | Új modellek párjainak extra esélye. |
+| `TARGETED_PAIRING_STRENGTH` | 3.0 | Célzott párosítás: a közeli pontszámú, bizonytalan modellek párjai gyakrabban jönnek (0 = ki). |
 | `FROZEN_BOTTOM_COUNT` | 0 | Az online ELO szerinti alsó N modell kimarad a Battle-ből. |
 | `BT_BOOTSTRAP_ROUNDS` | 100 | Bootstrap körök a CI-hez. |
 | `BT_PRIOR_GAMES` | 1.0 | Virtuális döntetlenek száma a priorban. |
@@ -305,7 +307,7 @@ SQLite, WAL módban. A séma verzióját a `PRAGMA user_version` jelzi; a migrá
 | `/api/battle/skip` | POST | Battle kihagyása (CSRF): lezárja a párt és felfedi a modelleket. |
 | `/api/side_by_side_data` | GET | `model1`, `model2`, [`model3`] + `prompt_id` / `after` / `previous_prompt_id`. |
 | `/api/get_image` | GET | Egy modell képének URL-je egy prompthoz. |
-| `/api/leaderboard` | GET | Rangsor (`model_type`: all / open-source / closed-source): `score`, `ci_lower`, `ci_upper`, `rank`, `rank_worst`, `preliminary`, `matches`, `win_rate`, `elo`, … |
+| `/api/leaderboard` | GET | Rangsor (`model_type`: all / open-source / closed-source): `score`, `ci_lower`, `ci_upper`, `position`, `rank`, `rank_worst`, `preliminary`, `matches`, `win_rate`, `elo`, … |
 | `/api/leaderboard/mine` | GET | Saját toplista (bejelentkezve): `unlocked`, `vote_count`, `min_votes`, `leaderboard`. |
 | `/api/leaderboard/stats` | GET | Összesítők, oldaltorzítás, módszertani paraméterek. |
 | `/api/leaderboard/matrix` | GET | Párharc-mátrix a top N modellre (`top`, `model_type`). |

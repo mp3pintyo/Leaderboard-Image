@@ -39,7 +39,7 @@ const BASE_COLUMN_COUNT = 7;
 
 // Rendezés: alapértelmezett irány kulcsonként
 const SORT_DEFAULT_DIRECTION = {
-    rank: 'asc', display: 'asc', ci_width: 'asc', price_per_1000: 'asc',
+    position: 'asc', display: 'asc', ci_width: 'asc', price_per_1000: 'asc',
     score: 'desc', matches: 'desc', win_rate: 'desc', open_source: 'desc', wins: 'desc', elo: 'desc', release_date: 'desc',
 };
 
@@ -155,7 +155,7 @@ function getVisibleRows() {
         .sort((a, b) => {
             const av = sortValue(a, key);
             const bv = sortValue(b, key);
-            if (av === bv) return b.score - a.score;
+            if (av === bv) return b.score - a.score || (a.position ?? 1e9) - (b.position ?? 1e9);
             if (av === null) return 1; // Hiányzó érték mindig a végére
             if (bv === null) return -1;
             return (av < bv ? -1 : 1) * factor;
@@ -182,6 +182,11 @@ function createCell(content, className = '') {
     return td;
 }
 
+function rankSpreadText(row) {
+    if (row.rank === null || row.rank_worst === null || row.rank_worst === undefined || row.rank === row.rank_worst) return '';
+    return `A bizonytalanság miatt a valós helyezés ${row.rank}. és ${row.rank_worst}. között lehet (95% CI).`;
+}
+
 function createCiCell(row, range) {
     const td = document.createElement('td');
     td.className = 'ci-cell';
@@ -194,7 +199,7 @@ function createCiCell(row, range) {
     const text = document.createElement('span');
     text.className = 'ci-text';
     text.textContent = `+${plus} / −${minus}`;
-    td.title = `95% CI: ${formatNumber(row.ci_lower)} – ${formatNumber(row.ci_upper)}`;
+    td.title = [`95% CI: ${formatNumber(row.ci_lower)} – ${formatNumber(row.ci_upper)}`, rankSpreadText(row)].filter(Boolean).join(' · ');
 
     const bar = document.createElement('span');
     bar.className = 'ci-bar';
@@ -234,11 +239,13 @@ function renderRows() {
         if (row.frozen) tr.classList.add('frozen-model');
         if (row.preliminary) tr.classList.add('preliminary-model');
 
-        const rankText = row.rank === null ? '–'
-            : row.rank_worst && row.rank_worst !== row.rank ? `${row.rank}–${row.rank_worst}` : String(row.rank);
-        const rankTd = createCell(rankText, 'rank-cell');
-        if (row.rank_worst && row.rank_worst !== row.rank) {
-            rankTd.title = `A bizonytalanság miatt a valós helyezés ${row.rank}. és ${row.rank_worst}. között lehet`;
+        // Egyetlen szám: a sorszám a pontszám szerinti listában; a bizonytalansági sáv tooltipben
+        const rankTd = createCell(row.position ?? '–', 'rank-cell');
+        const spread = rankSpreadText(row);
+        if (spread) {
+            rankTd.classList.add('has-spread');
+            rankTd.title = spread;
+            rankTd.setAttribute('aria-label', `${row.position}. hely. ${spread}`);
         }
         tr.appendChild(rankTd);
 

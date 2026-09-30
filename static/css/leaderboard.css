@@ -53,6 +53,14 @@ th[aria-sort="descending"] .sort-btn::after { content: '↓'; opacity: 0.9; }
     white-space: nowrap;
 }
 
+/* Bizonytalan helyezés: pontozott aláhúzás jelzi, hogy tooltipben ott a helyezéssáv */
+.rank-cell.has-spread {
+    text-decoration: underline dotted;
+    text-decoration-color: var(--bs-secondary-color, #6c757d);
+    text-underline-offset: 0.2em;
+    cursor: help;
+}
+
 .score-cell {
     font-variant-numeric: tabular-nums;
 }

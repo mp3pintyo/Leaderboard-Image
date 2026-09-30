@@ -303,3 +303,37 @@ def test_r2_sync_plan_copies_unchanged_and_uploads_changed():
     assert ('upload', 'data/002/prompt.txt', '002/prompt.txt', sync.CACHE_CONTROL) in actions
     assert not any(a[0] == 'upload' and a[1] == 'data/001/grok.jpg' for a in actions)
     assert not any(len(a) > 2 and a[2] == 'img/ccc' for a in actions)
+
+
+# --- Célzott párosítás és helyezés ---
+
+def test_pair_information_prefers_close_and_uncertain_pairs():
+    info = arena.pair_information
+    close_uncertain = info(1900, 1910, 140, 130, 60)
+    close_certain = info(1900, 1910, 40, 40, 60)
+    far_uncertain = info(2000, 1500, 140, 130, 60)
+    assert close_uncertain > close_certain > 0
+    assert close_uncertain > far_uncertain
+    assert info(1500, 1500, 5000, 5000, 1) == arena.MAX_PAIR_INFORMATION
+
+
+def test_pair_weight_combines_information_repeats_and_boost(monkeypatch):
+    monkeypatch.setattr(arena, 'TARGETED_PAIRING_STRENGTH', 3.0)
+    assert arena.pair_weight(0, 2.0, False) > arena.pair_weight(0, 0.0, False) > 0
+    assert arena.pair_weight(0, 1.0, False) > arena.pair_weight(9, 1.0, False)
+    assert arena.pair_weight(0, 1.0, True) == arena.pair_weight(0, 1.0, False) * arena.NEW_MODEL_BOOST_WEIGHT
+    monkeypatch.setattr(arena, 'TARGETED_PAIRING_STRENGTH', 0.0)
+    assert arena.pair_weight(0, 4.0, False) == arena.pair_weight(0, 0.0, False)  # kikapcsolva
+
+
+def test_leaderboard_position_is_sequential():
+    client = arena.app.test_client()
+    token = login(client)
+    for _ in range(4):
+        vote(client, token, new_battle(client)['battle_id'], 'a')
+    arena._ranking_cache['data'] = None
+    rows = client.get('/api/leaderboard').json
+    positions = [r['position'] for r in rows if r['matches'] > 0]
+    assert positions == list(range(1, len(positions) + 1))
+    assert all(r['position'] is None for r in rows if r['matches'] == 0)
+    assert all(r['rank'] <= r['position'] <= r['rank_worst'] for r in rows if r['matches'] > 0)

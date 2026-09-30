@@ -18,7 +18,7 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 from database import (close_db, get_db, init_db, get_prompt_ids, update_elo, immediate_transaction, utc_now_iso,
                       utc_now_naive, utc_iso_from_datetime, to_iso_utc, OUTCOME_WIN, OUTCOME_TIE, OUTCOME_BOTH_BAD)
 from config import (DATA_DIR, ALLOWED_EXTENSIONS, DEFAULT_ELO, MODELS, DEFAULT_VIDEO_URL, REVEAL_DELAY_MS,
-                    FROZEN_BOTTOM_COUNT, NEW_MODEL_BOOST_THRESHOLD, NEW_MODEL_BOOST_WEIGHT,
+                    FROZEN_BOTTOM_COUNT, NEW_MODEL_BOOST_THRESHOLD, NEW_MODEL_BOOST_WEIGHT, TARGETED_PAIRING_STRENGTH,
                     BATTLE_TTL_SECONDS, MAX_OPEN_BATTLES, MIN_VOTE_DELAY_MS, DAILY_VOTE_LIMIT,
                     BATTLE_RATE_LIMIT_PER_MINUTE, BT_BOOTSTRAP_ROUNDS, BT_PRIOR_GAMES, PRELIMINARY_MATCH_THRESHOLD,
                     PERSONAL_LEADERBOARD_MIN_VOTES,
@@ -559,12 +559,35 @@ def get_pair_and_match_counts(db):
     return pair_counts, match_counts
 
 
-def choose_battle(db):
-    """Kiválaszt egy modellpárt és egy közös promptot.
+MAX_PAIR_INFORMATION = 4.0
 
-    A párok súlya 1 / (1 + eddigi meccsek), így a ritkán látott párosítások gyakrabban kerülnek elő
-    (és ezzel az új modellek is). A kevés meccses modelleket tartalmazó párok extra boostot kapnak.
+
+def pair_information(rating_a, rating_b, sigma_a, sigma_b, median_sigma):
+    """Mennyit tanulna a rangsor ebből a párból (0 … MAX_PAIR_INFORMATION).
+
+    - közelség: 4·p·(1−p), ahol p az egyik modell várt nyerési esélye – 1, ha a kimenet teljesen
+      bizonytalan (azonos pontszám), és közel 0, ha az eredmény szinte biztos;
+    - bizonytalanság: a két modell CI-félszélességének átlaga a tipikus (medián) félszélességhez képest.
     """
+    p = 1.0 / (1.0 + 10 ** ((rating_b - rating_a) / 400))
+    closeness = 4.0 * p * (1.0 - p)
+    uncertainty = (sigma_a + sigma_b) / (2.0 * max(median_sigma, 1.0))
+    return min(closeness * uncertainty, MAX_PAIR_INFORMATION)
+
+
+def pair_weight(pair_games, information, boosted):
+    """Egy modellpár kiválasztási súlya.
+
+    A ritkán látott párok (1 / (1 + eddigi meccsek)) és a sokat mondó párok
+    (1 + TARGETED_PAIRING_STRENGTH · információ) gyakrabban kerülnek elő; az új modellek párjai
+    NEW_MODEL_BOOST_WEIGHT-szeres esélyt kapnak. Minden pár súlya pozitív, így bármelyik előfordulhat.
+    """
+    weight = (1.0 + TARGETED_PAIRING_STRENGTH * information) / (1 + pair_games)
+    return weight * NEW_MODEL_BOOST_WEIGHT if boosted else weight
+
+
+def choose_battle(db):
+    """Kiválaszt egy modellpárt (célzott párosítással) és egy közös promptot."""
     pairs = _battle_candidate_pairs()
     frozen = {r['model'] for r in db.execute('SELECT model FROM model_elo WHERE COALESCE(frozen, 0) = 1')}
     eligible = [(pair, prompts) for pair, prompts in pairs.items()
@@ -576,12 +599,23 @@ def choose_battle(db):
         return None
 
     pair_counts, match_counts = get_pair_and_match_counts(db)
+    ranking_data = get_global_ranking(db)
+    rating = ranking_data['rating']
+    half_width = (ranking_data['ci_upper'] - ranking_data['ci_lower']) / 2.0
+    played = [MODEL_INDEX[m] for m in MODEL_IDS if match_counts.get(m, 0) > 0]
+    known = half_width[played] if played else np.array([])
+    median_sigma = float(np.median(known)) if known.size else 1.0
+    # Adat nélküli modell bizonytalansága: a legbizonytalanabb ismert modellé (vagy 300 pont)
+    unknown_sigma = float(known.max()) if known.size else 300.0
+
+    def sigma(model_id):
+        return float(half_width[MODEL_INDEX[model_id]]) if match_counts.get(model_id, 0) > 0 else unknown_sigma
+
     weights = []
     for (a, b), _prompts in eligible:
-        weight = 1.0 / (1 + pair_counts.get((a, b), 0))
-        if min(match_counts.get(a, 0), match_counts.get(b, 0)) < NEW_MODEL_BOOST_THRESHOLD:
-            weight *= NEW_MODEL_BOOST_WEIGHT
-        weights.append(weight)
+        information = pair_information(rating[MODEL_INDEX[a]], rating[MODEL_INDEX[b]], sigma(a), sigma(b), median_sigma)
+        boosted = min(match_counts.get(a, 0), match_counts.get(b, 0)) < NEW_MODEL_BOOST_THRESHOLD
+        weights.append(pair_weight(pair_counts.get((a, b), 0), information, boosted))
 
     (a, b), prompts = random.choices(eligible, weights=weights, k=1)[0]
     # Véletlenszerű oldal-elosztás, hogy ne legyen oldalbias
@@ -937,8 +971,11 @@ def get_global_ranking(db):
 
 
 def apply_ranking(rows, rating, ci_lower=None, ci_upper=None):
-    """Pontszám, CI és helyezéssáv a (már szűrt) sorokhoz; rendezés pontszám szerint.
-    A helyezéssáv a megjelenített (szűrt) modellek között értendő."""
+    """Pontszám, CI és helyezés a (már szűrt) sorokhoz; rendezés pontszám szerint.
+
+    - position: a modell sorszáma a pontszám szerinti listában (ez jelenik meg a „#” oszlopban);
+    - rank / rank_worst: a statisztikailag lehetséges helyezéssáv (a CI-k átfedése alapján).
+    Mindkettő a megjelenített (szűrt) modellek között értendő."""
     for row in rows:
         index = MODEL_INDEX[row['id']]
         row['score'] = round(float(rating[index]), 1)
@@ -957,8 +994,10 @@ def apply_ranking(rows, rating, ci_lower=None, ci_upper=None):
         for row, b, w in zip(with_ci, best, worst):
             row['rank'], row['rank_worst'] = int(b), int(w)
     for position, row in enumerate(rows, start=1):
+        has_rank = row['matches'] > 0
+        # A megjelenített helyezés: sorszám a pontszám szerinti listában (adat nélküli modellnél nincs)
+        row['position'] = position if has_rank else None
         if 'rank' not in row:
-            has_rank = row['matches'] > 0
             row['rank'] = row['rank_worst'] = position if has_rank else None
     return rows
 

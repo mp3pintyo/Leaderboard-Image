@@ -1426,6 +1426,11 @@ FROZEN_BOTTOM_COUNT = 0  # Hány modellt fagyasszunk be az aljáról (0 = kikapc
 NEW_MODEL_BOOST_THRESHOLD = 50  # Ennyi meccs alatt aktív a boost
 NEW_MODEL_BOOST_WEIGHT = 20       # Hányszoros esély az átlagos párhoz képest
 
+# Célzott párosítás: azok a párok kerülnek elő gyakrabban, amelyek eredménye a legtöbbet mond a
+# rangsorról – közeli pontszám (bizonytalan kimenet) és széles konfidenciaintervallum.
+# 0 = kikapcsolva; nagyobb érték = erősebb célzás (a többi pár továbbra is előfordulhat).
+TARGETED_PAIRING_STRENGTH = 3.0
+
 # Szavazat-integritás beállítások
 BATTLE_TTL_SECONDS = 60 * 60        # Ennyi ideig szavazható egy kiadott battle
 MAX_OPEN_BATTLES = 3                # Egy sessionhöz egyszerre ennyi nyitott battle tartozhat (előtöltéshez)

@@ -398,7 +398,7 @@
                         <caption class="visually-hidden">Modellek rangsora</caption>
                         <thead>
                             <tr>
-                                <th scope="col" data-sort="rank" aria-sort="none"><button type="button" class="sort-btn">#</button></th>
+                                <th scope="col" data-sort="position" aria-sort="none"><button type="button" class="sort-btn" title="Helyezés pontszám szerint – a bizonytalansági sáv a szám fölé húzott egérrel látszik">#</button></th>
                                 <th scope="col" data-sort="display" aria-sort="none"><button type="button" class="sort-btn">Modell</button></th>
                                 <th scope="col" data-sort="score" aria-sort="descending"><button type="button" class="sort-btn" title="Bradley-Terry pontszám ELO-skálán">Pontszám</button></th>
                                 <th scope="col" data-sort="ci_width" aria-sort="none"><button type="button" class="sort-btn" title="95%-os konfidenciaintervallum (bootstrap)">95% CI</button></th>
@@ -431,7 +431,8 @@
                         </p>
                         <ul>
                             <li><strong>95% CI:</strong> a szavazatok <span data-stat="bootstrap_rounds">100</span>-szoros bootstrap újramintavételezéséből. Ha két modell intervalluma átfed, a sorrendjük nem biztos.</li>
-                            <li><strong>Helyezéssáv (pl. 2–5):</strong> a legjobb helyezés = 1 + azon modellek száma, amelyek statisztikailag biztosan jobbak; a legrosszabb = azon modellek száma, amelyek intervalluma átfed vagy jobb.</li>
+                            <li><strong>Helyezés (#):</strong> a modell sorszáma a pontszám szerinti listában. A szám fölé húzott egérrel (vagy a CI oszlopnál) látszik a <strong>helyezéssáv</strong> (pl. 2–5): a legjobb lehetséges helyezés = 1 + azon modellek száma, amelyek statisztikailag biztosan jobbak; a legrosszabb = azon modellek száma, amelyek intervalluma átfed vagy jobb. A pontozott aláhúzás jelzi, ha a helyezés bizonytalan.</li>
+                            <li><strong>Célzott párosítás:</strong> az Arena Battle gyakrabban hozza elő azokat a párokat, amelyek eredménye a legtöbbet mond a rangsorról (közeli pontszám, széles intervallum), így a bizonytalan helyezések gyorsabban tisztázódnak.</li>
                             <li><strong>Előzetes:</strong> <span data-stat="preliminary_threshold">30</span> meccs alatt a pontszám még bizonytalan.</li>
                             <li><strong>Döntetlen és „mindkettő rossz”:</strong> fél győzelemnek számít mindkét modellnek.</li>
                         </ul>

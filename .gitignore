@@ -8,3 +8,5 @@ votes.db-shm
 *.db-wal
 *.db-shm
 .pytest_cache/
+# Minden helyi adatbázis és mentés (felhasználói adatokat tartalmazhat)
+*.db

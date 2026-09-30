@@ -2,6 +2,40 @@
 
 Minden jelentős változás ebben a fájlban szerepel. / All notable changes are documented in this file.
 
+## [1.5.0] – 2026-09-30
+
+### 🇭🇺 Magyar
+
+**Célzott párosítás az Arena Battle-ben**
+- A párosítás gyakrabban hozza elő azokat a modellpárokat, amelyek eredménye a legtöbbet mond a rangsorról: közeli pontszámú (bizonytalan kimenetelű) és széles konfidenciaintervallumú modellek párjait. Így a bizonytalan helyezések – például egy új, még kevés meccset játszott modellé az élmezőnyben – gyorsabban tisztázódnak.
+- A pár súlya: `(1 + erősség · információ) / (1 + eddigi meccsek)`, az új modellek boostja megmaradt. Az információ = közelség (`4·p·(1−p)`) × a két modell bizonytalansága a tipikushoz képest (felső korláttal). Minden pár továbbra is előfordulhat, a választék változatos marad.
+- Az éles adatokon mérve: a top 16 modell egymás elleni párjai 3,7% helyett 5,9% eséllyel kerülnek elő, egy bizonytalan helyezésű új modell (pl. *GPT Image 2.5 Sunburst 1k Low*) kb. kétszer gyakrabban kap élmezőnybeli ellenfelet.
+- Új beállítás: `TARGETED_PAIRING_STRENGTH` (alapérték 3.0, 0 = kikapcsolva).
+
+**Egyszámos helyezés („#”)**
+- A „#” oszlop a modell sorszámát mutatja a pontszám szerinti listában (1, 2, 3, …), a korábbi – néha zavaróan széles – `1–17` típusú sáv helyett.
+- A statisztikailag lehetséges helyezéssáv a szám fölé húzott egérrel látszik (és a 95% CI oszlop tooltipjében); a pontozott aláhúzás jelzi, ha a helyezés bizonytalan.
+- Az API-ban új `position` mező; a `rank` / `rank_worst` (a sáv két vége) változatlanul elérhető.
+
+**Egyéb**
+- A `.gitignore` minden `*.db` fájlt kizár (pl. helyi adatbázis-mentések), hogy felhasználói adat ne kerülhessen véletlenül a repóba.
+
+### 🇬🇧 English
+
+**Targeted pairing in Arena Battle**
+- Pairing now favours model pairs whose outcome tells the most about the ranking: models with close scores (uncertain outcome) and wide confidence intervals. Uncertain ranks – e.g. a new model with few matches near the top – settle faster.
+- Pair weight: `(1 + strength · information) / (1 + previous matches)`, the new-model boost is kept. Information = closeness (`4·p·(1−p)`) × the two models' uncertainty relative to the typical one (capped). Every pair can still appear, so variety is preserved.
+- Measured on production data: top-16 vs top-16 pairs appear 5.9% of the time instead of 3.7%, and an uncertain new model (e.g. *GPT Image 2.5 Sunburst 1k Low*) meets top opponents about twice as often.
+- New setting: `TARGETED_PAIRING_STRENGTH` (default 3.0, 0 = off).
+
+**Single-number rank ("#")**
+- The "#" column shows the model's position in the score-sorted list (1, 2, 3, …) instead of the sometimes confusingly wide `1–17` style range.
+- The statistically plausible rank range appears on hover (and in the 95% CI tooltip); a dotted underline marks uncertain ranks.
+- New `position` field in the API; `rank` / `rank_worst` (the ends of the range) remain available.
+
+**Other**
+- `.gitignore` now excludes every `*.db` file (e.g. local database backups) so user data cannot be committed by accident.
+
 ## [1.4.0] – 2026-09-30
 
 ### 🇭🇺 Magyar
