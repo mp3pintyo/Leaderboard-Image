@@ -24,7 +24,7 @@ test('Leaderboard Quality vs. Price Top 10/20 flow', async ({ page }, testInfo) 
     await page.getByRole('link', { name: 'Leaderboard', exact: true }).click();
     await expect(page.locator('#navbarNav')).not.toHaveClass(/show/);
     await expect(page.locator('#leaderboard-mode')).toBeVisible();
-    await expect(page.getByRole('tab', { name: /ELO ranglista/ })).toHaveAttribute('aria-selected', 'true');
+    await expect(page.getByRole('tab', { name: /Rangsor/ })).toHaveAttribute('aria-selected', 'true');
     await expect(page.locator('#leaderboard-table-body tr').first()).toBeVisible();
 
     const optionalColumns = [
@@ -79,7 +79,7 @@ test('Expensive model does not compress affordable prices', async ({ page }) => 
     await page.route('**/api/leaderboard?model_type=all', async (route) => {
         const response = await route.fetch();
         const rows = await response.json();
-        rows.sort((a, b) => b.elo - a.elo);
+        rows.sort((a, b) => b.score - a.score);
         rows[4].price_per_1000 = 700;
         await route.fulfill({ response, json: rows });
     });

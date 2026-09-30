@@ -11,14 +11,17 @@ import datetime
 import threading
 import time
 from collections import deque
+import numpy as np
+import ranking
 from flask import Flask, render_template, jsonify, request, send_from_directory, abort, redirect, url_for, session
 from werkzeug.middleware.proxy_fix import ProxyFix
 from database import (close_db, get_db, init_db, get_prompt_ids, update_elo, immediate_transaction, utc_now_iso,
-                      utc_now_naive, utc_iso_from_datetime, to_iso_utc, OUTCOME_WIN, OUTCOME_TIE, OUTCOME_BOTH_BAD, DRAW_OUTCOMES)
-from config import (DATA_DIR, ALLOWED_EXTENSIONS, DEFAULT_ELO, K_FACTOR, MODELS, DEFAULT_VIDEO_URL, REVEAL_DELAY_MS,
+                      utc_now_naive, utc_iso_from_datetime, to_iso_utc, OUTCOME_WIN, OUTCOME_TIE, OUTCOME_BOTH_BAD)
+from config import (DATA_DIR, ALLOWED_EXTENSIONS, DEFAULT_ELO, MODELS, DEFAULT_VIDEO_URL, REVEAL_DELAY_MS,
                     FROZEN_BOTTOM_COUNT, NEW_MODEL_BOOST_THRESHOLD, NEW_MODEL_BOOST_WEIGHT,
                     BATTLE_TTL_SECONDS, MAX_OPEN_BATTLES, MIN_VOTE_DELAY_MS, DAILY_VOTE_LIMIT,
-                    BATTLE_RATE_LIMIT_PER_MINUTE,
+                    BATTLE_RATE_LIMIT_PER_MINUTE, BT_BOOTSTRAP_ROUNDS, BT_PRIOR_GAMES, PRELIMINARY_MATCH_THRESHOLD,
+                    PERSONAL_LEADERBOARD_MIN_VOTES,
                     DEFAULT_SECRET_KEY, SECRET_KEY, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET)
 from auth import csrf_protect, get_csrf_token, oauth, init_oauth, login_required, get_current_user, save_user
 
@@ -862,87 +865,269 @@ def build_leaderboard_row(model_id, stats, elo, frozen=False):
     }
 
 
+# --- Bradley-Terry rangsor ---
+
+MODEL_IDS = list(MODELS.keys())
+MODEL_INDEX = {model_id: index for index, model_id in enumerate(MODEL_IDS)}
+RANKING_CACHE_SECONDS = 30
+_ranking_cache = {'key': None, 'computed_at': 0.0, 'data': None}
+_ranking_lock = threading.Lock()
+
+
+def load_vote_pairs(db, user_id=None):
+    """(i, j, score_i) hármasok a Bradley-Terry illesztéshez (döntetlen = 0.5)."""
+    query = 'SELECT winner, loser, outcome FROM votes'
+    params = ()
+    if user_id is not None:
+        query += ' WHERE user_id = ?'
+        params = (user_id,)
+    pairs = []
+    for row in db.execute(query, params):
+        i, j = MODEL_INDEX.get(row['winner']), MODEL_INDEX.get(row['loser'])
+        if i is None or j is None:
+            continue
+        pairs.append((i, j, 1.0 if row['outcome'] == OUTCOME_WIN else 0.5))
+    return pairs
+
+
+def get_global_ranking(db):
+    """A globális BT rangsor. Új szavazat után legfeljebb RANKING_CACHE_SECONDS-ig a régi eredményt adja,
+    így gyakori szavazásnál sem számolunk minden kérésre újra."""
+    key = tuple(db.execute('SELECT COUNT(*), COALESCE(MAX(id), 0) FROM votes').fetchone())
+    now = time.monotonic()
+    with _ranking_lock:
+        cached = _ranking_cache['data']
+        if cached is not None and (_ranking_cache['key'] == key or now - _ranking_cache['computed_at'] < RANKING_CACHE_SECONDS):
+            return cached
+        result = ranking.compute_ratings(load_vote_pairs(db), len(MODEL_IDS), BT_PRIOR_GAMES, BT_BOOTSTRAP_ROUNDS)
+        data = {**result, 'computed_at': utc_now_iso(), 'vote_count': key[0]}
+        _ranking_cache.update(key=key, computed_at=now, data=data)
+        return data
+
+
+def apply_ranking(rows, rating, ci_lower=None, ci_upper=None):
+    """Pontszám, CI és helyezéssáv a (már szűrt) sorokhoz; rendezés pontszám szerint.
+    A helyezéssáv a megjelenített (szűrt) modellek között értendő."""
+    for row in rows:
+        index = MODEL_INDEX[row['id']]
+        row['score'] = round(float(rating[index]), 1)
+        if ci_lower is not None and row['matches'] > 0:
+            row['ci_lower'] = round(float(ci_lower[index]), 1)
+            row['ci_upper'] = round(float(ci_upper[index]), 1)
+        else:
+            row['ci_lower'] = row['ci_upper'] = None
+        row['preliminary'] = row['matches'] < PRELIMINARY_MATCH_THRESHOLD
+
+    # Adat nélküli modellek a lista végére kerülnek, helyezés nélkül
+    rows.sort(key=lambda r: (r['matches'] == 0, -r['score']))
+    with_ci = [r for r in rows if r['ci_lower'] is not None]
+    if with_ci:
+        best, worst = ranking.rank_spread([r['ci_lower'] for r in with_ci], [r['ci_upper'] for r in with_ci])
+        for row, b, w in zip(with_ci, best, worst):
+            row['rank'], row['rank_worst'] = int(b), int(w)
+    for position, row in enumerate(rows, start=1):
+        if 'rank' not in row:
+            has_rank = row['matches'] > 0
+            row['rank'] = row['rank_worst'] = position if has_rank else None
+    return rows
+
+
 @app.route('/api/leaderboard')
 def get_leaderboard():
-    """Leaderboard adatok lekérdezése és kiszámítása."""
+    """Leaderboard: Bradley-Terry pontszám 95%-os CI-vel, helyezéssávval, szavazatszámmal.
+    Az online ELO (az ELO-történet grafikon alapja) az `elo` mezőben marad meg."""
     try:
         model_type = request.args.get('model_type', 'all')
         db = get_db()
         stats = get_model_stats(db)
         elo_data = {row['model']: row for row in db.execute('SELECT model, elo, COALESCE(frozen, 0) AS frozen FROM model_elo')}
+        ranking_data = get_global_ranking(db)
 
-        leaderboard = []
+        rows = []
         for model_id, model in MODELS.items():
             if not filter_model_type(model, model_type):
                 continue
             elo_row = elo_data.get(model_id)
-            leaderboard.append(build_leaderboard_row(
+            rows.append(build_leaderboard_row(
                 model_id, stats.get(model_id),
                 elo_row['elo'] if elo_row else DEFAULT_ELO,
                 bool(elo_row['frozen']) if elo_row else False,
             ))
-        leaderboard.sort(key=lambda x: x['elo'], reverse=True)
-        return jsonify(leaderboard)
+        return jsonify(apply_ranking(rows, ranking_data['rating'], ranking_data['ci_lower'], ranking_data['ci_upper']))
     except sqlite3.Error:
         logger.exception("Database error while fetching leaderboard")
         return api_error("Adatbázis hiba a leaderboard lekérésekor.", 500)
 
 
+@app.route('/api/leaderboard/stats')
+def get_leaderboard_stats():
+    """Összesítő és módszertani adatok: szavazatok, döntetlenek, oldaltorzítás."""
+    db = get_db()
+    totals = db.execute('''
+        SELECT COUNT(*) AS total,
+               SUM(outcome = 'win') AS decisive,
+               SUM(outcome = 'tie') AS ties,
+               SUM(outcome = 'both_bad') AS both_bad,
+               COUNT(DISTINCT user_id) AS voters
+        FROM votes
+    ''').fetchone()
+    side = db.execute('''
+        SELECT COUNT(*) AS n, SUM(winner = left_model) AS left_wins
+        FROM votes WHERE outcome = 'win' AND left_model IS NOT NULL
+    ''').fetchone()
+    n, left_wins = side['n'] or 0, side['left_wins'] or 0
+    low, high = ranking.wilson_interval(left_wins, n)
+    ranking_data = get_global_ranking(db)
+    return jsonify({
+        "total_votes": totals['total'] or 0,
+        "decisive_votes": totals['decisive'] or 0,
+        "ties": totals['ties'] or 0,
+        "both_bad": totals['both_bad'] or 0,
+        "voters": totals['voters'] or 0,
+        "position_bias": {
+            "votes": n,
+            "left_win_rate": round(left_wins / n * 100, 1) if n else None,
+            "ci_lower": round(low * 100, 1) if low is not None else None,
+            "ci_upper": round(high * 100, 1) if high is not None else None,
+        },
+        "method": {
+            "name": "Bradley-Terry (MLE)",
+            "bootstrap_rounds": BT_BOOTSTRAP_ROUNDS,
+            "prior_games": BT_PRIOR_GAMES,
+            "preliminary_threshold": PRELIMINARY_MATCH_THRESHOLD,
+            "computed_at": ranking_data['computed_at'],
+        },
+    })
+
+
+@app.route('/api/leaderboard/matrix')
+def get_leaderboard_matrix():
+    """Párharc-mátrix a top N modellre: tényleges győzelmi arány, meccsszám és a BT által várt arány.
+    cells[i][j] = a sorban lévő i. modell eredménye az oszlopban lévő j. modell ellen."""
+    try:
+        top = max(2, min(int(request.args.get('top', 12)), 25))
+    except ValueError:
+        top = 12
+    model_type = request.args.get('model_type', 'all')
+    db = get_db()
+    ranking_data = get_global_ranking(db)
+    stats = get_model_stats(db)
+    candidates = [m for m in MODEL_IDS
+                  if filter_model_type(MODELS[m], model_type) and stats.get(m, {}).get('matches', 0) > 0]
+    candidates.sort(key=lambda m: -ranking_data['rating'][MODEL_INDEX[m]])
+    selected = candidates[:top]
+    idx = [MODEL_INDEX[m] for m in selected]
+    wins = ranking_data['wins'][np.ix_(idx, idx)]
+    games = wins + wins.T
+    rating = ranking_data['rating'][idx]
+    expected = 1.0 / (1.0 + 10 ** ((rating[None, :] - rating[:, None]) / 400))
+
+    def cell(i, j):
+        if i == j:
+            return None
+        n = float(games[i, j])
+        return {
+            "win_rate": round(float(wins[i, j]) / n * 100, 1) if n else None,
+            "games": int(round(n)),
+            "expected": round(float(expected[i, j]) * 100, 1),
+        }
+
+    return jsonify({
+        "models": [{**model_public(m), "score": round(float(ranking_data['rating'][MODEL_INDEX[m]]), 1)} for m in selected],
+        "cells": [[cell(i, j) for j in range(len(selected))] for i in range(len(selected))],
+    })
+
+
 @app.route('/api/leaderboard/mine')
 @login_required
 def get_personal_leaderboard():
-    """Saját toplista: ELO kiszámítása csak a bejelentkezett felhasználó szavazatai alapján."""
+    """Saját toplista: Bradley-Terry pontszám csak a felhasználó saját szavazataiból.
+    PERSONAL_LEADERBOARD_MIN_VOTES szavazat alatt még nem számolunk (túl zajos lenne)."""
     try:
         user = get_current_user()
         db = get_db()
         model_type = request.args.get('model_type', 'all')
-        rows = db.execute('SELECT winner, loser, outcome FROM votes WHERE user_id = ? ORDER BY id ASC',
-                          (user['id'],)).fetchall()
+        pairs = load_vote_pairs(db, user_id=user['id'])
+        base = {"vote_count": len(pairs), "min_votes": PERSONAL_LEADERBOARD_MIN_VOTES}
+        if len(pairs) < PERSONAL_LEADERBOARD_MIN_VOTES:
+            return jsonify({**base, "unlocked": False, "leaderboard": []})
 
-        # ELO számítás nulláról, csak saját szavazatokból
-        personal_elo = {m: DEFAULT_ELO for m in MODELS}
-        for row in rows:
-            winner, loser = row['winner'], row['loser']
-            if winner not in personal_elo or loser not in personal_elo:
-                continue
-            score = 1.0 if row['outcome'] == OUTCOME_WIN else 0.5
-            w_elo, l_elo = personal_elo[winner], personal_elo[loser]
-            expected_w = 1 / (1 + 10 ** ((l_elo - w_elo) / 400))
-            personal_elo[winner] = w_elo + K_FACTOR * (score - expected_w)
-            personal_elo[loser] = l_elo + K_FACTOR * ((1 - score) - (1 - expected_w))
-
+        result = ranking.compute_ratings(pairs, len(MODEL_IDS), BT_PRIOR_GAMES, bootstrap_rounds=0)
         stats = get_model_stats(db, user_id=user['id'])
-        leaderboard = [
-            build_leaderboard_row(model_id, stats.get(model_id), personal_elo[model_id])
-            for model_id, model in MODELS.items() if filter_model_type(model, model_type)
+        rows = [
+            build_leaderboard_row(model_id, stats.get(model_id), DEFAULT_ELO)
+            for model_id, model in MODELS.items()
+            if filter_model_type(model, model_type) and stats.get(model_id, {}).get('matches', 0) > 0
         ]
-        leaderboard.sort(key=lambda x: x['elo'], reverse=True)
-        return jsonify({"leaderboard": leaderboard, "vote_count": len(rows)})
+        return jsonify({**base, "unlocked": True, "leaderboard": apply_ranking(rows, result['rating'])})
     except sqlite3.Error:
         logger.exception("Database error (personal leaderboard)")
         return api_error("Adatbázis hiba.", 500)
 
 
-@app.route('/api/elo_history_with_current_elo')
-def get_elo_history_with_current_elo():
-    """Lekérdezi az ELO értékek időbeli változását és az aktuális ELO pontszámokat."""
-    try:
-        db = get_db()
-        chart_data = {}
-        for row in db.execute('SELECT model, elo, timestamp FROM elo_history ORDER BY timestamp ASC, id ASC'):
-            if row['model'] not in MODELS:
-                continue
-            name = model_display(MODELS[row['model']])
-            chart_data.setdefault(name, []).append({'x': to_iso_utc(row['timestamp']), 'y': round(row['elo'], 1)})
+ELO_HISTORY_RANGES = {'1w': 7, '2w': 14, '1m': 30, '3m': 90}
+ELO_HISTORY_MAX_POINTS = 160
 
-        current_elos = {
-            model_display(MODELS[row['model']]): round(row['elo'], 1)
-            for row in db.execute('SELECT model, elo FROM model_elo') if row['model'] in MODELS
-        }
-        return jsonify({"history": chart_data, "current_elos": current_elos})
-    except sqlite3.Error:
-        logger.exception("Database error fetching ELO history")
-        return api_error("Adatbázis hiba az ELO előzmények lekérésekor.", 500)
+
+@app.route('/api/elo_history')
+def get_elo_history():
+    """Az online ELO időbeli alakulása a top N modellre, szerveroldalon ritkítva.
+
+    Paraméterek: range (1w, 2w, 1m, 3m, all), top (1-30).
+    Időszakonként (bucket) csak az utolsó értéket adjuk vissza, így a válasz mérete
+    nem nő a szavazatok számával.
+    """
+    try:
+        top = max(1, min(int(request.args.get('top', 10)), 30))
+    except ValueError:
+        top = 10
+    range_key = request.args.get('range', 'all')
+    db = get_db()
+    current = [(row['model'], row['elo']) for row in db.execute('SELECT model, elo FROM model_elo ORDER BY elo DESC')
+               if row['model'] in MODELS]
+    selected = [model_id for model_id, _elo in current[:top]]
+    if not selected:
+        return jsonify({"series": [], "models_total": 0})
+
+    end = utc_now_naive()
+    if range_key in ELO_HISTORY_RANGES:
+        start = end - datetime.timedelta(days=ELO_HISTORY_RANGES[range_key])
+    else:
+        first = db.execute('SELECT MIN(timestamp) FROM elo_history').fetchone()[0]
+        start = _parse_iso(first) if first else end
+    span = max((end - start).total_seconds(), 3600.0)
+    bucket_seconds = max(span / ELO_HISTORY_MAX_POINTS, 60.0)
+    start_iso = utc_iso_from_datetime(start)
+    placeholders = ','.join('?' * len(selected))
+
+    series = {model_id: {} for model_id in selected}
+    # A tartomány előtti utolsó érték a vonal kezdőpontja
+    for row in db.execute(f'''
+        SELECT h.model, h.elo FROM elo_history h
+        JOIN (SELECT model, MAX(id) AS id FROM elo_history
+              WHERE timestamp < ? AND model IN ({placeholders}) GROUP BY model) last
+        ON h.id = last.id
+    ''', (start_iso, *selected)):
+        series[row['model']][0] = (start_iso, row['elo'])
+    for row in db.execute(f'''
+        SELECT model, elo, timestamp FROM elo_history
+        WHERE timestamp >= ? AND model IN ({placeholders}) ORDER BY timestamp, id
+    ''', (start_iso, *selected)):
+        timestamp = to_iso_utc(row['timestamp'])
+        bucket = int((_parse_iso(timestamp) - start).total_seconds() // bucket_seconds) + 1
+        series[row['model']][bucket] = (timestamp, row['elo'])
+
+    current_elo = dict(current)
+    now_iso = utc_iso_from_datetime(end)
+    result = []
+    for model_id in selected:
+        points = [{"x": ts, "y": round(elo, 1)} for _bucket, (ts, elo) in sorted(series[model_id].items())]
+        if points:
+            # A vonal a mai napig tart
+            points.append({"x": now_iso, "y": round(current_elo[model_id], 1)})
+        result.append({**model_public(model_id), "elo": round(current_elo[model_id], 1), "points": points})
+    return jsonify({"series": result, "models_total": len(current)})
+
 
 @app.route('/api/prompt_ids')
 def get_prompt_ids_api():
@@ -1047,9 +1232,17 @@ def get_compare_stats():
                 "model2": prompt_entry(m2_prompts.get(prompt_id, empty)),
             })
 
+        ranking_data = get_global_ranking(db)
+
         def global_entry(model_id):
             s = stats.get(model_id, empty)
+            index = MODEL_INDEX[model_id]
+            has_data = s['matches'] > 0
             return {**model_public(model_id), "elo": round(elos.get(model_id, DEFAULT_ELO), 1),
+                    "score": round(float(ranking_data['rating'][index]), 1),
+                    "ci_lower": round(float(ranking_data['ci_lower'][index]), 1) if has_data else None,
+                    "ci_upper": round(float(ranking_data['ci_upper'][index]), 1) if has_data else None,
+                    "preliminary": s['matches'] < PRELIMINARY_MATCH_THRESHOLD,
                     "wins": s['wins'], "ties": s['ties'], "matches": s['matches'], "win_rate": win_rate(s)}
 
         return jsonify({

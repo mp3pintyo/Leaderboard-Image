@@ -2,6 +2,70 @@
 
 Minden jelentős változás ebben a fájlban szerepel. / All notable changes are documented in this file.
 
+## [1.2.0] – 2026-09-30
+
+### 🇭🇺 Magyar
+
+**Bradley-Terry rangsor**
+- A leaderboard mostantól **Bradley-Terry** modellel rangsorol (mint az LMArena, az Artificial Analysis és a GenAI-Arena): az összes szavazatra egyszerre illesztett maximum likelihood becslés ELO-skálán, így az eredmény nem függ a szavazatok sorrendjétől és a K-faktortól. Az online ELO megmaradt (ELO-történet grafikon, opcionális oszlop).
+- **95%-os konfidenciaintervallum** 100-szoros bootstrap újramintavételezésből, a táblázatban `+x / −y` formában és kis intervallumsávval.
+- **Helyezéssáv** (pl. `2–5`): ha két modell intervalluma átfed, a sorrendjük nem biztos.
+- **Szavazatszám** oszlop és **„Előzetes”** jelvény 30 meccs alatt (`PRELIMINARY_MATCH_THRESHOLD`).
+- A döntetlen és a „mindkettő rossz” fél győzelemnek számít; a kevés adatú modelleket egy kis prior az átlag felé húzza (`BT_PRIOR_GAMES`).
+- Gyors: 10 000 szavazat + 100 bootstrap kör ~0,2 s, 30 másodperces gyorsítótárral.
+
+**Új nézetek és statisztikák**
+- **Párharc-mátrix** (új leaderboard fül): tényleges győzelmi arány, meccsszám és a BT alapján várt arány a top 8–20 modell között, színezett hőtérképként.
+- **Módszertan panel**: a számítás leírása, összesítők (szavazatok, döntetlenek, „mindkettő rossz”) és az **oldaltorzítás mérése** – a bal oldali kép nyerési aránya 95%-os Wilson-intervallummal.
+- **Saját toplista** csak 30 saját szavazat után nyílik meg (`PERSONAL_LEADERBOARD_MIN_VOTES`), addig haladásjelző mutatja, mennyi van még hátra; a számítás szintén Bradley-Terry.
+
+**Leaderboard felület**
+- Minden oszlop szerint **rendezhető** táblázat (`aria-sort`), **kereső** modell- és szolgáltatónévre, **szolgáltató-szűrő**, „Előzetesek elrejtése” kapcsoló.
+- Új opcionális oszlopok: *Gy / D / V* (győzelem / döntetlen / vereség) és *Online ELO*.
+- Oszlop megjelenítése/elrejtése, keresés és rendezés nem kér le újra adatot; gyors szűrőváltásnál a régi kérés megszakad (`AbortController`), így nem írhatja felül az újat.
+- A Minőség vs. ár diagram a Bradley-Terry pontszámot használja.
+- Mobilon kompakt, háromoszlopos nézetváltó.
+
+**ELO fejlődés grafikon**
+- Új `/api/elo_history` végpont szerveroldali ritkítással és időszűréssel: a válasz ~900 KB helyett ~10 KB, és nem nő a szavazatok számával.
+- Valódi időtengely (a korábbi, minden szavazatot külön címkének vevő kategóriatengely helyett), új 1 hónap / 3 hónap szűrők.
+- Alapértelmezés: Top 10 modell (1–30 állítható), 20 jól megkülönböztethető szín, kiemelés a jelmagyarázat fölé húzott egérrel.
+
+**Összehasonlítás API:** a `/api/compare_stats` válasza tartalmazza a Bradley-Terry pontszámot és a konfidenciaintervallumot.
+
+**Függőség:** új Python függőség a `numpy`.
+
+### 🇬🇧 English
+
+**Bradley-Terry ranking**
+- The leaderboard now ranks with a **Bradley-Terry** model (like LMArena, Artificial Analysis and GenAI-Arena): a maximum-likelihood fit over all votes at once on an ELO-like scale, independent of vote order and K-factor. Online ELO is kept (ELO history chart, optional column).
+- **95% confidence intervals** from 100 bootstrap resamples, shown as `+x / −y` with a small interval bar.
+- **Rank spread** (e.g. `2–5`): overlapping intervals mean the order is not certain.
+- **Vote count** column and a **"Preliminary"** badge below 30 matches (`PRELIMINARY_MATCH_THRESHOLD`).
+- Ties and "both bad" count as half a win; a small prior shrinks low-data models towards the mean (`BT_PRIOR_GAMES`).
+- Fast: 10,000 votes + 100 bootstrap rounds in ~0.2 s, cached for 30 seconds.
+
+**New views and statistics**
+- **Head-to-head matrix** (new leaderboard tab): actual win rate, match counts and BT-expected win rate among the top 8–20 models as a coloured heatmap.
+- **Methodology panel**: explanation, totals (votes, ties, "both bad") and **position-bias measurement** – the left image's win rate with a 95% Wilson interval.
+- **Personal leaderboard** unlocks after 30 own votes (`PERSONAL_LEADERBOARD_MIN_VOTES`) with a progress bar until then; it also uses Bradley-Terry.
+
+**Leaderboard UI**
+- **Sortable** columns (`aria-sort`), **search** by model/provider name, **provider filter**, "Hide preliminary" switch.
+- New optional columns: *W / T / L* (wins / ties / losses) and *Online ELO*.
+- Toggling columns, searching and sorting no longer refetch data; quick filter changes abort stale requests (`AbortController`).
+- The Quality vs. Price chart uses the Bradley-Terry score.
+- Compact three-column view switcher on mobile.
+
+**ELO history chart**
+- New `/api/elo_history` endpoint with server-side downsampling and time filtering: ~10 KB instead of ~900 KB, independent of the number of votes.
+- Real time axis (instead of a category axis with one label per vote), new 1 month / 3 months filters.
+- Default Top 10 models (adjustable 1–30), 20 distinguishable colours, highlight on legend hover.
+
+**Compare API:** `/api/compare_stats` now includes the Bradley-Terry score and confidence interval.
+
+**Dependency:** new Python dependency `numpy`.
+
 ## [1.1.0] – 2026-09-30
 
 ### 🇭🇺 Magyar

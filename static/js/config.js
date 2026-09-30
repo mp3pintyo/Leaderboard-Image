@@ -12,9 +12,12 @@ export const APP_CONFIG = (() => {
 })();
 window.APP_CONFIG = APP_CONFIG;
 
+// 20 jól megkülönböztethető szín (világos és sötét háttéren is olvasható)
 export const colorPalette = [
-    '#0d6efd', '#6f42c1', '#d63384', '#fd7e14', '#ffc107',
-    '#198754', '#20c997', '#0dcaf0', '#6c757d', '#adb5bd'
+    '#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f',
+    '#edc948', '#b07aa1', '#ff9da7', '#9c755f', '#bab0ac',
+    '#1f77b4', '#d62728', '#2ca02c', '#9467bd', '#8c564b',
+    '#e377c2', '#17becf', '#bcbd22', '#ff7f0e', '#7f7f7f'
 ];
 
 // Alapértelmezett késleltetési idő, amire visszaesik, ha nem lenne máshogy beállítva

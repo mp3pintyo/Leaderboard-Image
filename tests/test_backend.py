@@ -205,3 +205,70 @@ def test_timestamp_normalization():
     assert to_iso_utc('2025-04-04 09:21:56') == '2025-04-04T09:21:56.000Z'
     assert to_iso_utc('2026-02-27 01:15:41.549679') == '2026-02-27T01:15:41.549Z'
     assert to_iso_utc('2026-02-27T01:15:41.549Z') == '2026-02-27T01:15:41.549Z'
+
+
+# --- Rangsor (Bradley-Terry) ---
+
+def test_bradley_terry_recovers_strengths():
+    import numpy as np
+    import ranking
+    rng = np.random.default_rng(0)
+    true = np.array([0.0, 1.0, 2.0, -1.0])
+    pairs = []
+    for _ in range(20000):
+        i, j = rng.choice(4, 2, replace=False)
+        pairs.append((i, j, 1.0 if rng.random() < 1 / (1 + np.exp(true[j] - true[i])) else 0.0))
+    theta = ranking.fit_bradley_terry(ranking.build_win_matrix(pairs, 4), prior_games=0.0)
+    assert np.allclose(theta - theta.mean(), true - true.mean(), atol=0.08)
+
+
+def test_rank_spread_overlaps():
+    import ranking
+    best, worst = ranking.rank_spread([1600, 1550, 1400], [1700, 1650, 1450])
+    assert list(best) == [1, 1, 3] and list(worst) == [2, 2, 3]
+
+
+def test_leaderboard_has_ranking_fields():
+    client = arena.app.test_client()
+    token = login(client)
+    for _ in range(3):
+        vote(client, token, new_battle(client)['battle_id'], 'a')
+    arena._ranking_cache['data'] = None
+    rows = client.get('/api/leaderboard').json
+    played = [r for r in rows if r['matches'] > 0]
+    assert played and all(r['ci_lower'] <= r['score'] <= r['ci_upper'] for r in played)
+    assert all(r['preliminary'] for r in played)
+    assert all(r['rank'] is None for r in rows if r['matches'] == 0)
+    scores = [r['score'] for r in played]
+    assert scores == sorted(scores, reverse=True)
+
+
+def test_personal_leaderboard_unlocks_after_min_votes(monkeypatch):
+    monkeypatch.setattr(arena, 'PERSONAL_LEADERBOARD_MIN_VOTES', 3)
+    client = arena.app.test_client()
+    token = login(client)
+    vote(client, token, new_battle(client)['battle_id'], 'a')
+    locked = client.get('/api/leaderboard/mine').json
+    assert locked['unlocked'] is False and locked['vote_count'] == 1 and locked['leaderboard'] == []
+    for _ in range(2):
+        vote(client, token, new_battle(client)['battle_id'], 'tie')
+    unlocked = client.get('/api/leaderboard/mine').json
+    assert unlocked['unlocked'] is True and unlocked['leaderboard']
+
+
+def test_stats_matrix_and_history_endpoints():
+    client = arena.app.test_client()
+    token = login(client)
+    for choice in ('a', 'a', 'b', 'tie', 'both_bad'):
+        vote(client, token, new_battle(client)['battle_id'], choice)
+    arena._ranking_cache['data'] = None
+    stats = client.get('/api/leaderboard/stats').json
+    assert stats['total_votes'] == 5 and stats['ties'] == 1 and stats['both_bad'] == 1
+    assert stats['position_bias']['votes'] == 3
+    assert abs(stats['position_bias']['left_win_rate'] - 66.7) < 0.1
+    matrix = client.get('/api/leaderboard/matrix?top=5').json
+    size = len(matrix['models'])
+    assert size >= 2 and len(matrix['cells']) == size and matrix['cells'][0][0] is None
+    history = client.get('/api/elo_history?range=all&top=3').json
+    assert len(history['series']) == 3
+    assert all(p['x'].endswith('Z') for s in history['series'] for p in s['points'])

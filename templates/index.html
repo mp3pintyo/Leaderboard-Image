@@ -6,6 +6,7 @@
     <title>AI Képgenerátor Aréna</title>    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/battle.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/leaderboard.css') }}">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
@@ -239,7 +240,7 @@
             <div class="leaderboard-heading text-center">
                 <span class="leaderboard-eyebrow">TOPLISTÁK</span>
                 <h2>Leaderboard</h2>
-                <p>Válassz egy nézetet — a későbbi toplisták is itt, külön blokkokban kapnak helyet.</p>
+                <p id="leaderboard-summary">Bradley-Terry rangsor 95%-os konfidenciaintervallummal.</p>
             </div>
 
             <div class="leaderboard-view-grid" role="tablist" aria-label="Leaderboard nézetek">
@@ -248,8 +249,8 @@
                     aria-controls="leaderboard-ranking-panel" aria-selected="true">
                     <span class="leaderboard-view-icon" aria-hidden="true">01</span>
                     <span>
-                        <strong>ELO ranglista</strong>
-                        <small>Helyezések, győzelmek és meccsstatisztikák</small>
+                        <strong>Rangsor</strong>
+                        <small>Pontszám, bizonytalanság, helyezéssáv</small>
                     </span>
                     <span class="leaderboard-view-arrow" aria-hidden="true">→</span>
                 </button>
@@ -259,7 +260,17 @@
                     <span class="leaderboard-view-icon" aria-hidden="true">02</span>
                     <span>
                         <strong>Minőség vs. ár</strong>
-                        <small>ELO és fix API-ár 1 000 képre vetítve</small>
+                        <small>Pontszám és fix API-ár 1 000 képre vetítve</small>
+                    </span>
+                    <span class="leaderboard-view-arrow" aria-hidden="true">→</span>
+                </button>
+                <button class="leaderboard-view-card" type="button" role="tab"
+                    id="leaderboard-matrix-tab" data-leaderboard-view="matrix"
+                    aria-controls="leaderboard-matrix-panel" aria-selected="false">
+                    <span class="leaderboard-view-icon" aria-hidden="true">03</span>
+                    <span>
+                        <strong>Párharcok</strong>
+                        <small>Egymás elleni győzelmi arány és meccsszám</small>
                     </span>
                     <span class="leaderboard-view-arrow" aria-hidden="true">→</span>
                 </button>
@@ -268,7 +279,7 @@
             <section id="leaderboard-ranking-panel" class="leaderboard-panel" role="tabpanel"
                 aria-labelledby="leaderboard-ranking-tab">
                 <div class="row mb-3 justify-content-center">
-                    <div class="col-lg-8">
+                    <div class="col-lg-10">
                         <div class="btn-group w-100 leaderboard-filter-group" role="group" aria-label="Modell típus szűrő">
                             <input type="radio" class="btn-check" name="model-type" id="all-models" value="all" checked>
                             <label class="btn btn-outline-primary" for="all-models">Összes modell</label>
@@ -292,9 +303,37 @@
                             <input type="radio" class="btn-check" name="my-type" id="my-closed" value="closed-source">
                             <label class="btn btn-outline-warning btn-sm" for="my-closed">Zárt forrású modellek</label>
                         </div>
+
+                        <div class="leaderboard-toolbar mt-3">
+                            <div class="leaderboard-search">
+                                <label for="leaderboard-search" class="visually-hidden">Keresés modellnévre</label>
+                                <input type="search" id="leaderboard-search" class="form-control" placeholder="Keresés modell vagy szolgáltató szerint…" autocomplete="off">
+                            </div>
+                            <div>
+                                <label for="leaderboard-provider" class="visually-hidden">Szolgáltató</label>
+                                <select id="leaderboard-provider" class="form-select">
+                                    <option value="">Minden szolgáltató</option>
+                                </select>
+                            </div>
+                            <div class="form-check form-switch mb-0">
+                                <input class="form-check-input" type="checkbox" role="switch" id="leaderboard-hide-preliminary">
+                                <label class="form-check-label" for="leaderboard-hide-preliminary">Előzetesek elrejtése</label>
+                            </div>
+                        </div>
+
                         <fieldset class="leaderboard-column-picker mt-3">
                             <legend class="form-label mb-2">Opcionális oszlopok</legend>
                             <div class="leaderboard-column-options" role="group" aria-label="Opcionális leaderboard oszlopok">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input leaderboard-column-toggle" type="checkbox"
+                                        id="leaderboard-column-record" data-column="record">
+                                    <label class="form-check-label" for="leaderboard-column-record">Gy / D / V</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input leaderboard-column-toggle" type="checkbox"
+                                        id="leaderboard-column-elo" data-column="elo">
+                                    <label class="form-check-label" for="leaderboard-column-elo">Online ELO</label>
+                                </div>
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input leaderboard-column-toggle" type="checkbox"
                                         id="leaderboard-column-release-date" data-column="release_date">
@@ -320,29 +359,53 @@
                     </div>
                 </div>
 
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover align-middle">
+                <div id="personal-leaderboard-info" class="alert alert-info text-center mb-3" hidden></div>
+
+                <div class="table-responsive leaderboard-table-wrap">
+                    <table class="table table-hover align-middle leaderboard-table">
+                        <caption class="visually-hidden">Modellek rangsora</caption>
                         <thead>
                             <tr>
-                                <th>#</th>
-                                <th>Modell</th>
-                                <th>ELO Rating</th>
-                                <th>Győzelmek</th>
-                                <th>Meccsek száma</th>
-                                <th>Győzelmi arány</th>
-                                <th>Típus</th>
-                                <th data-column-header="release_date" hidden>Megjelenés</th>
-                                <th data-column-header="max_resolution" hidden>Max felbontás</th>
-                                <th data-column-header="pricing" hidden>Árazás</th>
-                                <th data-column-header="video_url" hidden>Videó</th>
+                                <th scope="col" data-sort="rank" aria-sort="none"><button type="button" class="sort-btn">#</button></th>
+                                <th scope="col" data-sort="display" aria-sort="none"><button type="button" class="sort-btn">Modell</button></th>
+                                <th scope="col" data-sort="score" aria-sort="descending"><button type="button" class="sort-btn" title="Bradley-Terry pontszám ELO-skálán">Pontszám</button></th>
+                                <th scope="col" data-sort="ci_width" aria-sort="none"><button type="button" class="sort-btn" title="95%-os konfidenciaintervallum (bootstrap)">95% CI</button></th>
+                                <th scope="col" data-sort="matches" aria-sort="none"><button type="button" class="sort-btn">Szavazatok</button></th>
+                                <th scope="col" data-sort="win_rate" aria-sort="none"><button type="button" class="sort-btn" title="A döntetlen fél győzelemnek számít">Győzelmi arány</button></th>
+                                <th scope="col" data-sort="open_source" aria-sort="none"><button type="button" class="sort-btn">Típus</button></th>
+                                <th scope="col" data-column-header="record" data-sort="wins" aria-sort="none" hidden><button type="button" class="sort-btn" title="Győzelem / döntetlen / vereség">Gy / D / V</button></th>
+                                <th scope="col" data-column-header="elo" data-sort="elo" aria-sort="none" hidden><button type="button" class="sort-btn" title="Online (sorrendfüggő) ELO">Online ELO</button></th>
+                                <th scope="col" data-column-header="release_date" data-sort="release_date" aria-sort="none" hidden><button type="button" class="sort-btn">Megjelenés</button></th>
+                                <th scope="col" data-column-header="max_resolution" aria-sort="none" hidden>Max felbontás</th>
+                                <th scope="col" data-column-header="pricing" data-sort="price_per_1000" aria-sort="none" hidden><button type="button" class="sort-btn">Árazás</button></th>
+                                <th scope="col" data-column-header="video_url" hidden>Videó</th>
                             </tr>
                         </thead>
                         <tbody id="leaderboard-table-body"></tbody>
                     </table>
                 </div>
-                <div class="text-center mt-3">
-                    <button id="refresh-leaderboard-btn" class="btn btn-info">Leaderboard frissítése</button>
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mt-3">
+                    <small id="leaderboard-count" class="text-body-secondary"></small>
+                    <button id="refresh-leaderboard-btn" class="btn btn-outline-primary btn-sm">Leaderboard frissítése</button>
                 </div>
+
+                <details class="leaderboard-method mt-4" id="leaderboard-method">
+                    <summary>Hogyan számoljuk? – módszertan és statisztika</summary>
+                    <div class="leaderboard-method-body">
+                        <p>
+                            A rangsor a <strong>Bradley-Terry modellt</strong> használja (mint az LMArena és az Artificial Analysis):
+                            az összes szavazatra egyszerre illesztett maximum likelihood becslés, ELO-skálán (1500 = átlagos).
+                            A korábbi online ELO-val szemben az eredmény nem függ a szavazatok sorrendjétől.
+                        </p>
+                        <ul>
+                            <li><strong>95% CI:</strong> a szavazatok <span data-stat="bootstrap_rounds">100</span>-szoros bootstrap újramintavételezéséből. Ha két modell intervalluma átfed, a sorrendjük nem biztos.</li>
+                            <li><strong>Helyezéssáv (pl. 2–5):</strong> a legjobb helyezés = 1 + azon modellek száma, amelyek statisztikailag biztosan jobbak; a legrosszabb = azon modellek száma, amelyek intervalluma átfed vagy jobb.</li>
+                            <li><strong>Előzetes:</strong> <span data-stat="preliminary_threshold">30</span> meccs alatt a pontszám még bizonytalan.</li>
+                            <li><strong>Döntetlen és „mindkettő rossz”:</strong> fél győzelemnek számít mindkét modellnek.</li>
+                        </ul>
+                        <div class="leaderboard-stats-grid" id="leaderboard-stats"></div>
+                    </div>
+                </details>
             </section>
 
             <section id="leaderboard-quality-price-panel" class="leaderboard-panel" role="tabpanel"
@@ -351,13 +414,13 @@
                     <div>
                         <span class="leaderboard-eyebrow">ÁR–ÉRTÉK TÉRKÉP</span>
                         <h3>Minőség vs. ár</h3>
-                        <p>Image Arena ELO vs. reprezentatív API-ár 1 000 képre</p>
+                        <p>Arena pontszám vs. reprezentatív API-ár 1 000 képre</p>
                     </div>
                     <div class="btn-group" role="group" aria-label="Megjelenített modellek száma">
                         <input type="radio" class="btn-check" name="quality-price-limit" id="quality-price-top-10" value="10" checked>
-                        <label class="btn btn-outline-dark" for="quality-price-top-10">Top 10</label>
+                        <label class="btn btn-outline-secondary" for="quality-price-top-10">Top 10</label>
                         <input type="radio" class="btn-check" name="quality-price-limit" id="quality-price-top-20" value="20">
-                        <label class="btn btn-outline-dark" for="quality-price-top-20">Top 20</label>
+                        <label class="btn btn-outline-secondary" for="quality-price-top-20">Top 20</label>
                     </div>
                 </div>
                 <div class="quality-price-legend" aria-hidden="true">
@@ -370,14 +433,48 @@
                 </div>
                 <div class="quality-price-chart-wrap">
                     <canvas id="quality-price-chart" role="img"
-                        aria-label="A modellek ELO pontszámát és 1 000 képre számított API-árát összehasonlító pontdiagram"></canvas>
+                        aria-label="A modellek pontszámát és 1 000 képre számított API-árát összehasonlító pontdiagram"></canvas>
                 </div>
                 <p class="quality-price-note">
                     Az ártengely logaritmikus: azonos arányú áremelkedések azonos távolságot jelentenek,
                     így a drága modellek nem nyomják össze az olcsóbbakat.
                     A diagram a modellkonfigban megadott legalacsonyabb API-árat használja.
                     Az intervallumos árazásnál ez a tartomány alsó értéke; a free, subscription és csak tokenalapú árak ki vannak zárva.
-                    A Pareto élvonal modelljeinél nincs egyszerre olcsóbb és legalább ilyen magas ELO-jú alternatíva.
+                    A Pareto élvonal modelljeinél nincs egyszerre olcsóbb és legalább ilyen magas pontszámú alternatíva.
+                </p>
+            </section>
+
+            <section id="leaderboard-matrix-panel" class="leaderboard-panel" role="tabpanel"
+                aria-labelledby="leaderboard-matrix-tab" hidden>
+                <div class="quality-price-header">
+                    <div>
+                        <span class="leaderboard-eyebrow">EGYMÁS ELLEN</span>
+                        <h3>Párharc-mátrix</h3>
+                        <p>A sor modelljének eredménye az oszlop modellje ellen (a top modellek között).</p>
+                    </div>
+                    <div class="d-flex flex-wrap gap-2">
+                        <div class="btn-group" role="group" aria-label="Mátrix nézet">
+                            <input type="radio" class="btn-check" name="matrix-metric" id="matrix-metric-winrate" value="win_rate" checked>
+                            <label class="btn btn-outline-secondary" for="matrix-metric-winrate">Győzelmi arány</label>
+                            <input type="radio" class="btn-check" name="matrix-metric" id="matrix-metric-games" value="games">
+                            <label class="btn btn-outline-secondary" for="matrix-metric-games">Meccsszám</label>
+                            <input type="radio" class="btn-check" name="matrix-metric" id="matrix-metric-expected" value="expected">
+                            <label class="btn btn-outline-secondary" for="matrix-metric-expected">Várt (BT)</label>
+                        </div>
+                        <label for="matrix-top" class="visually-hidden">Modellek száma</label>
+                        <select id="matrix-top" class="form-select w-auto">
+                            <option value="8">Top 8</option>
+                            <option value="12" selected>Top 12</option>
+                            <option value="16">Top 16</option>
+                            <option value="20">Top 20</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="matrix-wrap table-responsive" id="matrix-container"></div>
+                <p class="quality-price-note">
+                    <strong>Győzelmi arány:</strong> a tényleges eredmény (döntetlen = fél győzelem), „–” ha még nem találkoztak.
+                    <strong>Meccsszám:</strong> hányszor kerültek egymás ellen – a ritka párokat a párosítás előnyben részesíti.
+                    <strong>Várt (BT):</strong> a Bradley-Terry pontszámokból becsült győzelmi esély.
                 </p>
             </section>
         </div>
@@ -415,29 +512,33 @@
 
         <!-- ELO History Mode -->
         <div id="elo-history-mode" class="arena-mode" style="display: none;">
-            <h2 class="text-center mb-4">Modellek ELO Fejlődése</h2>
-            <div class="text-center mt-3">
-                <div class="btn-group" role="group" aria-label="Időintervallum szűrő">
+            <h2 class="text-center mb-2">Modellek ELO fejlődése</h2>
+            <p class="text-center text-body-secondary mb-3">Az online (szavazatonként frissülő) ELO időbeli alakulása. A rangsor a Leaderboard oldalon Bradley-Terry módszerrel készül.</p>
+            <div class="elo-history-controls">
+                <div class="btn-group flex-wrap" role="group" aria-label="Időintervallum szűrő">
                     <input type="radio" class="btn-check" name="elo-history-range" id="elo-range-1w" value="1w" autocomplete="off">
                     <label class="btn btn-outline-primary" for="elo-range-1w">1 hét</label>
                     <input type="radio" class="btn-check" name="elo-history-range" id="elo-range-2w" value="2w" autocomplete="off">
                     <label class="btn btn-outline-primary" for="elo-range-2w">2 hét</label>
+                    <input type="radio" class="btn-check" name="elo-history-range" id="elo-range-1m" value="1m" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="elo-range-1m">1 hónap</label>
+                    <input type="radio" class="btn-check" name="elo-history-range" id="elo-range-3m" value="3m" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="elo-range-3m">3 hónap</label>
                     <input type="radio" class="btn-check" name="elo-history-range" id="elo-range-all" value="all" autocomplete="off" checked>
-                    <label class="btn btn-outline-primary" for="elo-range-all">Teljes időtartam</label>
+                    <label class="btn btn-outline-primary" for="elo-range-all">Teljes</label>
+                </div>
+                <div class="elo-history-slider">
+                    <label for="top-n-slider" class="form-label mb-0">Top modellek: <span id="top-n-value" class="fw-bold">10</span></label>
+                    <input type="range" class="form-range" id="top-n-slider" min="1" max="30" value="10" step="1">
                 </div>
             </div>
-            <!-- Slider for Top N Models -->
-            <div class="row mb-3 justify-content-center align-items-center">
-                <div class="col-md-8 col-lg-6">
-                    <label for="top-n-slider" class="form-label">Megjelenített top modellek száma: <span id="top-n-value" class="fw-bold">1</span></label>
-                    <input type="range" class="form-range" id="top-n-slider" min="1" value="1" step="1">
-                </div>
+            <div class="chart-container elo-history-chart">
+                <canvas id="eloHistoryChart" role="img" aria-label="A top modellek online ELO pontszámának időbeli változása"></canvas>
+                <p id="elo-history-empty" class="elo-history-empty text-body-secondary" hidden>Ebben az időszakban nincs adat.</p>
             </div>
-            <div class="chart-container" style="position: relative; height:60vh; width:80vw; margin: auto;">
-                <canvas id="eloHistoryChart"></canvas>
-            </div>
-            <div class="text-center mt-3">
-                <button id="refresh-history-btn" class="btn btn-info">Grafikon frissítése</button>
+            <p class="text-center text-body-secondary small mt-2">Tipp: vidd az egeret egy modell neve fölé a jelmagyarázatban a kiemeléshez.</p>
+            <div class="text-center mt-2">
+                <button id="refresh-history-btn" class="btn btn-outline-primary btn-sm">Grafikon frissítése</button>
             </div>
         </div>
 

@@ -1,0 +1,283 @@
+/* --- Leaderboard: eszköztár, rendezhető fejléc, CI sáv --- */
+.leaderboard-view-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.leaderboard-toolbar {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) auto;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.leaderboard-table {
+    --ci-color: var(--bs-primary, #0d6efd);
+}
+
+.leaderboard-table th {
+    white-space: nowrap;
+    vertical-align: bottom;
+}
+
+.sort-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.sort-btn::after {
+    content: '↕';
+    font-size: 0.75em;
+    opacity: 0.3;
+}
+
+th[aria-sort="ascending"] .sort-btn::after { content: '↑'; opacity: 0.9; }
+th[aria-sort="descending"] .sort-btn::after { content: '↓'; opacity: 0.9; }
+
+.sort-btn:focus-visible {
+    outline: 2px solid var(--bs-primary, #0d6efd);
+    outline-offset: 2px;
+    border-radius: 0.2rem;
+}
+
+.rank-cell {
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.score-cell {
+    font-variant-numeric: tabular-nums;
+}
+
+.model-cell .model-name {
+    font-weight: 500;
+}
+
+.preliminary-model .model-name,
+.preliminary-model .score-cell {
+    opacity: 0.8;
+}
+
+.ci-cell {
+    min-width: 9rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.ci-text {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--bs-secondary-color, #6c757d);
+}
+
+.ci-bar {
+    position: relative;
+    display: block;
+    height: 6px;
+    margin-top: 0.2rem;
+    border-radius: 3px;
+    background: var(--bs-secondary-bg, #e9ecef);
+}
+
+.ci-band {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    border-radius: 3px;
+    background: color-mix(in srgb, var(--ci-color) 45%, transparent);
+}
+
+.ci-point {
+    position: absolute;
+    top: -2px;
+    width: 3px;
+    height: 10px;
+    margin-left: -1.5px;
+    border-radius: 2px;
+    background: var(--ci-color);
+}
+
+/* --- Módszertan panel --- */
+.leaderboard-method {
+    border: 1px solid var(--bs-border-color, #dee2e6);
+    border-radius: 0.8rem;
+    background: var(--bs-tertiary-bg, #f8f9fa);
+}
+
+.leaderboard-method summary {
+    padding: 0.8rem 1rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.leaderboard-method-body {
+    padding: 0 1rem 1rem;
+    font-size: 0.92rem;
+}
+
+.leaderboard-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.75rem;
+}
+
+.leaderboard-stat {
+    padding: 0.6rem 0.8rem;
+    border-radius: 0.6rem;
+    background: var(--bs-body-bg, #fff);
+    border: 1px solid var(--bs-border-color-translucent, rgba(0, 0, 0, 0.1));
+}
+
+.leaderboard-stat-label {
+    display: block;
+    font-size: 0.78rem;
+    color: var(--bs-secondary-color, #6c757d);
+}
+
+.leaderboard-stat-note {
+    grid-column: 1 / -1;
+    margin: 0;
+    font-size: 0.82rem;
+    color: var(--bs-secondary-color, #6c757d);
+}
+
+/* --- Párharc-mátrix --- */
+.matrix-wrap {
+    margin-top: 0.5rem;
+}
+
+.matrix-table {
+    border-collapse: separate;
+    border-spacing: 2px;
+    font-size: 0.8rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.matrix-table td {
+    min-width: 2.9rem;
+    height: 2.2rem;
+    padding: 0.2rem;
+    border-radius: 0.3rem;
+    text-align: center;
+    background: var(--bs-tertiary-bg, #f8f9fa);
+}
+
+.matrix-table .matrix-diagonal {
+    background: repeating-linear-gradient(45deg, var(--bs-secondary-bg, #e9ecef) 0 4px, transparent 4px 8px);
+}
+
+.matrix-row-head {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    max-width: 16rem;
+    padding: 0 0.6rem 0 0.2rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    background: var(--bs-body-bg, #fff);
+    font-weight: 600;
+}
+
+.matrix-col-head {
+    text-align: center;
+    font-weight: 700;
+}
+
+.matrix-corner {
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--bs-secondary-color, #6c757d);
+    white-space: nowrap;
+}
+
+/* --- ELO fejlődés --- */
+.elo-history-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem 2rem;
+    margin-bottom: 1rem;
+}
+
+.elo-history-slider {
+    min-width: min(320px, 100%);
+}
+
+.elo-history-chart {
+    position: relative;
+    width: 100%;
+    max-width: 1400px;
+    height: 62vh;
+    min-height: 360px;
+    margin: 0 auto;
+}
+
+.elo-history-empty {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    margin: 0;
+}
+
+@media (max-width: 767.98px) {
+    /* Mobilon kompakt, háromoszlopos nézetváltó */
+    .leaderboard-view-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.4rem;
+        margin-bottom: 1rem;
+    }
+
+    .leaderboard-view-card {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        gap: 0.3rem;
+        padding: 0.6rem 0.3rem;
+        border-radius: 0.8rem;
+        text-align: center;
+    }
+
+    .leaderboard-view-card small,
+    .leaderboard-view-arrow {
+        display: none !important;
+    }
+
+    .leaderboard-view-card strong {
+        margin: 0;
+        font-size: 0.85rem;
+    }
+
+    .leaderboard-view-icon {
+        width: 2rem;
+        height: 2rem;
+        font-size: 0.7rem;
+    }
+
+    .leaderboard-heading {
+        margin: 0.5rem auto 1rem;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .leaderboard-toolbar {
+        grid-template-columns: 1fr;
+    }
+
+    .ci-cell {
+        min-width: 7rem;
+    }
+
+    .elo-history-chart {
+        height: 60vh;
+        min-height: 320px;
+    }
+}
