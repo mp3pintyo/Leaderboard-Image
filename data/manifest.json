@@ -1,1113 +1,4374 @@
 {
   "001": {
-    "bagel": "bagel.jpg",
-    "bitdance": "bitdance.png",
-    "chroma-34": "chroma-34.png",
-    "dreamina-image20pro": "dreamina-image20pro.jpeg",
-    "dreamina-image3": "dreamina-image3.jpeg",
-    "ernie-45turbo": "ernie-45turbo.png",
-    "ernie-image": "ernie-image.png",
-    "ernie-image-turbo": "ernie-image-turbo.png",
-    "f-lite-standard": "f-lite-standard.webp",
-    "firefly-image-5-preview": "firefly-image-5-preview.png",
-    "firefly4": "firefly4.jpg",
-    "firefly4ultra": "firefly4ultra.jpg",
-    "flux1-kontext-pro": "flux1-kontext-pro.png",
-    "flux1-krea": "flux1-krea.png",
-    "flux2-dev": "flux2-dev.png",
-    "flux2-flex-2k": "flux2-flex-2k.png",
-    "flux2-klein-4b": "flux2-klein-4b.png",
-    "flux2-klein-9b": "flux2-klein-9b.png",
-    "flux2-klein-base-4b": "flux2-klein-base-4b.png",
-    "flux2-klein-base-9b": "flux2-klein-base-9b.png",
-    "flux2-max-2k": "flux2-max-2k.png",
-    "flux2-pro-2k": "flux2-pro-2k.png",
-    "fluxmaniaV": "fluxmaniaV.png",
-    "gemini-2.0-flash-0507": "gemini-2.0-flash-0507.jpg",
-    "gemini-flash": "gemini-flash.jpeg",
-    "gemini25flashimagepreview": "gemini25flashimagepreview.png",
-    "glm-image": "glm-image.png",
-    "gpt-5-image-mini-high": "gpt-5-image-mini-high.png",
-    "gpt-5-image-mini-low": "gpt-5-image-mini-low.png",
-    "gpt-5-image-mini-medium": "gpt-5-image-mini-medium.png",
-    "gpt-image-1": "gpt-image-1.png",
-    "gpt-image-1.5": "gpt-image-1.5.png",
-    "gpt-image-2-3k": "gpt-image-2-3k.png",
-    "gpt-image-2-5-sunburst-1k-low": "gpt-image-2-5-sunburst-1k-low.png",
-    "gpt-image-2-5-sunburst-4k-max": "gpt-image-2-5-sunburst-4k-max.png",
-    "gpt-image-2-chatgpt": "gpt-image-2-chatgpt.png",
-    "grok": "grok.jpg",
-    "grok-imagine-image-20260201": "grok-imagine-image-20260201.jpg",
-    "hidreami1": "hidreami1.png",
-    "hunyuan-image-2.0": "hunyuan-image-2.0.jpg",
-    "hunyuan-image-2.1": "hunyuan-image-2.1.png",
-    "hunyuan-image-3.0": "hunyuan-image-3.0.jpg",
-    "hunyuan-image-3.0-instruct": "hunyuan-image-3.0-instruct.png",
-    "ideogram3": "ideogram3.jpeg",
-    "imagen3": "imagen3.jpg",
-    "imagen4": "imagen4.png",
-    "imagen4ultra": "imagen4ultra.png",
-    "imagineart-2-0": "imagineart-2-0.png",
-    "juggernautxl": "juggernautxl.png",
-    "klingai-kolors-2.1": "klingai-kolors-2.1.png",
-    "klingai-omni-image-1.0": "klingai-omni-image-1.0.png",
-    "krea2-turbo-int8": "krea2-turbo-int8.png",
-    "lens": "lens.png",
-    "lumina2": "lumina2.png",
-    "mai-image-1": "mai-image-1.png",
-    "mai-image-2": "mai-image-2.png",
-    "mai-image-2-5": "mai-image-2-5.png",
-    "mai-image-2-5-flash": "mai-image-2-5-flash.png",
-    "mai-image-2-5-pro": "mai-image-2-5-pro.png",
-    "mai-image-2-6-pre": "mai-image-2-6-pre.png",
-    "midjourney-v8.1-alpha": "midjourney-v8.1-alpha.png",
-    "midjourneyv61": "midjourneyv61.png",
-    "midjourneyv7": "midjourneyv7.png",
-    "midjourneyv7-20250501": "midjourneyv7-20250501.png",
-    "midjourneyv8alpha": "midjourneyv8alpha.png",
-    "nanobanana-2-4k": "nanobanana-2-4k.png",
-    "nanobananapro-1k": "nanobananapro-1k.jpg",
-    "nanobananapro-4k": "nanobananapro-4k.png",
-    "piclumen-realistic-v2": "piclumen-realistic-v2.png",
-    "qwen-image": "qwen-image.png",
-    "qwen-image-2.0": "qwen-image-2.0.png",
-    "qwen-image-2.1": "qwen-image-2.1.png",
-    "qwen-image-2512": "qwen-image-2512.png",
-    "qwen-image-3.0": "qwen-image-3.0.png",
-    "qwen-image-3.0-pro": "qwen-image-3.0-pro.png",
-    "recraft-v3-raw": "recraft-v3-raw.png",
-    "recraft-v4": "recraft-v4.png",
-    "reve": "reve.png",
-    "reve-1.5": "reve-1.5.png",
-    "sana-15-16": "sana-15-16.png",
-    "sana-15-48": "sana-15-48.png",
-    "sana4k": "sana4k.png",
-    "sanasprint-step2": "sanasprint-step2.png",
-    "sanasprint-step4": "sanasprint-step4.png",
-    "sd35l-step6": "sd35l-step6.png",
-    "seedream-4.0-4k": "seedream-4.0-4k.png",
-    "seedream-4.5-4k": "seedream-4.5-4k.jpg",
-    "seedream-5.0-lite": "seedream-5.0-lite.png",
-    "seedream-5.0-pro": "seedream-5.0-pro.png",
-    "tengrai": "tengrai.png",
-    "tengrai-q": "tengrai-q.png",
-    "uni-1": "uni-1.png",
-    "uni-1.1": "uni-1.1.png",
-    "uni-1.1-max": "uni-1.1-max.png",
-    "wan-2-7-pro-2k": "wan-2-7-pro-2k.png",
-    "z-image-base": "z-image-base.png",
-    "z-image-turbo": "z-image-turbo.png"
+    "bagel": {
+      "file": "bagel.jpg",
+      "key": "img/dbe06b4be717ffedfbd240cb1424ff705cf510f3"
+    },
+    "bitdance": {
+      "file": "bitdance.png",
+      "key": "img/a269a3b8a74795d9b161da44b7b7bfa0eee5fa34"
+    },
+    "chroma-34": {
+      "file": "chroma-34.png",
+      "key": "img/1444395e2ef44eb2d0b8ecb927eeb0819fc2099f"
+    },
+    "dreamina-image20pro": {
+      "file": "dreamina-image20pro.jpeg",
+      "key": "img/df7ac221b8073309fc278758f1173391e08f1127"
+    },
+    "dreamina-image3": {
+      "file": "dreamina-image3.jpeg",
+      "key": "img/5dec0e04bfc3f43cafb3d40c25ce5cb84107d84a"
+    },
+    "ernie-45turbo": {
+      "file": "ernie-45turbo.png",
+      "key": "img/b062890bb96657cc72503c1ba76b205aeefa8696"
+    },
+    "ernie-image": {
+      "file": "ernie-image.png",
+      "key": "img/7c7f37fe3eb39e4d5e4d81b27d6da924c43b030b"
+    },
+    "ernie-image-turbo": {
+      "file": "ernie-image-turbo.png",
+      "key": "img/2879c0991ac7e9f408f3524a98677f0ebc3f2098"
+    },
+    "f-lite-standard": {
+      "file": "f-lite-standard.webp",
+      "key": "img/1f68d2159bfab7d47bace176d4c282602320a95c"
+    },
+    "firefly-image-5-preview": {
+      "file": "firefly-image-5-preview.png",
+      "key": "img/bb801209105ecfc2f43c4f339375b1bb1b974759"
+    },
+    "firefly4": {
+      "file": "firefly4.jpg",
+      "key": "img/d3c2e672e2781cbc07df41fb7b170217d415ab37"
+    },
+    "firefly4ultra": {
+      "file": "firefly4ultra.jpg",
+      "key": "img/bbf166a103d9d4323878be75c32955b0114a2685"
+    },
+    "flux1-kontext-pro": {
+      "file": "flux1-kontext-pro.png",
+      "key": "img/d27620bf58b59dd5784ec37537bf48335aed315b"
+    },
+    "flux1-krea": {
+      "file": "flux1-krea.png",
+      "key": "img/edab99d62f54ce11b23fbf82f0e5ca9b1a45b9a7"
+    },
+    "flux2-dev": {
+      "file": "flux2-dev.png",
+      "key": "img/ecd1d55ff020301b90dde59307245ac6d339a941"
+    },
+    "flux2-flex-2k": {
+      "file": "flux2-flex-2k.png",
+      "key": "img/f43d5b2a77e0e2924ac23bcded7de91a471e692e"
+    },
+    "flux2-klein-4b": {
+      "file": "flux2-klein-4b.png",
+      "key": "img/28cf37dd020ed325d950dfa3b3c92c38adaaf940"
+    },
+    "flux2-klein-9b": {
+      "file": "flux2-klein-9b.png",
+      "key": "img/30eb2da6a2aa7d31624a3af5b11a6b84fda3fa17"
+    },
+    "flux2-klein-base-4b": {
+      "file": "flux2-klein-base-4b.png",
+      "key": "img/c6dd7598e207dd83096161d7318a31106a6cbd02"
+    },
+    "flux2-klein-base-9b": {
+      "file": "flux2-klein-base-9b.png",
+      "key": "img/fdcde6cbe3dda8fae348ed1ff0c56955c05dcbfb"
+    },
+    "flux2-max-2k": {
+      "file": "flux2-max-2k.png",
+      "key": "img/90d31bdb7c43500235284788c46291465efb480f"
+    },
+    "flux2-pro-2k": {
+      "file": "flux2-pro-2k.png",
+      "key": "img/173475da1b162a29b8fb64bf3d8f21e043e1a645"
+    },
+    "fluxmaniaV": {
+      "file": "fluxmaniaV.png",
+      "key": "img/02aa38c11fca00f2ac4e3a3e7592694aa8354a13"
+    },
+    "gemini-2.0-flash-0507": {
+      "file": "gemini-2.0-flash-0507.jpg",
+      "key": "img/19beec512c00f282f9f8b40dceeaa3987f5cfe90"
+    },
+    "gemini-flash": {
+      "file": "gemini-flash.jpeg",
+      "key": "img/b52225bbc4554ce7f8b4fcc7093c9976feb9499d"
+    },
+    "gemini25flashimagepreview": {
+      "file": "gemini25flashimagepreview.png",
+      "key": "img/893ebe8669edbb4f5503bbfc81f9f653bd8dbc55"
+    },
+    "glm-image": {
+      "file": "glm-image.png",
+      "key": "img/149ce06dea825658336136de8b29741960b4829d"
+    },
+    "gpt-5-image-mini-high": {
+      "file": "gpt-5-image-mini-high.png",
+      "key": "img/f9011a988bcbf153987f6170a6ae164b7580f355"
+    },
+    "gpt-5-image-mini-low": {
+      "file": "gpt-5-image-mini-low.png",
+      "key": "img/803c52b61b1525dc1eeca0ffe0a50afb6676e593"
+    },
+    "gpt-5-image-mini-medium": {
+      "file": "gpt-5-image-mini-medium.png",
+      "key": "img/886c32605afacfb7826d741394524d651a83d76f"
+    },
+    "gpt-image-1": {
+      "file": "gpt-image-1.png",
+      "key": "img/182f7f3e94047bcfff00ead12e11674e40e80bf3"
+    },
+    "gpt-image-1.5": {
+      "file": "gpt-image-1.5.png",
+      "key": "img/cc08f6794037b673c848c53f50fa95ae6fcb42a9"
+    },
+    "gpt-image-2-3k": {
+      "file": "gpt-image-2-3k.png",
+      "key": "img/c0b5403bd8f9b1dcc3cc17e0cbe6ba253e27b7ac"
+    },
+    "gpt-image-2-5-sunburst-1k-low": {
+      "file": "gpt-image-2-5-sunburst-1k-low.png",
+      "key": "img/7f7f6a7bb5a4868762e119d9d52b70e8e869c3ff"
+    },
+    "gpt-image-2-5-sunburst-4k-max": {
+      "file": "gpt-image-2-5-sunburst-4k-max.png",
+      "key": "img/b966be16a87b63a3b3f42669dde3f025ecb6c616"
+    },
+    "gpt-image-2-chatgpt": {
+      "file": "gpt-image-2-chatgpt.png",
+      "key": "img/d71154b3c8ac51dd3aebb9efe137207928e79fa6"
+    },
+    "grok": {
+      "file": "grok.jpg",
+      "key": "img/110c2d1f2d2c9c3633a6ef675f46d831b0ee8cac"
+    },
+    "grok-imagine-image-20260201": {
+      "file": "grok-imagine-image-20260201.jpg",
+      "key": "img/93902b7e649c564a0bad9b48d06accebc4c1b3a2"
+    },
+    "hidreami1": {
+      "file": "hidreami1.png",
+      "key": "img/f833407ea3a7347fdaf4adf166e08c16c6414f5b"
+    },
+    "hunyuan-image-2.0": {
+      "file": "hunyuan-image-2.0.jpg",
+      "key": "img/72094c5fbf1f825d236548806173535374ca2607"
+    },
+    "hunyuan-image-2.1": {
+      "file": "hunyuan-image-2.1.png",
+      "key": "img/25f72cea41e60f8d8bb5fbc23cb86407dd874e92"
+    },
+    "hunyuan-image-3.0": {
+      "file": "hunyuan-image-3.0.jpg",
+      "key": "img/2fcf120ad2d5fe726192ffdd6ef6ccd11fe74d32"
+    },
+    "hunyuan-image-3.0-instruct": {
+      "file": "hunyuan-image-3.0-instruct.png",
+      "key": "img/5296e6c75499f20b4f6bbcfe17cef4c110c86aa7"
+    },
+    "ideogram3": {
+      "file": "ideogram3.jpeg",
+      "key": "img/6c2e380e3c04a14d513a77fbc5fea0b764d50c20"
+    },
+    "imagen3": {
+      "file": "imagen3.jpg",
+      "key": "img/61f33d814836a0bdaf336caca5de460f35b055a8"
+    },
+    "imagen4": {
+      "file": "imagen4.png",
+      "key": "img/79c481d1577e0bebdbde3937139dd301b4fda72d"
+    },
+    "imagen4ultra": {
+      "file": "imagen4ultra.png",
+      "key": "img/53face58ba7b2c4a6cab77e3a2f4e1c465cd8bbf"
+    },
+    "imagineart-2-0": {
+      "file": "imagineart-2-0.png",
+      "key": "img/7da97bb0923c3378d07e618ef8a2415059264172"
+    },
+    "juggernautxl": {
+      "file": "juggernautxl.png",
+      "key": "img/5aa26144486fa03dec6efc5249dbc6bb74376742"
+    },
+    "klingai-kolors-2.1": {
+      "file": "klingai-kolors-2.1.png",
+      "key": "img/ef793599bf484f5f73c317873ec12540391b8d00"
+    },
+    "klingai-omni-image-1.0": {
+      "file": "klingai-omni-image-1.0.png",
+      "key": "img/31af833ee2c251d7edf913a3146a6b90050a857f"
+    },
+    "krea2-turbo-int8": {
+      "file": "krea2-turbo-int8.png",
+      "key": "img/cd95423218792619522107cc6c8b49dfd0ea1dbd"
+    },
+    "lens": {
+      "file": "lens.png",
+      "key": "img/b2d5657bbc2db1d78781290e9f74ecd862f959e7"
+    },
+    "lumina2": {
+      "file": "lumina2.png",
+      "key": "img/55243b43a044af5139c6cb4dab36c6b7046cde05"
+    },
+    "mai-image-1": {
+      "file": "mai-image-1.png",
+      "key": "img/afea75b3e9fdb3b614a27df789464e8499343332"
+    },
+    "mai-image-2": {
+      "file": "mai-image-2.png",
+      "key": "img/9a097aee46b75d45a99309044415eb9b4f0a51af"
+    },
+    "mai-image-2-5": {
+      "file": "mai-image-2-5.png",
+      "key": "img/c746781243b7530542cabaa14cd1c12978a5a688"
+    },
+    "mai-image-2-5-flash": {
+      "file": "mai-image-2-5-flash.png",
+      "key": "img/8d48d5c1e80ea0324df0c744eb3e6186cd6a0262"
+    },
+    "mai-image-2-5-pro": {
+      "file": "mai-image-2-5-pro.png",
+      "key": "img/acd6ec53e4e97ed72939edbe37738edf3a0a223f"
+    },
+    "mai-image-2-6-pre": {
+      "file": "mai-image-2-6-pre.png",
+      "key": "img/446237294b30a03cb2785e57c202f05b95c5a636"
+    },
+    "midjourney-v8.1-alpha": {
+      "file": "midjourney-v8.1-alpha.png",
+      "key": "img/ae49572549e175d9a87c623a041f0631ee43fd5a"
+    },
+    "midjourneyv61": {
+      "file": "midjourneyv61.png",
+      "key": "img/2bbb4a963c41cadc356d773a3a779a8b06b8c6f4"
+    },
+    "midjourneyv7": {
+      "file": "midjourneyv7.png",
+      "key": "img/e448ca09c0df4b7c19afbe4fe1ca8c504137ba83"
+    },
+    "midjourneyv7-20250501": {
+      "file": "midjourneyv7-20250501.png",
+      "key": "img/4c40f4877af9e8bac1bea15a62f96a1a24c7d446"
+    },
+    "midjourneyv8alpha": {
+      "file": "midjourneyv8alpha.png",
+      "key": "img/b496b8c98556af8a7e145928d16a199a7a69ea9b"
+    },
+    "nanobanana-2-4k": {
+      "file": "nanobanana-2-4k.png",
+      "key": "img/3e6eb0f8cd988ff305cb60b213181b8ad3cc6b5a"
+    },
+    "nanobananapro-1k": {
+      "file": "nanobananapro-1k.jpg",
+      "key": "img/7354be3a4f154c862c249d883a4c5dba9762f8c0"
+    },
+    "nanobananapro-4k": {
+      "file": "nanobananapro-4k.png",
+      "key": "img/6f236f4211a0733e8ace1b9ddbfa6901798fdd94"
+    },
+    "piclumen-realistic-v2": {
+      "file": "piclumen-realistic-v2.png",
+      "key": "img/b160d67765a452552294564050f682533b4050cb"
+    },
+    "qwen-image": {
+      "file": "qwen-image.png",
+      "key": "img/73c278011e4bea4bd2a6864a5ff36ea42c4e264e"
+    },
+    "qwen-image-2.0": {
+      "file": "qwen-image-2.0.png",
+      "key": "img/e67b2b2b919c438037f19a99d946d9a28d86be4c"
+    },
+    "qwen-image-2.1": {
+      "file": "qwen-image-2.1.png",
+      "key": "img/7442183622b45689fae5cb0773d1c0b67ca83095"
+    },
+    "qwen-image-2512": {
+      "file": "qwen-image-2512.png",
+      "key": "img/5d1e0765fe78cd1765d016247fdb7f6b63776183"
+    },
+    "qwen-image-3.0": {
+      "file": "qwen-image-3.0.png",
+      "key": "img/885f7729ed46a2255acd4a343e42dbc370d367f5"
+    },
+    "qwen-image-3.0-pro": {
+      "file": "qwen-image-3.0-pro.png",
+      "key": "img/f5b4c7e881502960f32e29c561ce7a2cc27bc3de"
+    },
+    "recraft-v3-raw": {
+      "file": "recraft-v3-raw.png",
+      "key": "img/81ff3dbe5f3232b3ffd28a04465a35f340e8f012"
+    },
+    "recraft-v4": {
+      "file": "recraft-v4.png",
+      "key": "img/f5fd4cfc0f3e896cbbb152cd4d352f6b73d0e247"
+    },
+    "reve": {
+      "file": "reve.png",
+      "key": "img/3abde329880bd0c15604008a9836df2cd6117bbb"
+    },
+    "reve-1.5": {
+      "file": "reve-1.5.png",
+      "key": "img/efea7ed7873ce6bf5727e1abd75fc5132d9c5922"
+    },
+    "sana-15-16": {
+      "file": "sana-15-16.png",
+      "key": "img/0118c9eea21627893b26b3c3796d90503827f91a"
+    },
+    "sana-15-48": {
+      "file": "sana-15-48.png",
+      "key": "img/5b3b88d601ca28edbb6c430e6094fcd6f21e0904"
+    },
+    "sana4k": {
+      "file": "sana4k.png",
+      "key": "img/c0ebb9211a02407f709768c56af758ea054fc9af"
+    },
+    "sanasprint-step2": {
+      "file": "sanasprint-step2.png",
+      "key": "img/736ddfd1b051de84de8404b05b6272cfd4d54418"
+    },
+    "sanasprint-step4": {
+      "file": "sanasprint-step4.png",
+      "key": "img/58f11e1a5b32a9842e810bb7f21ea8e48d461636"
+    },
+    "sd35l-step6": {
+      "file": "sd35l-step6.png",
+      "key": "img/6f8948d3d746d1711532db17805c8408389b135a"
+    },
+    "seedream-4.0-4k": {
+      "file": "seedream-4.0-4k.png",
+      "key": "img/fc7aea4324a4e823d249d75753078a177f611901"
+    },
+    "seedream-4.5-4k": {
+      "file": "seedream-4.5-4k.jpg",
+      "key": "img/a1ce089bc343b4188f9ee452d6898eb07778d8cf"
+    },
+    "seedream-5.0-lite": {
+      "file": "seedream-5.0-lite.png",
+      "key": "img/b1a9f91cc1d97c1f827188ba95ff7dc52eb87fdb"
+    },
+    "seedream-5.0-pro": {
+      "file": "seedream-5.0-pro.png",
+      "key": "img/02cf66a84b4dc4c40f46206b610628b4ed485983"
+    },
+    "tengrai": {
+      "file": "tengrai.png",
+      "key": "img/f628ca40aa48995dbcd3a03265c13f8a29bbc5ec"
+    },
+    "tengrai-q": {
+      "file": "tengrai-q.png",
+      "key": "img/c7d3aa05ac8972295a927c49ed0670ab77268274"
+    },
+    "uni-1": {
+      "file": "uni-1.png",
+      "key": "img/aaef6e5ca79c2d5a96d0fb57f3cf2aff90f2c5c5"
+    },
+    "uni-1.1": {
+      "file": "uni-1.1.png",
+      "key": "img/d515f4b93c535b39bd7802fd333d319f171ed542"
+    },
+    "uni-1.1-max": {
+      "file": "uni-1.1-max.png",
+      "key": "img/fac3b328943394e7fb67fd2bee4fa6ed3aff2410"
+    },
+    "wan-2-7-pro-2k": {
+      "file": "wan-2-7-pro-2k.png",
+      "key": "img/c696370447eb295f07c770ebf0da38a62392afec"
+    },
+    "z-image-base": {
+      "file": "z-image-base.png",
+      "key": "img/702f53d7eddd6b33547c8d9ce6873f8e50ee96d3"
+    },
+    "z-image-turbo": {
+      "file": "z-image-turbo.png",
+      "key": "img/67554cdd0389b8aafd18b146d0f617ee96e823f7"
+    }
   },
   "002": {
-    "bagel": "bagel.jpg",
-    "bitdance": "bitdance.png",
-    "chroma-34": "chroma-34.png",
-    "dreamina-image20pro": "dreamina-image20pro.jpeg",
-    "dreamina-image3": "dreamina-image3.jpeg",
-    "ernie-45turbo": "ernie-45turbo.png",
-    "ernie-image": "ernie-image.png",
-    "ernie-image-turbo": "ernie-image-turbo.png",
-    "f-lite-standard": "f-lite-standard.webp",
-    "firefly-image-5-preview": "firefly-image-5-preview.png",
-    "firefly4": "firefly4.jpg",
-    "firefly4ultra": "firefly4ultra.jpg",
-    "flux1-kontext-pro": "flux1-kontext-pro.png",
-    "flux1-krea": "flux1-krea.png",
-    "flux2-dev": "flux2-dev.png",
-    "flux2-flex-2k": "flux2-flex-2k.png",
-    "flux2-klein-4b": "flux2-klein-4b.png",
-    "flux2-klein-9b": "flux2-klein-9b.png",
-    "flux2-klein-base-4b": "flux2-klein-base-4b.png",
-    "flux2-klein-base-9b": "flux2-klein-base-9b.png",
-    "flux2-max-2k": "flux2-max-2k.png",
-    "flux2-pro-2k": "flux2-pro-2k.png",
-    "fluxmaniaV": "fluxmaniaV.png",
-    "gemini-2.0-flash-0507": "gemini-2.0-flash-0507.jpg",
-    "gemini-flash": "gemini-flash.jpeg",
-    "gemini25flashimagepreview": "gemini25flashimagepreview.png",
-    "glm-image": "glm-image.png",
-    "gpt-5-image-mini-high": "gpt-5-image-mini-high.png",
-    "gpt-5-image-mini-low": "gpt-5-image-mini-low.png",
-    "gpt-5-image-mini-medium": "gpt-5-image-mini-medium.png",
-    "gpt-image-1": "gpt-image-1.png",
-    "gpt-image-1.5": "gpt-image-1.5.png",
-    "gpt-image-2-3k": "gpt-image-2-3k.png",
-    "gpt-image-2-5-sunburst-1k-low": "gpt-image-2-5-sunburst-1k-low.png",
-    "gpt-image-2-5-sunburst-4k-max": "gpt-image-2-5-sunburst-4k-max.png",
-    "gpt-image-2-chatgpt": "gpt-image-2-chatgpt.png",
-    "grok": "grok.jpg",
-    "grok-imagine-image-20260201": "grok-imagine-image-20260201.jpg",
-    "hidreami1": "hidreami1.png",
-    "hunyuan-image-2.0": "hunyuan-image-2.0.jpg",
-    "hunyuan-image-2.1": "hunyuan-image-2.1.png",
-    "hunyuan-image-3.0": "hunyuan-image-3.0.jpg",
-    "hunyuan-image-3.0-instruct": "hunyuan-image-3.0-instruct.png",
-    "ideogram3": "ideogram3.jpeg",
-    "imagen3": "imagen3.jpg",
-    "imagen4": "imagen4.png",
-    "imagen4ultra": "imagen4ultra.png",
-    "imagineart-2-0": "imagineart-2-0.png",
-    "juggernautxl": "juggernautxl.png",
-    "klingai-kolors-2.1": "klingai-kolors-2.1.png",
-    "klingai-omni-image-1.0": "klingai-omni-image-1.0.png",
-    "krea2-turbo-int8": "krea2-turbo-int8.png",
-    "lens": "lens.png",
-    "lumina2": "lumina2.png",
-    "mai-image-1": "mai-image-1.png",
-    "mai-image-2": "mai-image-2.png",
-    "mai-image-2-5": "mai-image-2-5.png",
-    "mai-image-2-5-flash": "mai-image-2-5-flash.png",
-    "mai-image-2-5-pro": "mai-image-2-5-pro.png",
-    "mai-image-2-6-pre": "mai-image-2-6-pre.png",
-    "midjourney-v8.1-alpha": "midjourney-v8.1-alpha.png",
-    "midjourneyv61": "midjourneyv61.png",
-    "midjourneyv7": "midjourneyv7.png",
-    "midjourneyv7-20250501": "midjourneyv7-20250501.png",
-    "midjourneyv8alpha": "midjourneyv8alpha.png",
-    "nanobanana-2-4k": "nanobanana-2-4k.png",
-    "nanobananapro-4k": "nanobananapro-4k.png",
-    "piclumen-realistic-v2": "piclumen-realistic-v2.png",
-    "qwen-image": "qwen-image.png",
-    "qwen-image-2.0": "qwen-image-2.0.png",
-    "qwen-image-2.1": "qwen-image-2.1.png",
-    "qwen-image-2512": "qwen-image-2512.png",
-    "qwen-image-3.0": "qwen-image-3.0.png",
-    "qwen-image-3.0-pro": "qwen-image-3.0-pro.png",
-    "recraft-v3-raw": "recraft-v3-raw.png",
-    "recraft-v4": "recraft-v4.png",
-    "reve": "reve.png",
-    "reve-1.5": "reve-1.5.png",
-    "seedream-4.0-4k": "seedream-4.0-4k.png",
-    "seedream-4.5-4k": "seedream-4.5-4k.png",
-    "seedream-5.0-lite": "seedream-5.0-lite.png",
-    "seedream-5.0-pro": "seedream-5.0-pro.png",
-    "tengrai": "tengrai.png",
-    "tengrai-q": "tengrai-q.png",
-    "uni-1": "uni-1.png",
-    "uni-1.1": "uni-1.1.png",
-    "uni-1.1-max": "uni-1.1-max.png",
-    "wan-2-7-pro-2k": "wan-2-7-pro-2k.png",
-    "z-image-base": "z-image-base.png",
-    "z-image-turbo": "z-image-turbo.png"
+    "bagel": {
+      "file": "bagel.jpg",
+      "key": "img/3073f01232c2bf02a84497f12b4aac997cd08a26"
+    },
+    "bitdance": {
+      "file": "bitdance.png",
+      "key": "img/efd85b2eb5b5c79bb577814d8bbe772e96909913"
+    },
+    "chroma-34": {
+      "file": "chroma-34.png",
+      "key": "img/5b9884361ffd7afb09ef9ebb5cbc7244e9fdf9fa"
+    },
+    "dreamina-image20pro": {
+      "file": "dreamina-image20pro.jpeg",
+      "key": "img/bea7950bdf7e609b271670aa68b53578f31e2503"
+    },
+    "dreamina-image3": {
+      "file": "dreamina-image3.jpeg",
+      "key": "img/5f34cfde69d43e53448477d5a4810197aa9ccd9b"
+    },
+    "ernie-45turbo": {
+      "file": "ernie-45turbo.png",
+      "key": "img/b73529de05dd99a154ac51658bf4ba4d393e8ae3"
+    },
+    "ernie-image": {
+      "file": "ernie-image.png",
+      "key": "img/06fa70bc0d05a2ede88e04b2dce376afc9fb1ef5"
+    },
+    "ernie-image-turbo": {
+      "file": "ernie-image-turbo.png",
+      "key": "img/f5d0f18bb39531018b98d0bb5f56b7b26850a63a"
+    },
+    "f-lite-standard": {
+      "file": "f-lite-standard.webp",
+      "key": "img/bede793cc0d056bfa133ad905b7f584a1e5b1667"
+    },
+    "firefly-image-5-preview": {
+      "file": "firefly-image-5-preview.png",
+      "key": "img/58effb18480ee62b7227b4a9002e98af724d03f8"
+    },
+    "firefly4": {
+      "file": "firefly4.jpg",
+      "key": "img/88dd4b609e53399b93812cf3903407b2cb210f3b"
+    },
+    "firefly4ultra": {
+      "file": "firefly4ultra.jpg",
+      "key": "img/9cd3f041ab6fc2dfb0a91fe4fc38feda272d81ee"
+    },
+    "flux1-kontext-pro": {
+      "file": "flux1-kontext-pro.png",
+      "key": "img/7bec19477f29e642a0a75a9cf9c9118996afcb4f"
+    },
+    "flux1-krea": {
+      "file": "flux1-krea.png",
+      "key": "img/902a26142555a3918bf19e568535857306d02b38"
+    },
+    "flux2-dev": {
+      "file": "flux2-dev.png",
+      "key": "img/95d75321061399917853d5ffd707668971155bd0"
+    },
+    "flux2-flex-2k": {
+      "file": "flux2-flex-2k.png",
+      "key": "img/08e3aa2ae219fbfd311e44ec579865159e2fd02d"
+    },
+    "flux2-klein-4b": {
+      "file": "flux2-klein-4b.png",
+      "key": "img/4565a84cb3f7c22557d93dfcad2223ac271a6957"
+    },
+    "flux2-klein-9b": {
+      "file": "flux2-klein-9b.png",
+      "key": "img/f658bffe708212027909bc4401ae085d2e96b379"
+    },
+    "flux2-klein-base-4b": {
+      "file": "flux2-klein-base-4b.png",
+      "key": "img/ddbeda6c3b572a080d72f313ea75029a0090a661"
+    },
+    "flux2-klein-base-9b": {
+      "file": "flux2-klein-base-9b.png",
+      "key": "img/32a5ebc3ffeb69517cc7125add22015a764cd17a"
+    },
+    "flux2-max-2k": {
+      "file": "flux2-max-2k.png",
+      "key": "img/4cb5316e22cba39e0fbe969e7635113bd0167d6c"
+    },
+    "flux2-pro-2k": {
+      "file": "flux2-pro-2k.png",
+      "key": "img/bb6d85dd55aa6e46e9829ffab223ff91e19a2b1b"
+    },
+    "fluxmaniaV": {
+      "file": "fluxmaniaV.png",
+      "key": "img/b28e0b886a490b1072c42a1d56740e69ffba2a2e"
+    },
+    "gemini-2.0-flash-0507": {
+      "file": "gemini-2.0-flash-0507.jpg",
+      "key": "img/e9fa1b92a447c76f6f7f813f26c9862a6dabe957"
+    },
+    "gemini-flash": {
+      "file": "gemini-flash.jpeg",
+      "key": "img/e6aa75683ae97648df4c26180484a27f593a89fc"
+    },
+    "gemini25flashimagepreview": {
+      "file": "gemini25flashimagepreview.png",
+      "key": "img/7473e7f1d9842abeb743e3471695e829f0011223"
+    },
+    "glm-image": {
+      "file": "glm-image.png",
+      "key": "img/e6dd2c928daaa423f03ad8a21b3ddbbd28da3acc"
+    },
+    "gpt-5-image-mini-high": {
+      "file": "gpt-5-image-mini-high.png",
+      "key": "img/62289cd0a367472ffd0b41cce591cb90256c8981"
+    },
+    "gpt-5-image-mini-low": {
+      "file": "gpt-5-image-mini-low.png",
+      "key": "img/0a117771f8dc28b47e20a2b6971df0311c8d990a"
+    },
+    "gpt-5-image-mini-medium": {
+      "file": "gpt-5-image-mini-medium.png",
+      "key": "img/0ad4d6a3f6a6c1e6fbd0c93d4635a69d6b1bb850"
+    },
+    "gpt-image-1": {
+      "file": "gpt-image-1.png",
+      "key": "img/76a90da93841ace9c94bd31f07268dfedf54f2a6"
+    },
+    "gpt-image-1.5": {
+      "file": "gpt-image-1.5.png",
+      "key": "img/2f34a7504f1e9be5edc2883a709d2589cf516748"
+    },
+    "gpt-image-2-3k": {
+      "file": "gpt-image-2-3k.png",
+      "key": "img/e6015b2125bf43d66b8cc410a4cbe56b266d2767"
+    },
+    "gpt-image-2-5-sunburst-1k-low": {
+      "file": "gpt-image-2-5-sunburst-1k-low.png",
+      "key": "img/3c2260cfb8c241b4bf8eb2edd903615c7e22f366"
+    },
+    "gpt-image-2-5-sunburst-4k-max": {
+      "file": "gpt-image-2-5-sunburst-4k-max.png",
+      "key": "img/660a89c8286a8f2b26a60576d14d63135822351a"
+    },
+    "gpt-image-2-chatgpt": {
+      "file": "gpt-image-2-chatgpt.png",
+      "key": "img/a00ad1dc82477a28cb6a2ad801b2347c074f23e5"
+    },
+    "grok": {
+      "file": "grok.jpg",
+      "key": "img/2c51f5faa69867a181269d67ff6d03d8288bc1e4"
+    },
+    "grok-imagine-image-20260201": {
+      "file": "grok-imagine-image-20260201.jpg",
+      "key": "img/93a9cb5de022d5e82d1a3576bd28acd2419ec8cc"
+    },
+    "hidreami1": {
+      "file": "hidreami1.png",
+      "key": "img/026f142f85d0d479496dfb778c326d05f8474f33"
+    },
+    "hunyuan-image-2.0": {
+      "file": "hunyuan-image-2.0.jpg",
+      "key": "img/f4c39b0cf6e6064bd2fb474b111cc2bae0608429"
+    },
+    "hunyuan-image-2.1": {
+      "file": "hunyuan-image-2.1.png",
+      "key": "img/4d753bbf7b4123fdf6db777972461da584d948cd"
+    },
+    "hunyuan-image-3.0": {
+      "file": "hunyuan-image-3.0.jpg",
+      "key": "img/682349fc86236349a7b311735bf055e0ec7f6f00"
+    },
+    "hunyuan-image-3.0-instruct": {
+      "file": "hunyuan-image-3.0-instruct.png",
+      "key": "img/373e21dc2d8707cfce13a27fcc4a9ce832fa5065"
+    },
+    "ideogram3": {
+      "file": "ideogram3.jpeg",
+      "key": "img/7cd6bea50c081ef60ddfc61905ce6cd6dbf2fcb1"
+    },
+    "imagen3": {
+      "file": "imagen3.jpg",
+      "key": "img/bd4d6148ea0ac1a1865c78cf423affa0d381e062"
+    },
+    "imagen4": {
+      "file": "imagen4.png",
+      "key": "img/08d67dca973c5bc314ad73eccac5a90bef0c2514"
+    },
+    "imagen4ultra": {
+      "file": "imagen4ultra.png",
+      "key": "img/d814573c87e0fe661b4b27ab711ca1704b6a7b8a"
+    },
+    "imagineart-2-0": {
+      "file": "imagineart-2-0.png",
+      "key": "img/98770fbf64851cbc4c47500371f9c3c84ea04d42"
+    },
+    "juggernautxl": {
+      "file": "juggernautxl.png",
+      "key": "img/9cf9a1abe38bcfb676bb2ea3d6a82c198dd16ea1"
+    },
+    "klingai-kolors-2.1": {
+      "file": "klingai-kolors-2.1.png",
+      "key": "img/aa2976e622552cde1804de0e69799db919aaba97"
+    },
+    "klingai-omni-image-1.0": {
+      "file": "klingai-omni-image-1.0.png",
+      "key": "img/f7440942dfb909d597c0ca35470426c72023e066"
+    },
+    "krea2-turbo-int8": {
+      "file": "krea2-turbo-int8.png",
+      "key": "img/fa6ae3d5e1986c83f50e1f817fbe520ef7fcf2ff"
+    },
+    "lens": {
+      "file": "lens.png",
+      "key": "img/13ab470eb80f35c3e5c139a61a61cc743209e5ef"
+    },
+    "lumina2": {
+      "file": "lumina2.png",
+      "key": "img/03baf86018ca16c6d774ada501ae3eeaeee63195"
+    },
+    "mai-image-1": {
+      "file": "mai-image-1.png",
+      "key": "img/bf80d3ebac0712b50bc798f281dfc60b165513ee"
+    },
+    "mai-image-2": {
+      "file": "mai-image-2.png",
+      "key": "img/94f0327eb66fc438c2036a8a35c16967a542855c"
+    },
+    "mai-image-2-5": {
+      "file": "mai-image-2-5.png",
+      "key": "img/4c976dc3bd7c42f17b984c44c7d2653bcfff0955"
+    },
+    "mai-image-2-5-flash": {
+      "file": "mai-image-2-5-flash.png",
+      "key": "img/263128088d4007b35f1721de2b4ef9b0dfc35ed4"
+    },
+    "mai-image-2-5-pro": {
+      "file": "mai-image-2-5-pro.png",
+      "key": "img/fcbe236a9d901de37aa82f1e588b7f4ce6b4a51e"
+    },
+    "mai-image-2-6-pre": {
+      "file": "mai-image-2-6-pre.png",
+      "key": "img/5f03836ae2efdd8891ce89a100568f8a89eeb238"
+    },
+    "midjourney-v8.1-alpha": {
+      "file": "midjourney-v8.1-alpha.png",
+      "key": "img/56f5797e5d6bbf986c216efcec3f59e1142155f0"
+    },
+    "midjourneyv61": {
+      "file": "midjourneyv61.png",
+      "key": "img/5be42f0ee20c20bbe85fa4fbafc4681c95fe1b57"
+    },
+    "midjourneyv7": {
+      "file": "midjourneyv7.png",
+      "key": "img/f52cb70b5ba1943f24902441b8e11a315340184c"
+    },
+    "midjourneyv7-20250501": {
+      "file": "midjourneyv7-20250501.png",
+      "key": "img/b3d4be5741cfbddc49ea7eb0fa6b718dc39a09e3"
+    },
+    "midjourneyv8alpha": {
+      "file": "midjourneyv8alpha.png",
+      "key": "img/93fa9175b922bd4f2be0af04fbd45572e31003d9"
+    },
+    "nanobanana-2-4k": {
+      "file": "nanobanana-2-4k.png",
+      "key": "img/93641e754bc80d92c1ae1fd1f9a9b5a1af007d6d"
+    },
+    "nanobananapro-4k": {
+      "file": "nanobananapro-4k.png",
+      "key": "img/8a05695e7d32a9b38175062a249f3985b05db5b4"
+    },
+    "piclumen-realistic-v2": {
+      "file": "piclumen-realistic-v2.png",
+      "key": "img/e616aea15c5a9ffabad068302032615a49d9b232"
+    },
+    "qwen-image": {
+      "file": "qwen-image.png",
+      "key": "img/6137d90fd1daf9cb7f6d0f37977b5d6dcf458084"
+    },
+    "qwen-image-2.0": {
+      "file": "qwen-image-2.0.png",
+      "key": "img/a01bd830d9d86990d57732e9545ecc2a339a382e"
+    },
+    "qwen-image-2.1": {
+      "file": "qwen-image-2.1.png",
+      "key": "img/70a253e60b88cc3a78b3bf37d35e6d1bf74c7a43"
+    },
+    "qwen-image-2512": {
+      "file": "qwen-image-2512.png",
+      "key": "img/9815b84f0d8bddf5e5aef02e64b906f3df273486"
+    },
+    "qwen-image-3.0": {
+      "file": "qwen-image-3.0.png",
+      "key": "img/7764b04b2074b8d074e4acf1c35116ce506052e8"
+    },
+    "qwen-image-3.0-pro": {
+      "file": "qwen-image-3.0-pro.png",
+      "key": "img/c37d0bf3925f2d09625805ea8358782cd6ece390"
+    },
+    "recraft-v3-raw": {
+      "file": "recraft-v3-raw.png",
+      "key": "img/b65670604676b0ed05021fe62a7ad8c82edf4d24"
+    },
+    "recraft-v4": {
+      "file": "recraft-v4.png",
+      "key": "img/c85ded9ac6027d5f5b3d3bbc2bb94178ae1b02f7"
+    },
+    "reve": {
+      "file": "reve.png",
+      "key": "img/554410c1b47c31423f959eeddcae6dd4a0834a89"
+    },
+    "reve-1.5": {
+      "file": "reve-1.5.png",
+      "key": "img/ffb4ac423ab8bd8f4865a5cda4770d512c93105a"
+    },
+    "seedream-4.0-4k": {
+      "file": "seedream-4.0-4k.png",
+      "key": "img/5a4a562d70f9d0994d4ab44b8dae4932bf7fee47"
+    },
+    "seedream-4.5-4k": {
+      "file": "seedream-4.5-4k.png",
+      "key": "img/a417bf3c2bbb7f5f7d1dc43315ebb7c77f94dcad"
+    },
+    "seedream-5.0-lite": {
+      "file": "seedream-5.0-lite.png",
+      "key": "img/471ae9ae1f370d09ce789f65cf6d395312f84fcb"
+    },
+    "seedream-5.0-pro": {
+      "file": "seedream-5.0-pro.png",
+      "key": "img/9090afbcfbb634658c62828d2646b5f7f10db7da"
+    },
+    "tengrai": {
+      "file": "tengrai.png",
+      "key": "img/6987ae9041609c5e2e86319ba590fc68b8ab4f82"
+    },
+    "tengrai-q": {
+      "file": "tengrai-q.png",
+      "key": "img/7dc9c2295e5369a9d0a62d18964bef71e9aee747"
+    },
+    "uni-1": {
+      "file": "uni-1.png",
+      "key": "img/2a54d780c5a56b1b7c7211f88aa18e180e6cc362"
+    },
+    "uni-1.1": {
+      "file": "uni-1.1.png",
+      "key": "img/01cb6a02c04740b99a54d0d19fec6b4877a6465e"
+    },
+    "uni-1.1-max": {
+      "file": "uni-1.1-max.png",
+      "key": "img/4d5e4fde79fcb386b8197dc680a64ec4463707f1"
+    },
+    "wan-2-7-pro-2k": {
+      "file": "wan-2-7-pro-2k.png",
+      "key": "img/6828be1a00d48137d1c6c206cbfa84a7ed2c01ed"
+    },
+    "z-image-base": {
+      "file": "z-image-base.png",
+      "key": "img/625e27664873ac368621d5e3522a46d87430cc66"
+    },
+    "z-image-turbo": {
+      "file": "z-image-turbo.png",
+      "key": "img/32b3fca58ee09273a8a08d24d2401c03eed81bf4"
+    }
   },
   "003": {
-    "bagel": "bagel.jpg",
-    "bitdance": "bitdance.png",
-    "chroma-34": "chroma-34.png",
-    "dreamina-image20pro": "dreamina-image20pro.jpeg",
-    "dreamina-image3": "dreamina-image3.jpeg",
-    "ernie-45turbo": "ernie-45turbo.png",
-    "ernie-image": "ernie-image.png",
-    "ernie-image-turbo": "ernie-image-turbo.png",
-    "f-lite-standard": "f-lite-standard.webp",
-    "firefly-image-5-preview": "firefly-image-5-preview.png",
-    "firefly4": "firefly4.jpg",
-    "firefly4ultra": "firefly4ultra.jpg",
-    "flux1-kontext-pro": "flux1-kontext-pro.png",
-    "flux1-krea": "flux1-krea.png",
-    "flux2-dev": "flux2-dev.png",
-    "flux2-flex-2k": "flux2-flex-2k.png",
-    "flux2-klein-4b": "flux2-klein-4b.png",
-    "flux2-klein-9b": "flux2-klein-9b.png",
-    "flux2-klein-base-4b": "flux2-klein-base-4b.png",
-    "flux2-klein-base-9b": "flux2-klein-base-9b.png",
-    "flux2-max-2k": "flux2-max-2k.png",
-    "flux2-pro-2k": "flux2-pro-2k.png",
-    "fluxmaniaV": "fluxmaniaV.png",
-    "gemini-2.0-flash-0507": "gemini-2.0-flash-0507.jpg",
-    "gemini-flash": "gemini-flash.jpeg",
-    "gemini25flashimagepreview": "gemini25flashimagepreview.png",
-    "glm-image": "glm-image.png",
-    "gpt-5-image-mini-high": "gpt-5-image-mini-high.png",
-    "gpt-5-image-mini-low": "gpt-5-image-mini-low.png",
-    "gpt-5-image-mini-medium": "gpt-5-image-mini-medium.png",
-    "gpt-image-1": "gpt-image-1.png",
-    "gpt-image-1.5": "gpt-image-1.5.png",
-    "gpt-image-2-3k": "gpt-image-2-3k.png",
-    "gpt-image-2-5-sunburst-1k-low": "gpt-image-2-5-sunburst-1k-low.png",
-    "gpt-image-2-5-sunburst-4k-max": "gpt-image-2-5-sunburst-4k-max.png",
-    "gpt-image-2-chatgpt": "gpt-image-2-chatgpt.png",
-    "grok": "grok.jpg",
-    "grok-imagine-image-20260201": "grok-imagine-image-20260201.jpg",
-    "hidreami1": "hidreami1.png",
-    "hunyuan-image-2.0": "hunyuan-image-2.0.jpg",
-    "hunyuan-image-2.1": "hunyuan-image-2.1.png",
-    "hunyuan-image-3.0": "hunyuan-image-3.0.jpg",
-    "hunyuan-image-3.0-instruct": "hunyuan-image-3.0-instruct.png",
-    "ideogram3": "ideogram3.jpeg",
-    "imagen3": "imagen3.jpg",
-    "imagen4": "imagen4.png",
-    "imagen4ultra": "imagen4ultra.png",
-    "imagineart-2-0": "imagineart-2-0.png",
-    "juggernautxl": "juggernautxl.png",
-    "klingai-kolors-2.1": "klingai-kolors-2.1.png",
-    "klingai-omni-image-1.0": "klingai-omni-image-1.0.png",
-    "krea2-turbo-int8": "krea2-turbo-int8.png",
-    "lens": "lens.png",
-    "lumina2": "lumina2.png",
-    "mai-image-1": "mai-image-1.png",
-    "mai-image-2": "mai-image-2.png",
-    "mai-image-2-5": "mai-image-2-5.png",
-    "mai-image-2-5-flash": "mai-image-2-5-flash.png",
-    "mai-image-2-5-pro": "mai-image-2-5-pro.png",
-    "mai-image-2-6-pre": "mai-image-2-6-pre.png",
-    "midjourney-v8.1-alpha": "midjourney-v8.1-alpha.png",
-    "midjourneyv61": "midjourneyv61.png",
-    "midjourneyv7": "midjourneyv7.png",
-    "midjourneyv7-20250501": "midjourneyv7-20250501.png",
-    "midjourneyv8alpha": "midjourneyv8alpha.png",
-    "nanobanana-2-4k": "nanobanana-2-4k.png",
-    "nanobananapro-4k": "nanobananapro-4k.png",
-    "piclumen-realistic-v2": "piclumen-realistic-v2.png",
-    "qwen-image": "qwen-image.png",
-    "qwen-image-2.0": "qwen-image-2.0.png",
-    "qwen-image-2.1": "qwen-image-2.1.png",
-    "qwen-image-2512": "qwen-image-2512.png",
-    "qwen-image-3.0": "qwen-image-3.0.png",
-    "qwen-image-3.0-pro": "qwen-image-3.0-pro.png",
-    "recraft-v3-raw": "recraft-v3-raw.png",
-    "recraft-v4": "recraft-v4.png",
-    "reve": "reve.png",
-    "reve-1.5": "reve-1.5.png",
-    "seedream-4.0-4k": "seedream-4.0-4k.png",
-    "seedream-4.5-4k": "seedream-4.5-4k.png",
-    "seedream-5.0-lite": "seedream-5.0-lite.png",
-    "seedream-5.0-pro": "seedream-5.0-pro.png",
-    "tengrai": "tengrai.png",
-    "tengrai-q": "tengrai-q.png",
-    "uni-1": "uni-1.png",
-    "uni-1.1": "uni-1.1.png",
-    "uni-1.1-max": "uni-1.1-max.png",
-    "wan-2-7-pro-2k": "wan-2-7-pro-2k.png",
-    "z-image-base": "z-image-base.png",
-    "z-image-turbo": "z-image-turbo.png"
+    "bagel": {
+      "file": "bagel.jpg",
+      "key": "img/6eae1bee464d1ba7fe91fc23ecd388358542305d"
+    },
+    "bitdance": {
+      "file": "bitdance.png",
+      "key": "img/cdefa852cc45aba256bb58269be244d224376b14"
+    },
+    "chroma-34": {
+      "file": "chroma-34.png",
+      "key": "img/5e0eeb00fe72ce79364bdca74131d136fc8b40c2"
+    },
+    "dreamina-image20pro": {
+      "file": "dreamina-image20pro.jpeg",
+      "key": "img/8acc0fa8a1c2c96527f8fd6051425631d6332b44"
+    },
+    "dreamina-image3": {
+      "file": "dreamina-image3.jpeg",
+      "key": "img/d6dc3302491d35ca21077541f9d65319e329a641"
+    },
+    "ernie-45turbo": {
+      "file": "ernie-45turbo.png",
+      "key": "img/302a1e7f43320104effe2bd7d0bb689bf8fd8034"
+    },
+    "ernie-image": {
+      "file": "ernie-image.png",
+      "key": "img/c3f777a0534a474807249c6922124669fa54ab2e"
+    },
+    "ernie-image-turbo": {
+      "file": "ernie-image-turbo.png",
+      "key": "img/75cf5c9b27a95d0ec3412b97c64dbaff114436c4"
+    },
+    "f-lite-standard": {
+      "file": "f-lite-standard.webp",
+      "key": "img/b04845ca34e9322b358e1ac2246678641b825ed8"
+    },
+    "firefly-image-5-preview": {
+      "file": "firefly-image-5-preview.png",
+      "key": "img/cf7c0dcf77f2c0830a60839971cb3f53c1c846e0"
+    },
+    "firefly4": {
+      "file": "firefly4.jpg",
+      "key": "img/8deb06bae2275dfcc681abb2f28968483ac2f8fa"
+    },
+    "firefly4ultra": {
+      "file": "firefly4ultra.jpg",
+      "key": "img/b1ed862557380be3d7d06047ae8cb814f69e4b2d"
+    },
+    "flux1-kontext-pro": {
+      "file": "flux1-kontext-pro.png",
+      "key": "img/2812f629db935953d23941dae0cb61c6b1469b46"
+    },
+    "flux1-krea": {
+      "file": "flux1-krea.png",
+      "key": "img/52be55dff8708374492ef76dcbc95cc78f2c0374"
+    },
+    "flux2-dev": {
+      "file": "flux2-dev.png",
+      "key": "img/5ee4afb0e47801fff78649ab567d2a8b56d5d87a"
+    },
+    "flux2-flex-2k": {
+      "file": "flux2-flex-2k.png",
+      "key": "img/aa8cf98628d702f4fdf6a946ce3f94e124c770a4"
+    },
+    "flux2-klein-4b": {
+      "file": "flux2-klein-4b.png",
+      "key": "img/adcb6f66491c846136fb5df7ed222cfc2698bb6e"
+    },
+    "flux2-klein-9b": {
+      "file": "flux2-klein-9b.png",
+      "key": "img/e330589d73d7d748f9965d3414fc83c9f3365e01"
+    },
+    "flux2-klein-base-4b": {
+      "file": "flux2-klein-base-4b.png",
+      "key": "img/eca497476735c520100c14ff160867b5fd06ab10"
+    },
+    "flux2-klein-base-9b": {
+      "file": "flux2-klein-base-9b.png",
+      "key": "img/1f59844f40cf691d0319ca61189a5687553144c4"
+    },
+    "flux2-max-2k": {
+      "file": "flux2-max-2k.png",
+      "key": "img/a331b33ef3b30b4e81c00b2d35caa51a432ae927"
+    },
+    "flux2-pro-2k": {
+      "file": "flux2-pro-2k.png",
+      "key": "img/ab855ad1069d96b7b2d785d175a25d551168bd03"
+    },
+    "fluxmaniaV": {
+      "file": "fluxmaniaV.png",
+      "key": "img/b38b950b2e977ededa18084f7d81a9386685ba93"
+    },
+    "gemini-2.0-flash-0507": {
+      "file": "gemini-2.0-flash-0507.jpg",
+      "key": "img/1bc6e56d7d62cd7ab8d002295b517fb7222758b7"
+    },
+    "gemini-flash": {
+      "file": "gemini-flash.jpeg",
+      "key": "img/709ca5974c422c514987742618884cf035abe056"
+    },
+    "gemini25flashimagepreview": {
+      "file": "gemini25flashimagepreview.png",
+      "key": "img/334b109fcde4ef4b1304b627c1f13cc46e92e3fe"
+    },
+    "glm-image": {
+      "file": "glm-image.png",
+      "key": "img/e827a410ab0ef06b83fd9d4e758cfba2f2c5f96a"
+    },
+    "gpt-5-image-mini-high": {
+      "file": "gpt-5-image-mini-high.png",
+      "key": "img/3e01d1802a8765c2f2b78247d14ca75c99c6bf83"
+    },
+    "gpt-5-image-mini-low": {
+      "file": "gpt-5-image-mini-low.png",
+      "key": "img/b590261602c63c79f421b947e934857125c3b596"
+    },
+    "gpt-5-image-mini-medium": {
+      "file": "gpt-5-image-mini-medium.png",
+      "key": "img/25787a409f6277030ec07b4daab2bfe8ef3de9e5"
+    },
+    "gpt-image-1": {
+      "file": "gpt-image-1.png",
+      "key": "img/536e4368218bb4bbf9e95d3a11818cbd8ab9bb3d"
+    },
+    "gpt-image-1.5": {
+      "file": "gpt-image-1.5.png",
+      "key": "img/1af82b48a3b2108d66d8462f8112af734d30c6d1"
+    },
+    "gpt-image-2-3k": {
+      "file": "gpt-image-2-3k.png",
+      "key": "img/6aded4f4dae6883e5a2a191c786b859a11a6a15d"
+    },
+    "gpt-image-2-5-sunburst-1k-low": {
+      "file": "gpt-image-2-5-sunburst-1k-low.png",
+      "key": "img/71efdb50199431a0337d4ead9d478ce498ad6d05"
+    },
+    "gpt-image-2-5-sunburst-4k-max": {
+      "file": "gpt-image-2-5-sunburst-4k-max.png",
+      "key": "img/23c4f0836389b33806e021ce7dd3effa42a72dee"
+    },
+    "gpt-image-2-chatgpt": {
+      "file": "gpt-image-2-chatgpt.png",
+      "key": "img/e5d87776dfb66178218347a4a1db20c7e963c383"
+    },
+    "grok": {
+      "file": "grok.jpg",
+      "key": "img/798d29da7e578ede712f3752d343444b174ed5fe"
+    },
+    "grok-imagine-image-20260201": {
+      "file": "grok-imagine-image-20260201.jpg",
+      "key": "img/e6d06c4f7f7ae767984e374fb50e2e4ce39ec93f"
+    },
+    "hidreami1": {
+      "file": "hidreami1.png",
+      "key": "img/ac87e97fd9bbbc1aea8f5aaaa9bed24634a876cb"
+    },
+    "hunyuan-image-2.0": {
+      "file": "hunyuan-image-2.0.jpg",
+      "key": "img/be3f789da590c3413ac0a0ea04850e85d259b62f"
+    },
+    "hunyuan-image-2.1": {
+      "file": "hunyuan-image-2.1.png",
+      "key": "img/e66aab5d30b7ae1f1d3eda801c0618ad976952ec"
+    },
+    "hunyuan-image-3.0": {
+      "file": "hunyuan-image-3.0.jpg",
+      "key": "img/ad022cd0c0695dc9d431fdee2a998af70be3cd4f"
+    },
+    "hunyuan-image-3.0-instruct": {
+      "file": "hunyuan-image-3.0-instruct.png",
+      "key": "img/4e48041ca41aff34277c66a4e239a6d26e5226c9"
+    },
+    "ideogram3": {
+      "file": "ideogram3.jpeg",
+      "key": "img/110bc935c00016e77249ac34cb03f8e8c3c91d12"
+    },
+    "imagen3": {
+      "file": "imagen3.jpg",
+      "key": "img/be1fa7292c54fc0db04c5125f80ccf5f58eda8eb"
+    },
+    "imagen4": {
+      "file": "imagen4.png",
+      "key": "img/9309a630a3e1a5d0ef624fbdc13cd9970b806e7e"
+    },
+    "imagen4ultra": {
+      "file": "imagen4ultra.png",
+      "key": "img/05ecd7f196fd930351f8d92219bc734be3e38413"
+    },
+    "imagineart-2-0": {
+      "file": "imagineart-2-0.png",
+      "key": "img/8407077796627ed76e75aba5e51a13a1814f5b4f"
+    },
+    "juggernautxl": {
+      "file": "juggernautxl.png",
+      "key": "img/47abe29119d007370fa2a73f02f893676888d007"
+    },
+    "klingai-kolors-2.1": {
+      "file": "klingai-kolors-2.1.png",
+      "key": "img/6c370c8277071de9146fd79c6aaf3ad46719ce5f"
+    },
+    "klingai-omni-image-1.0": {
+      "file": "klingai-omni-image-1.0.png",
+      "key": "img/048bb1804bfacd1d34360cff79e0f037c21fb9e6"
+    },
+    "krea2-turbo-int8": {
+      "file": "krea2-turbo-int8.png",
+      "key": "img/9bcf2051eaf904c5acc462780e1c6902766a4fca"
+    },
+    "lens": {
+      "file": "lens.png",
+      "key": "img/438f40c7729fc34b5ec1f4980efdd9b93e357809"
+    },
+    "lumina2": {
+      "file": "lumina2.png",
+      "key": "img/3b1111a0f768c62618dd7da00f553359b2bedff3"
+    },
+    "mai-image-1": {
+      "file": "mai-image-1.png",
+      "key": "img/c31695ebe20eea9d747edbf0a31af4527ae51cff"
+    },
+    "mai-image-2": {
+      "file": "mai-image-2.png",
+      "key": "img/3b978f31df6fc79e24465623edc3283dfd2210bc"
+    },
+    "mai-image-2-5": {
+      "file": "mai-image-2-5.png",
+      "key": "img/9481a3e8b4c4fc49df506b3e04db9bffb96b30e7"
+    },
+    "mai-image-2-5-flash": {
+      "file": "mai-image-2-5-flash.png",
+      "key": "img/7cf7eafc5e0a54fb542edbb34313338b3abbc692"
+    },
+    "mai-image-2-5-pro": {
+      "file": "mai-image-2-5-pro.png",
+      "key": "img/a668298e25742759323ecd82c120da046585d08a"
+    },
+    "mai-image-2-6-pre": {
+      "file": "mai-image-2-6-pre.png",
+      "key": "img/44fd1a6d707153e28a11821988f527abdda41b02"
+    },
+    "midjourney-v8.1-alpha": {
+      "file": "midjourney-v8.1-alpha.png",
+      "key": "img/d7e5ca960402bb09411aebd95c4883a23f2ccedb"
+    },
+    "midjourneyv61": {
+      "file": "midjourneyv61.png",
+      "key": "img/2c0a54a3e12e39c420d29dfb852244238b556c33"
+    },
+    "midjourneyv7": {
+      "file": "midjourneyv7.png",
+      "key": "img/020b1b811af7d89dd29d149a8f24e26a8d845345"
+    },
+    "midjourneyv7-20250501": {
+      "file": "midjourneyv7-20250501.png",
+      "key": "img/9945c8b4ecc14d7825a88858f5650ca75cca59e5"
+    },
+    "midjourneyv8alpha": {
+      "file": "midjourneyv8alpha.png",
+      "key": "img/5d3e321a099fe2147f64ec307c7ee4e42473fa6e"
+    },
+    "nanobanana-2-4k": {
+      "file": "nanobanana-2-4k.png",
+      "key": "img/81522405f30d91f6921d51cf0af0bf8495086570"
+    },
+    "nanobananapro-4k": {
+      "file": "nanobananapro-4k.png",
+      "key": "img/411d7a2c6bae65d10cfa64e15101ecb3c7c48e6d"
+    },
+    "piclumen-realistic-v2": {
+      "file": "piclumen-realistic-v2.png",
+      "key": "img/a4f966362decd77e4bc034dfd1ee9a3f2631cd57"
+    },
+    "qwen-image": {
+      "file": "qwen-image.png",
+      "key": "img/84351f0f874eced7c52be7a345ea126a3582e0d3"
+    },
+    "qwen-image-2.0": {
+      "file": "qwen-image-2.0.png",
+      "key": "img/43c2bcd3d717740558b84e8a944491340c00d68e"
+    },
+    "qwen-image-2.1": {
+      "file": "qwen-image-2.1.png",
+      "key": "img/7055f82e3e3612d66b76d5d47281388198ad4551"
+    },
+    "qwen-image-2512": {
+      "file": "qwen-image-2512.png",
+      "key": "img/e9384f29f79e10fdb114870e910666ed48c737d2"
+    },
+    "qwen-image-3.0": {
+      "file": "qwen-image-3.0.png",
+      "key": "img/70890bbd5c64b5c14c5c6931ba9a40ccacd3da62"
+    },
+    "qwen-image-3.0-pro": {
+      "file": "qwen-image-3.0-pro.png",
+      "key": "img/73f798932a9d5cb0e2f0ceaef5490ebe24996ac8"
+    },
+    "recraft-v3-raw": {
+      "file": "recraft-v3-raw.png",
+      "key": "img/64e844a1e83e775f1efe55b37c5825e14ec690fe"
+    },
+    "recraft-v4": {
+      "file": "recraft-v4.png",
+      "key": "img/3df79e82cd917149f44a0f19442c5c074636b31a"
+    },
+    "reve": {
+      "file": "reve.png",
+      "key": "img/ef5a0d993acb4f36671d15cd71ddbe0509f6ed14"
+    },
+    "reve-1.5": {
+      "file": "reve-1.5.png",
+      "key": "img/06f8a2da0a00a029d4dfdc4b7031dcee5d295907"
+    },
+    "seedream-4.0-4k": {
+      "file": "seedream-4.0-4k.png",
+      "key": "img/96cca0bf6439d56e906b17ffa97111a7d498fadc"
+    },
+    "seedream-4.5-4k": {
+      "file": "seedream-4.5-4k.png",
+      "key": "img/0b3e0f66c5335a04432d83a501db13ad406dbb7a"
+    },
+    "seedream-5.0-lite": {
+      "file": "seedream-5.0-lite.png",
+      "key": "img/971bd46bae13af2a541e61dfc9aa25403094400a"
+    },
+    "seedream-5.0-pro": {
+      "file": "seedream-5.0-pro.png",
+      "key": "img/047c4f78a72411646621c063c69092aae4cdc004"
+    },
+    "tengrai": {
+      "file": "tengrai.png",
+      "key": "img/c3c30a04986de86b806b26640b2f1ec9d5636961"
+    },
+    "tengrai-q": {
+      "file": "tengrai-q.png",
+      "key": "img/6b40f7d00a9cbc85900448123b800373d266b67f"
+    },
+    "uni-1": {
+      "file": "uni-1.png",
+      "key": "img/6a70bc60999355e72fbe7b513f9c0b4f948756a5"
+    },
+    "uni-1.1": {
+      "file": "uni-1.1.png",
+      "key": "img/5ecc0ee1a748c4aa4d193270074751a67239906d"
+    },
+    "uni-1.1-max": {
+      "file": "uni-1.1-max.png",
+      "key": "img/ec7951092c70904619555be31e693ec25285dc6e"
+    },
+    "wan-2-7-pro-2k": {
+      "file": "wan-2-7-pro-2k.png",
+      "key": "img/4584f0fa6be30ca271eb7f2edab06f99a6bbb9e1"
+    },
+    "z-image-base": {
+      "file": "z-image-base.png",
+      "key": "img/dbf3b3406ca785bfd52795ef155fd832698d286c"
+    },
+    "z-image-turbo": {
+      "file": "z-image-turbo.png",
+      "key": "img/1234a92af8b07a24b43b4182af8ac7722bb1cd0d"
+    }
   },
   "004": {
-    "bagel": "bagel.jpg",
-    "bitdance": "bitdance.png",
-    "chroma-34": "chroma-34.png",
-    "dreamina-image20pro": "dreamina-image20pro.jpeg",
-    "dreamina-image3": "dreamina-image3.jpeg",
-    "ernie-45turbo": "ernie-45turbo.png",
-    "ernie-image": "ernie-image.png",
-    "ernie-image-turbo": "ernie-image-turbo.png",
-    "f-lite-standard": "f-lite-standard.webp",
-    "firefly-image-5-preview": "firefly-image-5-preview.png",
-    "firefly4": "firefly4.jpg",
-    "firefly4ultra": "firefly4ultra.jpg",
-    "flux1-kontext-pro": "flux1-kontext-pro.png",
-    "flux1-krea": "flux1-krea.png",
-    "flux2-dev": "flux2-dev.png",
-    "flux2-flex-2k": "flux2-flex-2k.png",
-    "flux2-klein-4b": "flux2-klein-4b.png",
-    "flux2-klein-9b": "flux2-klein-9b.png",
-    "flux2-klein-base-4b": "flux2-klein-base-4b.png",
-    "flux2-klein-base-9b": "flux2-klein-base-9b.png",
-    "flux2-max-2k": "flux2-max-2k.png",
-    "flux2-pro-2k": "flux2-pro-2k.png",
-    "fluxmaniaV": "fluxmaniaV.png",
-    "gemini-2.0-flash-0507": "gemini-2.0-flash-0507.jpg",
-    "gemini-flash": "gemini-flash.jpeg",
-    "gemini25flashimagepreview": "gemini25flashimagepreview.png",
-    "glm-image": "glm-image.png",
-    "gpt-5-image-mini-high": "gpt-5-image-mini-high.png",
-    "gpt-5-image-mini-low": "gpt-5-image-mini-low.png",
-    "gpt-5-image-mini-medium": "gpt-5-image-mini-medium.png",
-    "gpt-image-1": "gpt-image-1.png",
-    "gpt-image-1.5": "gpt-image-1.5.png",
-    "gpt-image-2-3k": "gpt-image-2-3k.png",
-    "gpt-image-2-5-sunburst-1k-low": "gpt-image-2-5-sunburst-1k-low.png",
-    "gpt-image-2-5-sunburst-4k-max": "gpt-image-2-5-sunburst-4k-max.png",
-    "gpt-image-2-chatgpt": "gpt-image-2-chatgpt.png",
-    "grok": "grok.jpg",
-    "grok-imagine-image-20260201": "grok-imagine-image-20260201.jpg",
-    "hidreami1": "hidreami1.png",
-    "hunyuan-image-2.0": "hunyuan-image-2.0.jpg",
-    "hunyuan-image-2.1": "hunyuan-image-2.1.png",
-    "hunyuan-image-3.0": "hunyuan-image-3.0.jpg",
-    "hunyuan-image-3.0-instruct": "hunyuan-image-3.0-instruct.png",
-    "ideogram3": "ideogram3.jpeg",
-    "imagen3": "imagen3.jpg",
-    "imagen4": "imagen4.png",
-    "imagen4ultra": "imagen4ultra.png",
-    "imagineart-2-0": "imagineart-2-0.png",
-    "juggernautxl": "juggernautxl.png",
-    "klingai-kolors-2.1": "klingai-kolors-2.1.png",
-    "klingai-omni-image-1.0": "klingai-omni-image-1.0.png",
-    "krea2-turbo-int8": "krea2-turbo-int8.png",
-    "lens": "lens.png",
-    "lumina2": "lumina2.png",
-    "mai-image-1": "mai-image-1.png",
-    "mai-image-2": "mai-image-2.png",
-    "mai-image-2-5": "mai-image-2-5.png",
-    "mai-image-2-5-flash": "mai-image-2-5-flash.png",
-    "mai-image-2-5-pro": "mai-image-2-5-pro.png",
-    "mai-image-2-6-pre": "mai-image-2-6-pre.png",
-    "midjourney-v8.1-alpha": "midjourney-v8.1-alpha.png",
-    "midjourneyv61": "midjourneyv61.png",
-    "midjourneyv7": "midjourneyv7.png",
-    "midjourneyv7-20250501": "midjourneyv7-20250501.png",
-    "midjourneyv8alpha": "midjourneyv8alpha.png",
-    "nanobanana-2-4k": "nanobanana-2-4k.png",
-    "nanobananapro-4k": "nanobananapro-4k.png",
-    "piclumen-realistic-v2": "piclumen-realistic-v2.png",
-    "qwen-image": "qwen-image.png",
-    "qwen-image-2.0": "qwen-image-2.0.png",
-    "qwen-image-2.1": "qwen-image-2.1.png",
-    "qwen-image-2512": "qwen-image-2512.png",
-    "qwen-image-3.0": "qwen-image-3.0.png",
-    "qwen-image-3.0-pro": "qwen-image-3.0-pro.png",
-    "recraft-v3-raw": "recraft-v3-raw.png",
-    "recraft-v4": "recraft-v4.png",
-    "reve": "reve.png",
-    "reve-1.5": "reve-1.5.png",
-    "seedream-4.0-4k": "seedream-4.0-4k.png",
-    "seedream-4.5-4k": "seedream-4.5-4k.png",
-    "seedream-5.0-lite": "seedream-5.0-lite.png",
-    "seedream-5.0-pro": "seedream-5.0-pro.png",
-    "tengrai": "tengrai.png",
-    "tengrai-q": "tengrai-q.png",
-    "uni-1": "uni-1.png",
-    "uni-1.1": "uni-1.1.png",
-    "uni-1.1-max": "uni-1.1-max.png",
-    "wan-2-7-pro-2k": "wan-2-7-pro-2k.png",
-    "z-image-base": "z-image-base.png",
-    "z-image-turbo": "z-image-turbo.png"
+    "bagel": {
+      "file": "bagel.jpg",
+      "key": "img/42e4ef19e2fe6ca9dea25c9fe11f97516afe48aa"
+    },
+    "bitdance": {
+      "file": "bitdance.png",
+      "key": "img/35d857070b1941ae5262cf06de2fe174a0027639"
+    },
+    "chroma-34": {
+      "file": "chroma-34.png",
+      "key": "img/c9ad8185bf3180d1123e45732708d68ed9d9de03"
+    },
+    "dreamina-image20pro": {
+      "file": "dreamina-image20pro.jpeg",
+      "key": "img/a363be3533f4cbdd97051315d34784a652675d06"
+    },
+    "dreamina-image3": {
+      "file": "dreamina-image3.jpeg",
+      "key": "img/9c9d3c8070816ed2f31aca86eb0d240eaa6bc331"
+    },
+    "ernie-45turbo": {
+      "file": "ernie-45turbo.png",
+      "key": "img/b8e6793c8dd78aa55b96f9ecb5ea5f6452322610"
+    },
+    "ernie-image": {
+      "file": "ernie-image.png",
+      "key": "img/1a1718734d730568e5f711695fc74b7e3258ec2c"
+    },
+    "ernie-image-turbo": {
+      "file": "ernie-image-turbo.png",
+      "key": "img/69d005d4b44aa42069f18d17b455db571f6cc903"
+    },
+    "f-lite-standard": {
+      "file": "f-lite-standard.webp",
+      "key": "img/bc72fd2bc7be69fccb0dbcd35751344a9064724d"
+    },
+    "firefly-image-5-preview": {
+      "file": "firefly-image-5-preview.png",
+      "key": "img/229165660de59e428de12a8870ca3862b5cfe3f5"
+    },
+    "firefly4": {
+      "file": "firefly4.jpg",
+      "key": "img/39e42a5e388b53009704e6c899a9cede56e3e18c"
+    },
+    "firefly4ultra": {
+      "file": "firefly4ultra.jpg",
+      "key": "img/e7914e58848d61136210033c171664dd64743a4c"
+    },
+    "flux1-kontext-pro": {
+      "file": "flux1-kontext-pro.png",
+      "key": "img/3b3bc4c43ccbdea32b75a6d12a911f63d7a9d27b"
+    },
+    "flux1-krea": {
+      "file": "flux1-krea.png",
+      "key": "img/aff42ce89e809bbbf3dbd68da8b0a430d81e76a4"
+    },
+    "flux2-dev": {
+      "file": "flux2-dev.png",
+      "key": "img/8e7578a15c810339afdcc6e2a7d44226aba8555a"
+    },
+    "flux2-flex-2k": {
+      "file": "flux2-flex-2k.png",
+      "key": "img/ef3f6869e80adf4114ceb73dedcca8b295e78f3a"
+    },
+    "flux2-klein-4b": {
+      "file": "flux2-klein-4b.png",
+      "key": "img/c7f44959a89d803644daa39b95d0384b8de1224d"
+    },
+    "flux2-klein-9b": {
+      "file": "flux2-klein-9b.png",
+      "key": "img/1a409bd87594c65ffff5cbdfd36cd3b23f3373ab"
+    },
+    "flux2-klein-base-4b": {
+      "file": "flux2-klein-base-4b.png",
+      "key": "img/864905c1278ff4ce0aea03a0df905995286ca885"
+    },
+    "flux2-klein-base-9b": {
+      "file": "flux2-klein-base-9b.png",
+      "key": "img/f6a7b964b0f38331dfebf57893fd25aef5e81098"
+    },
+    "flux2-max-2k": {
+      "file": "flux2-max-2k.png",
+      "key": "img/d14b734fac15e1496e1b88c8cc31704f8ebb88b7"
+    },
+    "flux2-pro-2k": {
+      "file": "flux2-pro-2k.png",
+      "key": "img/f789dfe6fa2fc0c226c432b2105fc736eb1e5a47"
+    },
+    "fluxmaniaV": {
+      "file": "fluxmaniaV.png",
+      "key": "img/b87d2abf4527f543a002273d2709fe6ef11604a0"
+    },
+    "gemini-2.0-flash-0507": {
+      "file": "gemini-2.0-flash-0507.jpg",
+      "key": "img/b46878847513a9b57f0dc3d3a43e7984e4d39a29"
+    },
+    "gemini-flash": {
+      "file": "gemini-flash.jpeg",
+      "key": "img/5c6a059cd800b3ae84228e5e49339f14b37d2dee"
+    },
+    "gemini25flashimagepreview": {
+      "file": "gemini25flashimagepreview.png",
+      "key": "img/ae3e3c1941208600da66995a9d5909657c945f9e"
+    },
+    "glm-image": {
+      "file": "glm-image.png",
+      "key": "img/8d19206a03a2d21f34c8fd05b2aae52559121728"
+    },
+    "gpt-5-image-mini-high": {
+      "file": "gpt-5-image-mini-high.png",
+      "key": "img/ea3dfa181c3dc7f0ac0ef8ba9b05d36ea751f2ce"
+    },
+    "gpt-5-image-mini-low": {
+      "file": "gpt-5-image-mini-low.png",
+      "key": "img/661f4f21fbc3ac04449bc2bd417cde8016169898"
+    },
+    "gpt-5-image-mini-medium": {
+      "file": "gpt-5-image-mini-medium.png",
+      "key": "img/78f1d66a7e01df5394f69cd311f3b0947169388a"
+    },
+    "gpt-image-1": {
+      "file": "gpt-image-1.png",
+      "key": "img/1ed21fda8d34b67431a530769f36ee8ee8b1ef36"
+    },
+    "gpt-image-1.5": {
+      "file": "gpt-image-1.5.png",
+      "key": "img/0bc67e5585982e28e81fde661d57d935f2a328c3"
+    },
+    "gpt-image-2-3k": {
+      "file": "gpt-image-2-3k.png",
+      "key": "img/d7c046195d48b31ef96cda4a37fc5c7d3fb1b2a6"
+    },
+    "gpt-image-2-5-sunburst-1k-low": {
+      "file": "gpt-image-2-5-sunburst-1k-low.png",
+      "key": "img/770f293d54ccc581f1f16d72d36c04e2fe0f7db7"
+    },
+    "gpt-image-2-5-sunburst-4k-max": {
+      "file": "gpt-image-2-5-sunburst-4k-max.png",
+      "key": "img/5e699ebddddef7c5eace6d649af1432ee776a5e1"
+    },
+    "gpt-image-2-chatgpt": {
+      "file": "gpt-image-2-chatgpt.png",
+      "key": "img/e9b739c0486c95dd07c50dc3d46e5432d9b39c11"
+    },
+    "grok": {
+      "file": "grok.jpg",
+      "key": "img/207d7058900810e5ce114fdc225b73eeea3f3672"
+    },
+    "grok-imagine-image-20260201": {
+      "file": "grok-imagine-image-20260201.jpg",
+      "key": "img/53fb4279dd03d67f3bac6882e7b7aedfa80a6ef5"
+    },
+    "hidreami1": {
+      "file": "hidreami1.png",
+      "key": "img/0e3532754ed163c8b029c403f50f34962a71236e"
+    },
+    "hunyuan-image-2.0": {
+      "file": "hunyuan-image-2.0.jpg",
+      "key": "img/eeed42f7eac9f25f9c7172fcb16437ea027c5fd5"
+    },
+    "hunyuan-image-2.1": {
+      "file": "hunyuan-image-2.1.png",
+      "key": "img/2e5efdcd6e0efb07ebeaa3ef7e009a4b8f9e993f"
+    },
+    "hunyuan-image-3.0": {
+      "file": "hunyuan-image-3.0.jpg",
+      "key": "img/81f75951222cc50976758822a232dfe6913475b4"
+    },
+    "hunyuan-image-3.0-instruct": {
+      "file": "hunyuan-image-3.0-instruct.png",
+      "key": "img/6583fad0e090ff46afbce63b63f55b64bdbbd640"
+    },
+    "ideogram3": {
+      "file": "ideogram3.jpeg",
+      "key": "img/1ef2815fa3a2fe8c07d212e98899e16028029391"
+    },
+    "imagen3": {
+      "file": "imagen3.jpg",
+      "key": "img/eb874197b561a597b6a6ce653d8a2f85bfc0445e"
+    },
+    "imagen4": {
+      "file": "imagen4.png",
+      "key": "img/ef1a59ac424c8e5179594d9fe7b99e16acd64807"
+    },
+    "imagen4ultra": {
+      "file": "imagen4ultra.png",
+      "key": "img/3a8cdf98f4be6f8302e35d3333884ee943b1acef"
+    },
+    "imagineart-2-0": {
+      "file": "imagineart-2-0.png",
+      "key": "img/bd88901a2b04efbe58379cbe7eeb01f8633e465f"
+    },
+    "juggernautxl": {
+      "file": "juggernautxl.png",
+      "key": "img/0ec44cdcadaf79fdd25ddcc537951355227bddbe"
+    },
+    "klingai-kolors-2.1": {
+      "file": "klingai-kolors-2.1.png",
+      "key": "img/b780a3394bda9c3395a8aac0c7e86c3bbe3009f3"
+    },
+    "klingai-omni-image-1.0": {
+      "file": "klingai-omni-image-1.0.png",
+      "key": "img/6763ba9ab21dc00df6887174699ec43d1d02b25b"
+    },
+    "krea2-turbo-int8": {
+      "file": "krea2-turbo-int8.png",
+      "key": "img/6bf5699fb43f7694e10680edb3ff6d8cd8eb1c35"
+    },
+    "lens": {
+      "file": "lens.png",
+      "key": "img/ebaa51569fea03761cd80adbee2e7c6c2e4d2bce"
+    },
+    "lumina2": {
+      "file": "lumina2.png",
+      "key": "img/993cfdb48c1a889839b38e1f0156a2991ddafdc6"
+    },
+    "mai-image-1": {
+      "file": "mai-image-1.png",
+      "key": "img/59597280f738e432b4f33b7ac392cc05ba646c1d"
+    },
+    "mai-image-2": {
+      "file": "mai-image-2.png",
+      "key": "img/f9d2171d81a8cf0e07b99797996177ac54bc72ab"
+    },
+    "mai-image-2-5": {
+      "file": "mai-image-2-5.png",
+      "key": "img/b86e915a28a5346426880e804bc3a4e0137f503f"
+    },
+    "mai-image-2-5-flash": {
+      "file": "mai-image-2-5-flash.png",
+      "key": "img/249a2d2e9ab3d9f2feeb09feb62ab0958a529837"
+    },
+    "mai-image-2-5-pro": {
+      "file": "mai-image-2-5-pro.png",
+      "key": "img/4aff574d5691547b83d6648e870ba0eaf5a6fe51"
+    },
+    "mai-image-2-6-pre": {
+      "file": "mai-image-2-6-pre.png",
+      "key": "img/ee4d0c009870eb2a5d59ca265743d6b2e876eaf1"
+    },
+    "midjourney-v8.1-alpha": {
+      "file": "midjourney-v8.1-alpha.png",
+      "key": "img/eaf6b6dd73c1c8ab4013657971b8bac52f5d2507"
+    },
+    "midjourneyv61": {
+      "file": "midjourneyv61.png",
+      "key": "img/152b50f8b1766cac2f5fc9849d695561d0cb3c64"
+    },
+    "midjourneyv7": {
+      "file": "midjourneyv7.png",
+      "key": "img/cc0e99a5275c82d59a0d70cf405136851372aec3"
+    },
+    "midjourneyv7-20250501": {
+      "file": "midjourneyv7-20250501.png",
+      "key": "img/14e41d1b19ee3787cebaf3c4a2bdb9a73adcdd3d"
+    },
+    "midjourneyv8alpha": {
+      "file": "midjourneyv8alpha.png",
+      "key": "img/022960378be560981dd653d7fe2b2d7fb76629db"
+    },
+    "nanobanana-2-4k": {
+      "file": "nanobanana-2-4k.png",
+      "key": "img/f8884965d179b7e17614d74f01db2188aafb5423"
+    },
+    "nanobananapro-4k": {
+      "file": "nanobananapro-4k.png",
+      "key": "img/3995d1d975c94884b4e1b8fe1eab0f49425a9cdf"
+    },
+    "piclumen-realistic-v2": {
+      "file": "piclumen-realistic-v2.png",
+      "key": "img/e3177a9d7bbe8556246ae0c1ff146bdd1b9e4e46"
+    },
+    "qwen-image": {
+      "file": "qwen-image.png",
+      "key": "img/27759c9dca2d94c50c6cde0e7f9b05065f8aabd7"
+    },
+    "qwen-image-2.0": {
+      "file": "qwen-image-2.0.png",
+      "key": "img/6c2393b17b6e4a7338f5b74c3740635de45c50ae"
+    },
+    "qwen-image-2.1": {
+      "file": "qwen-image-2.1.png",
+      "key": "img/c2c30d4d8fc9d4c9c64e37593392cfa8c7655c2c"
+    },
+    "qwen-image-2512": {
+      "file": "qwen-image-2512.png",
+      "key": "img/24463c0742e320a8592cfb4f268c29167a3843a9"
+    },
+    "qwen-image-3.0": {
+      "file": "qwen-image-3.0.png",
+      "key": "img/f2603fda4a48a9a8a2268b1d86eb1459b1fecf8b"
+    },
+    "qwen-image-3.0-pro": {
+      "file": "qwen-image-3.0-pro.png",
+      "key": "img/feabe29158d687dfb992d85c393dd1fa982cbc97"
+    },
+    "recraft-v3-raw": {
+      "file": "recraft-v3-raw.png",
+      "key": "img/49f74b8408f5b78397b1d0e12aab927eff8fdbc7"
+    },
+    "recraft-v4": {
+      "file": "recraft-v4.png",
+      "key": "img/e1f267172a28b4ec3dba61f16baddcbbc3d92b72"
+    },
+    "reve": {
+      "file": "reve.png",
+      "key": "img/6e696e7a2a13ae811f625d8814d531406a1af06f"
+    },
+    "reve-1.5": {
+      "file": "reve-1.5.png",
+      "key": "img/0c2128daf899f979494f296d6528d2acdcbb55ae"
+    },
+    "seedream-4.0-4k": {
+      "file": "seedream-4.0-4k.png",
+      "key": "img/6da0d7c1c6247da39008bfa811a9e1b3426966c4"
+    },
+    "seedream-4.5-4k": {
+      "file": "seedream-4.5-4k.png",
+      "key": "img/50c028df55ac8c28c4c0fb9c29ac84f3e644fc75"
+    },
+    "seedream-5.0-lite": {
+      "file": "seedream-5.0-lite.png",
+      "key": "img/65d926acc636e6882091c8cba1c1994cde0dcecb"
+    },
+    "seedream-5.0-pro": {
+      "file": "seedream-5.0-pro.png",
+      "key": "img/85371aa32f292bcf7672c9cbe23bb58c6c981df6"
+    },
+    "tengrai": {
+      "file": "tengrai.png",
+      "key": "img/f18d5df400daea7277550f9a2648583b0ca33089"
+    },
+    "tengrai-q": {
+      "file": "tengrai-q.png",
+      "key": "img/57255bc7a044042bc529cc9b1dac5224c80cb54c"
+    },
+    "uni-1": {
+      "file": "uni-1.png",
+      "key": "img/fee01f1ebaf5a2a1c530c51ee1492a487e244708"
+    },
+    "uni-1.1": {
+      "file": "uni-1.1.png",
+      "key": "img/c698f392eae104f5f1769abded5b927ceb90cbc0"
+    },
+    "uni-1.1-max": {
+      "file": "uni-1.1-max.png",
+      "key": "img/f7d029c879110738e09b5182a5941ecd6138b764"
+    },
+    "wan-2-7-pro-2k": {
+      "file": "wan-2-7-pro-2k.png",
+      "key": "img/2997e352c9d72228730634f2d607da4bc13ca2c0"
+    },
+    "z-image-base": {
+      "file": "z-image-base.png",
+      "key": "img/12e093da9c8cb82df1f355c7ad44069bdeaa9693"
+    },
+    "z-image-turbo": {
+      "file": "z-image-turbo.png",
+      "key": "img/24dada7299292283882e70292296def0686dc1dd"
+    }
   },
   "005": {
-    "bagel": "bagel.jpg",
-    "bitdance": "bitdance.png",
-    "chroma-34": "chroma-34.png",
-    "dreamina-image20pro": "dreamina-image20pro.jpeg",
-    "dreamina-image3": "dreamina-image3.jpeg",
-    "ernie-45turbo": "ernie-45turbo.png",
-    "ernie-image": "ernie-image.png",
-    "ernie-image-turbo": "ernie-image-turbo.png",
-    "f-lite-standard": "f-lite-standard.webp",
-    "firefly-image-5-preview": "firefly-image-5-preview.png",
-    "firefly4": "firefly4.jpg",
-    "firefly4ultra": "firefly4ultra.jpg",
-    "flux1-kontext-pro": "flux1-kontext-pro.png",
-    "flux1-krea": "flux1-krea.png",
-    "flux11ultra": "flux11ultra.jpg",
-    "flux2-dev": "flux2-dev.png",
-    "flux2-flex-2k": "flux2-flex-2k.png",
-    "flux2-klein-4b": "flux2-klein-4b.png",
-    "flux2-klein-9b": "flux2-klein-9b.png",
-    "flux2-klein-base-4b": "flux2-klein-base-4b.png",
-    "flux2-klein-base-9b": "flux2-klein-base-9b.png",
-    "flux2-max-2k": "flux2-max-2k.png",
-    "flux2-pro-2k": "flux2-pro-2k.png",
-    "fluxmaniaV": "fluxmaniaV.png",
-    "gemini-2.0-flash-0507": "gemini-2.0-flash-0507.jpg",
-    "gemini-flash": "gemini-flash.jpeg",
-    "gemini25flashimagepreview": "gemini25flashimagepreview.png",
-    "glm-image": "glm-image.png",
-    "gpt-5-image-mini-high": "gpt-5-image-mini-high.png",
-    "gpt-5-image-mini-low": "gpt-5-image-mini-low.png",
-    "gpt-5-image-mini-medium": "gpt-5-image-mini-medium.png",
-    "gpt-image-1": "gpt-image-1.png",
-    "gpt-image-1.5": "gpt-image-1.5.png",
-    "gpt-image-2-3k": "gpt-image-2-3k.png",
-    "gpt-image-2-5-sunburst-1k-low": "gpt-image-2-5-sunburst-1k-low.png",
-    "gpt-image-2-5-sunburst-4k-max": "gpt-image-2-5-sunburst-4k-max.png",
-    "gpt-image-2-chatgpt": "gpt-image-2-chatgpt.png",
-    "grok": "grok.jpg",
-    "grok-imagine-image-20260201": "grok-imagine-image-20260201.jpg",
-    "hidreami1": "hidreami1.png",
-    "hunyuan-image-2.0": "hunyuan-image-2.0.jpg",
-    "hunyuan-image-2.1": "hunyuan-image-2.1.png",
-    "hunyuan-image-3.0": "hunyuan-image-3.0.jpg",
-    "hunyuan-image-3.0-instruct": "hunyuan-image-3.0-instruct.png",
-    "ideogram3": "ideogram3.jpeg",
-    "imagen3": "imagen3.jpg",
-    "imagen4": "imagen4.png",
-    "imagen4ultra": "imagen4ultra.png",
-    "imagineart-2-0": "imagineart-2-0.png",
-    "juggernautxl": "juggernautxl.png",
-    "klingai-kolors-2.1": "klingai-kolors-2.1.png",
-    "klingai-omni-image-1.0": "klingai-omni-image-1.0.png",
-    "krea2-turbo-int8": "krea2-turbo-int8.png",
-    "lens": "lens.png",
-    "lumina2": "lumina2.png",
-    "mai-image-1": "mai-image-1.png",
-    "mai-image-2": "mai-image-2.png",
-    "mai-image-2-5": "mai-image-2-5.png",
-    "mai-image-2-5-flash": "mai-image-2-5-flash.png",
-    "mai-image-2-5-pro": "mai-image-2-5-pro.png",
-    "mai-image-2-6-pre": "mai-image-2-6-pre.png",
-    "midjourney-v8.1-alpha": "midjourney-v8.1-alpha.png",
-    "midjourneyv61": "midjourneyv61.png",
-    "midjourneyv7": "midjourneyv7.png",
-    "midjourneyv7-20250501": "midjourneyv7-20250501.png",
-    "midjourneyv8alpha": "midjourneyv8alpha.png",
-    "nanobanana-2-4k": "nanobanana-2-4k.png",
-    "nanobananapro-4k": "nanobananapro-4k.png",
-    "piclumen-realistic-v2": "piclumen-realistic-v2.png",
-    "qwen-image": "qwen-image.png",
-    "qwen-image-2.0": "qwen-image-2.0.png",
-    "qwen-image-2.1": "qwen-image-2.1.png",
-    "qwen-image-2512": "qwen-image-2512.png",
-    "qwen-image-3.0": "qwen-image-3.0.png",
-    "qwen-image-3.0-pro": "qwen-image-3.0-pro.png",
-    "recraft-v3-raw": "recraft-v3-raw.png",
-    "recraft-v4": "recraft-v4.png",
-    "reve": "reve.png",
-    "reve-1.5": "reve-1.5.png",
-    "seedream-4.0-4k": "seedream-4.0-4k.png",
-    "seedream-4.5-4k": "seedream-4.5-4k.png",
-    "seedream-5.0-lite": "seedream-5.0-lite.png",
-    "seedream-5.0-pro": "seedream-5.0-pro.png",
-    "tengrai": "tengrai.png",
-    "tengrai-q": "tengrai-q.png",
-    "uni-1": "uni-1.png",
-    "uni-1.1": "uni-1.1.png",
-    "uni-1.1-max": "uni-1.1-max.png",
-    "wan-2-7-pro-2k": "wan-2-7-pro-2k.png",
-    "z-image-base": "z-image-base.png",
-    "z-image-turbo": "z-image-turbo.png"
+    "bagel": {
+      "file": "bagel.jpg",
+      "key": "img/3709ddd6600b42fd87b564fde23b55cef6ccde62"
+    },
+    "bitdance": {
+      "file": "bitdance.png",
+      "key": "img/6b3bb773204f3f6c8afe898a163ff2d1c4ec9b76"
+    },
+    "chroma-34": {
+      "file": "chroma-34.png",
+      "key": "img/8801582ce073dacc65ee706cd558be68adcd6f12"
+    },
+    "dreamina-image20pro": {
+      "file": "dreamina-image20pro.jpeg",
+      "key": "img/ced923b4cce3bd659f282e8b9aceab3e5ae16f07"
+    },
+    "dreamina-image3": {
+      "file": "dreamina-image3.jpeg",
+      "key": "img/8354c6f37f72be226b624d6db8ff4ccb6f9e4708"
+    },
+    "ernie-45turbo": {
+      "file": "ernie-45turbo.png",
+      "key": "img/0d2255c59f271807a9078165ee166650ed9c2cc6"
+    },
+    "ernie-image": {
+      "file": "ernie-image.png",
+      "key": "img/fbf72344ffdc428e499982f85622cf67e1075c18"
+    },
+    "ernie-image-turbo": {
+      "file": "ernie-image-turbo.png",
+      "key": "img/b2610c93bdb41731e2292296ef0cb39813c978e0"
+    },
+    "f-lite-standard": {
+      "file": "f-lite-standard.webp",
+      "key": "img/876a0594a00b2a196bbe4131389bd4c298eaf4dc"
+    },
+    "firefly-image-5-preview": {
+      "file": "firefly-image-5-preview.png",
+      "key": "img/e2398ff13a491875381559be792b136942c45714"
+    },
+    "firefly4": {
+      "file": "firefly4.jpg",
+      "key": "img/22b18d08fde83cf906143a32d4f43bc0ed20f9b4"
+    },
+    "firefly4ultra": {
+      "file": "firefly4ultra.jpg",
+      "key": "img/aea6b712819c93a9e742451a4d88be39f067d9eb"
+    },
+    "flux1-kontext-pro": {
+      "file": "flux1-kontext-pro.png",
+      "key": "img/7560aef984218cbd0ca80cdc2298e685f7946d53"
+    },
+    "flux1-krea": {
+      "file": "flux1-krea.png",
+      "key": "img/d95ea9eae23c99476df596031899177b84d1e982"
+    },
+    "flux11ultra": {
+      "file": "flux11ultra.jpg",
+      "key": "img/5937efc21b78b1a902f291aef2a0df0e49535bce"
+    },
+    "flux2-dev": {
+      "file": "flux2-dev.png",
+      "key": "img/b10c8d240f6c47fd00bd33f11fc7bf07212ce5c6"
+    },
+    "flux2-flex-2k": {
+      "file": "flux2-flex-2k.png",
+      "key": "img/53060372cf55ef53b976bb36122fa3bae64ae0f1"
+    },
+    "flux2-klein-4b": {
+      "file": "flux2-klein-4b.png",
+      "key": "img/374b90446951b7f26ff8993fb67981d73fda28b7"
+    },
+    "flux2-klein-9b": {
+      "file": "flux2-klein-9b.png",
+      "key": "img/19879665d5bee4c2d7a56329096ac9c9a3bef592"
+    },
+    "flux2-klein-base-4b": {
+      "file": "flux2-klein-base-4b.png",
+      "key": "img/4b6d8c2d33aac129e17db10d421fcd1b9f70214a"
+    },
+    "flux2-klein-base-9b": {
+      "file": "flux2-klein-base-9b.png",
+      "key": "img/faa1b84543348aaaf44ba7fc7e0f3ab55720b905"
+    },
+    "flux2-max-2k": {
+      "file": "flux2-max-2k.png",
+      "key": "img/fefb564c6d8049ea3fe899ba2116ec9bc32dc2e3"
+    },
+    "flux2-pro-2k": {
+      "file": "flux2-pro-2k.png",
+      "key": "img/b40608562b5e3a6d20311e17caa069f7fdba0d5e"
+    },
+    "fluxmaniaV": {
+      "file": "fluxmaniaV.png",
+      "key": "img/e6154019a4ae0d94e7b5f332641eeea38c805405"
+    },
+    "gemini-2.0-flash-0507": {
+      "file": "gemini-2.0-flash-0507.jpg",
+      "key": "img/fd12db0233383a09b5c45991c0d3b3ccc5d77fcd"
+    },
+    "gemini-flash": {
+      "file": "gemini-flash.jpeg",
+      "key": "img/413907aae577af9c6043c6d20a4b42e234f358f7"
+    },
+    "gemini25flashimagepreview": {
+      "file": "gemini25flashimagepreview.png",
+      "key": "img/e61dd80dc055e7257cba84ac09b395b41ba888c6"
+    },
+    "glm-image": {
+      "file": "glm-image.png",
+      "key": "img/44473035493ab58dc36ff3f8c596582540884947"
+    },
+    "gpt-5-image-mini-high": {
+      "file": "gpt-5-image-mini-high.png",
+      "key": "img/a3124ea40939f0d3d4ca86f397e40cbc1471d216"
+    },
+    "gpt-5-image-mini-low": {
+      "file": "gpt-5-image-mini-low.png",
+      "key": "img/611b2be5a2261e0214db6a1365a56b4218f38348"
+    },
+    "gpt-5-image-mini-medium": {
+      "file": "gpt-5-image-mini-medium.png",
+      "key": "img/c578c69f7edf6b7fc18ae96ebae2f9677fa1bf2f"
+    },
+    "gpt-image-1": {
+      "file": "gpt-image-1.png",
+      "key": "img/3a52e10f05f4c974b65cb702162a89aeeec1b52b"
+    },
+    "gpt-image-1.5": {
+      "file": "gpt-image-1.5.png",
+      "key": "img/553a74dda837e3f19431d1dffa938c31d383405a"
+    },
+    "gpt-image-2-3k": {
+      "file": "gpt-image-2-3k.png",
+      "key": "img/58c20c27fb30e6eb0a7331fa132e0dc73b542027"
+    },
+    "gpt-image-2-5-sunburst-1k-low": {
+      "file": "gpt-image-2-5-sunburst-1k-low.png",
+      "key": "img/2b03bafa844c78aaeca4828932fd76b7edd2a982"
+    },
+    "gpt-image-2-5-sunburst-4k-max": {
+      "file": "gpt-image-2-5-sunburst-4k-max.png",
+      "key": "img/40a48053ef5cc0e421bd498b124bb44d443f556f"
+    },
+    "gpt-image-2-chatgpt": {
+      "file": "gpt-image-2-chatgpt.png",
+      "key": "img/9c504dae7909313301de4150819e0a4a1365af29"
+    },
+    "grok": {
+      "file": "grok.jpg",
+      "key": "img/6feef35e4dbdccb9a2b3b42ea007263c9d8ebd01"
+    },
+    "grok-imagine-image-20260201": {
+      "file": "grok-imagine-image-20260201.jpg",
+      "key": "img/e53d2d49983b71f304277bcc0430d095bf6b8051"
+    },
+    "hidreami1": {
+      "file": "hidreami1.png",
+      "key": "img/2a318ebc7221d6a7269b04a4f1e7c3fdf9af2448"
+    },
+    "hunyuan-image-2.0": {
+      "file": "hunyuan-image-2.0.jpg",
+      "key": "img/08ae0bcfcdbdd643fdc30d06c521407bfc706137"
+    },
+    "hunyuan-image-2.1": {
+      "file": "hunyuan-image-2.1.png",
+      "key": "img/d589eab79f1f0c8d3d1d9d82967267f411a7467a"
+    },
+    "hunyuan-image-3.0": {
+      "file": "hunyuan-image-3.0.jpg",
+      "key": "img/5dcb0989d30514c8cb97998915e622bc731f02ab"
+    },
+    "hunyuan-image-3.0-instruct": {
+      "file": "hunyuan-image-3.0-instruct.png",
+      "key": "img/7f8f497c56d895e8e5287d82ea7c1b1d5ce17a62"
+    },
+    "ideogram3": {
+      "file": "ideogram3.jpeg",
+      "key": "img/81bad878c63f46292a17339d3c3f3d80bcbeb95c"
+    },
+    "imagen3": {
+      "file": "imagen3.jpg",
+      "key": "img/4f1421702fd59aeb74b25aee4189b6c9f1b69d6a"
+    },
+    "imagen4": {
+      "file": "imagen4.png",
+      "key": "img/5c774e4a543b9d560832ce69bff1cb016a4ad9a0"
+    },
+    "imagen4ultra": {
+      "file": "imagen4ultra.png",
+      "key": "img/67a1505d1244ec61c90acd2e8f41fb532cbcd16b"
+    },
+    "imagineart-2-0": {
+      "file": "imagineart-2-0.png",
+      "key": "img/a12ca2bd007fa7a97ae99d9db386891fc84395ee"
+    },
+    "juggernautxl": {
+      "file": "juggernautxl.png",
+      "key": "img/8b98b70b63afe2a10f9ced6d00e558d713998a93"
+    },
+    "klingai-kolors-2.1": {
+      "file": "klingai-kolors-2.1.png",
+      "key": "img/5c0af939683bfdab04776cf329f2f03c05014aec"
+    },
+    "klingai-omni-image-1.0": {
+      "file": "klingai-omni-image-1.0.png",
+      "key": "img/0a12cd5ce87cbc6637fc9229eddbbbdc83796a68"
+    },
+    "krea2-turbo-int8": {
+      "file": "krea2-turbo-int8.png",
+      "key": "img/229d20d04706aac6da9ee9e5129a5481a7608ae3"
+    },
+    "lens": {
+      "file": "lens.png",
+      "key": "img/23028a570082d3a042f83be375e031b2ffa7cbef"
+    },
+    "lumina2": {
+      "file": "lumina2.png",
+      "key": "img/b54ab435ab3f154c8188fbd797c3441313a5c66c"
+    },
+    "mai-image-1": {
+      "file": "mai-image-1.png",
+      "key": "img/341903ab94fc25e337d49f7d8c7c48d2bae32918"
+    },
+    "mai-image-2": {
+      "file": "mai-image-2.png",
+      "key": "img/fc68fae264f0b04cb9fa9371a419ba2c32e3b418"
+    },
+    "mai-image-2-5": {
+      "file": "mai-image-2-5.png",
+      "key": "img/b256cb8038cce950b939f4816ac296cd1f19ec9e"
+    },
+    "mai-image-2-5-flash": {
+      "file": "mai-image-2-5-flash.png",
+      "key": "img/1f77c26c40514af0506a6781032e3e76f9358cf8"
+    },
+    "mai-image-2-5-pro": {
+      "file": "mai-image-2-5-pro.png",
+      "key": "img/05bb9caa2cd44e555f19ab0fc7a3e25e7d0391c0"
+    },
+    "mai-image-2-6-pre": {
+      "file": "mai-image-2-6-pre.png",
+      "key": "img/0446d40ae511b3eb2602584f43bf0282b2811ce4"
+    },
+    "midjourney-v8.1-alpha": {
+      "file": "midjourney-v8.1-alpha.png",
+      "key": "img/836b22d43065763bd4ece91d2fe7c6ba639db0c0"
+    },
+    "midjourneyv61": {
+      "file": "midjourneyv61.png",
+      "key": "img/db0650ee3ec70ef3fe34bc3ed47da67686e9712b"
+    },
+    "midjourneyv7": {
+      "file": "midjourneyv7.png",
+      "key": "img/07314757b5a23146c0f47007704b8a39ad0a4f52"
+    },
+    "midjourneyv7-20250501": {
+      "file": "midjourneyv7-20250501.png",
+      "key": "img/f6140a0a0b522b3b89cbb0973b32c0eef916819d"
+    },
+    "midjourneyv8alpha": {
+      "file": "midjourneyv8alpha.png",
+      "key": "img/64a8219d5017326774e7a7834e86627ae2334992"
+    },
+    "nanobanana-2-4k": {
+      "file": "nanobanana-2-4k.png",
+      "key": "img/5c8f385c522ea779abf4f768fef04d183e4a9e67"
+    },
+    "nanobananapro-4k": {
+      "file": "nanobananapro-4k.png",
+      "key": "img/db32a44fd53b2fcbebeb6463375810f248e4ee63"
+    },
+    "piclumen-realistic-v2": {
+      "file": "piclumen-realistic-v2.png",
+      "key": "img/447091251ff972a6ffc870b52afc04c5f724c8a3"
+    },
+    "qwen-image": {
+      "file": "qwen-image.png",
+      "key": "img/b6d6281d5f615494da6e5e2bffd52c665bf3ca17"
+    },
+    "qwen-image-2.0": {
+      "file": "qwen-image-2.0.png",
+      "key": "img/35e8658086afc2f95fa9590dd9de70f7a7853213"
+    },
+    "qwen-image-2.1": {
+      "file": "qwen-image-2.1.png",
+      "key": "img/83edc11e1cb5e30ca88075eea0a75227e45b5dcb"
+    },
+    "qwen-image-2512": {
+      "file": "qwen-image-2512.png",
+      "key": "img/a1162d75d7a1f597b8047e27e3f3b2a1d7322723"
+    },
+    "qwen-image-3.0": {
+      "file": "qwen-image-3.0.png",
+      "key": "img/90a89929d4ec31fb9e7b2bbfa48e73dbc10634ec"
+    },
+    "qwen-image-3.0-pro": {
+      "file": "qwen-image-3.0-pro.png",
+      "key": "img/61f4f7aae3906db648f49647369428c85b100a9b"
+    },
+    "recraft-v3-raw": {
+      "file": "recraft-v3-raw.png",
+      "key": "img/30af8b5f0f28817cd062c89b6c31ff5103c9282b"
+    },
+    "recraft-v4": {
+      "file": "recraft-v4.png",
+      "key": "img/986b26be89356729046daef8f936c643174872d4"
+    },
+    "reve": {
+      "file": "reve.png",
+      "key": "img/d5feee6a6b3829a3a321ca2445035f95eea93e72"
+    },
+    "reve-1.5": {
+      "file": "reve-1.5.png",
+      "key": "img/1d2c13bbd341d8c3d5c09ee8c785fcfe359f1b45"
+    },
+    "seedream-4.0-4k": {
+      "file": "seedream-4.0-4k.png",
+      "key": "img/10aee9890678a18176277f154794864548085787"
+    },
+    "seedream-4.5-4k": {
+      "file": "seedream-4.5-4k.png",
+      "key": "img/8dbce0b71ceaf3c6ab1752b8b132fdf8fdb9b05b"
+    },
+    "seedream-5.0-lite": {
+      "file": "seedream-5.0-lite.png",
+      "key": "img/2e8629ed5286d7689e2991bff65235c045ca0b5f"
+    },
+    "seedream-5.0-pro": {
+      "file": "seedream-5.0-pro.png",
+      "key": "img/64b8f32da355d0f3978768f8e7520e7b108983aa"
+    },
+    "tengrai": {
+      "file": "tengrai.png",
+      "key": "img/8e57524cd345a0b0fc00a7d7e06819f77c1dfeb7"
+    },
+    "tengrai-q": {
+      "file": "tengrai-q.png",
+      "key": "img/6cb46c7c2f99cc3a35676d102a1290c7a1b0126d"
+    },
+    "uni-1": {
+      "file": "uni-1.png",
+      "key": "img/f798932b9ab3250abb0405a43121bb012c0c827b"
+    },
+    "uni-1.1": {
+      "file": "uni-1.1.png",
+      "key": "img/a71cbd6f94eea562dcccef26f5d92144044e1076"
+    },
+    "uni-1.1-max": {
+      "file": "uni-1.1-max.png",
+      "key": "img/859f98277c2d5c9f9207550cb8a29a794f2ceb28"
+    },
+    "wan-2-7-pro-2k": {
+      "file": "wan-2-7-pro-2k.png",
+      "key": "img/226611a6d5d3222025bbd3414f2bdbad611afc12"
+    },
+    "z-image-base": {
+      "file": "z-image-base.png",
+      "key": "img/8a908d65c2b6a157db49d72f4375df66ca455f19"
+    },
+    "z-image-turbo": {
+      "file": "z-image-turbo.png",
+      "key": "img/d0eed448ebbc6e17ec75423bf00c8ba50dea3a09"
+    }
   },
   "006": {
-    "bagel": "bagel.webp",
-    "bitdance": "bitdance.png",
-    "chroma-34": "chroma-34.png",
-    "dreamina-image20pro": "dreamina-image20pro.jpeg",
-    "dreamina-image3": "dreamina-image3.jpeg",
-    "ernie-45turbo": "ernie-45turbo.png",
-    "ernie-image": "ernie-image.png",
-    "ernie-image-turbo": "ernie-image-turbo.png",
-    "f-lite-standard": "f-lite-standard.webp",
-    "firefly-image-5-preview": "firefly-image-5-preview.png",
-    "firefly4": "firefly4.jpg",
-    "flux1-kontext-pro": "flux1-kontext-pro.png",
-    "flux1-krea": "flux1-krea.png",
-    "flux2-dev": "flux2-dev.png",
-    "flux2-flex-2k": "flux2-flex-2k.png",
-    "flux2-klein-4b": "flux2-klein-4b.png",
-    "flux2-klein-9b": "flux2-klein-9b.png",
-    "flux2-klein-base-4b": "flux2-klein-base-4b.png",
-    "flux2-klein-base-9b": "flux2-klein-base-9b.png",
-    "flux2-max-2k": "flux2-max-2k.png",
-    "flux2-pro-2k": "flux2-pro-2k.png",
-    "fluxmaniaV": "fluxmaniaV.png",
-    "gemini-2.0-flash-0507": "gemini-2.0-flash-0507.jpg",
-    "gemini-flash": "gemini-flash.jpeg",
-    "gemini25flashimagepreview": "gemini25flashimagepreview.png",
-    "glm-image": "glm-image.png",
-    "gpt-5-image-mini-high": "gpt-5-image-mini-high.png",
-    "gpt-5-image-mini-low": "gpt-5-image-mini-low.png",
-    "gpt-5-image-mini-medium": "gpt-5-image-mini-medium.png",
-    "gpt-image-1": "gpt-image-1.png",
-    "gpt-image-1.5": "gpt-image-1.5.png",
-    "gpt-image-2-3k": "gpt-image-2-3k.png",
-    "gpt-image-2-5-sunburst-1k-low": "gpt-image-2-5-sunburst-1k-low.png",
-    "gpt-image-2-5-sunburst-4k-max": "gpt-image-2-5-sunburst-4k-max.png",
-    "gpt-image-2-chatgpt": "gpt-image-2-chatgpt.png",
-    "grok": "grok.jpg",
-    "grok-imagine-image-20260201": "grok-imagine-image-20260201.jpg",
-    "hidreami1": "hidreami1.png",
-    "hunyuan-image-2.0": "hunyuan-image-2.0.jpg",
-    "hunyuan-image-2.1": "hunyuan-image-2.1.png",
-    "hunyuan-image-3.0": "hunyuan-image-3.0.jpg",
-    "hunyuan-image-3.0-instruct": "hunyuan-image-3.0-instruct.png",
-    "ideogram3": "ideogram3.jpeg",
-    "imagen3": "imagen3.jpg",
-    "imagen4": "imagen4.png",
-    "imagen4ultra": "imagen4ultra.jpg",
-    "imagineart-2-0": "imagineart-2-0.png",
-    "juggernautxl": "juggernautxl.png",
-    "klingai-kolors-2.1": "klingai-kolors-2.1.png",
-    "klingai-omni-image-1.0": "klingai-omni-image-1.0.png",
-    "krea2-turbo-int8": "krea2-turbo-int8.png",
-    "lens": "lens.png",
-    "lumina2": "lumina2.png",
-    "mai-image-1": "mai-image-1.png",
-    "mai-image-2": "mai-image-2.png",
-    "mai-image-2-5": "mai-image-2-5.png",
-    "mai-image-2-5-flash": "mai-image-2-5-flash.png",
-    "mai-image-2-5-pro": "mai-image-2-5-pro.png",
-    "mai-image-2-6-pre": "mai-image-2-6-pre.png",
-    "midjourney-v8.1-alpha": "midjourney-v8.1-alpha.png",
-    "midjourneyv61": "midjourneyv61.png",
-    "midjourneyv7": "midjourneyv7.png",
-    "midjourneyv7-20250501": "midjourneyv7-20250501.png",
-    "midjourneyv8alpha": "midjourneyv8alpha.png",
-    "nanobanana-2-4k": "nanobanana-2-4k.png",
-    "nanobananapro-4k": "nanobananapro-4k.png",
-    "piclumen-realistic-v2": "piclumen-realistic-v2.png",
-    "qwen-image": "qwen-image.png",
-    "qwen-image-2.0": "qwen-image-2.0.png",
-    "qwen-image-2.1": "qwen-image-2.1.png",
-    "qwen-image-2512": "qwen-image-2512.png",
-    "qwen-image-3.0": "qwen-image-3.0.png",
-    "qwen-image-3.0-pro": "qwen-image-3.0-pro.png",
-    "recraft-v3-raw": "recraft-v3-raw.png",
-    "recraft-v4": "recraft-v4.png",
-    "reve": "reve.png",
-    "reve-1.5": "reve-1.5.png",
-    "seedream-4.0-4k": "seedream-4.0-4k.png",
-    "seedream-4.5-4k": "seedream-4.5-4k.png",
-    "seedream-5.0-lite": "seedream-5.0-lite.png",
-    "seedream-5.0-pro": "seedream-5.0-pro.png",
-    "tengrai": "tengrai.png",
-    "tengrai-q": "tengrai-q.png",
-    "uni-1": "uni-1.png",
-    "uni-1.1": "uni-1.1.png",
-    "uni-1.1-max": "uni-1.1-max.png",
-    "wan-2-7-pro-2k": "wan-2-7-pro-2k.png",
-    "z-image-base": "z-image-base.png",
-    "z-image-turbo": "z-image-turbo.png"
+    "bagel": {
+      "file": "bagel.webp",
+      "key": "img/238db8d4ac54e8372d74c0296ae40c41e8fceaae"
+    },
+    "bitdance": {
+      "file": "bitdance.png",
+      "key": "img/a12400b54cb6b354ce59fa6fa19d46af92229829"
+    },
+    "chroma-34": {
+      "file": "chroma-34.png",
+      "key": "img/063a9b3c18ae42edc763fc5a96d4cfc11b5b01a3"
+    },
+    "dreamina-image20pro": {
+      "file": "dreamina-image20pro.jpeg",
+      "key": "img/15e19898b63ddcd2159363612277bff93d901449"
+    },
+    "dreamina-image3": {
+      "file": "dreamina-image3.jpeg",
+      "key": "img/bbb7aacbea9c8ed15525aa2e2bca28c820518b2a"
+    },
+    "ernie-45turbo": {
+      "file": "ernie-45turbo.png",
+      "key": "img/1315bae28ad51fcc8f6ca26f1dcc154d33280606"
+    },
+    "ernie-image": {
+      "file": "ernie-image.png",
+      "key": "img/3fd261c19846c0ceac8ed4bea2ed0e7fe1591afd"
+    },
+    "ernie-image-turbo": {
+      "file": "ernie-image-turbo.png",
+      "key": "img/3182d262a39131f019bf06d47144c7ec020decf4"
+    },
+    "f-lite-standard": {
+      "file": "f-lite-standard.webp",
+      "key": "img/31329f2991c99a6c34395840b6e5a3305164872a"
+    },
+    "firefly-image-5-preview": {
+      "file": "firefly-image-5-preview.png",
+      "key": "img/5b7796ddd5539b4e9c3206f031b7bdbde0840df6"
+    },
+    "firefly4": {
+      "file": "firefly4.jpg",
+      "key": "img/b0b055ec83f64958694bdf0e16998c614c6faf26"
+    },
+    "flux1-kontext-pro": {
+      "file": "flux1-kontext-pro.png",
+      "key": "img/e203ab34260179b9f968bbb616c24b8535ad3b5a"
+    },
+    "flux1-krea": {
+      "file": "flux1-krea.png",
+      "key": "img/155ec63ca5a283946fda3405a40a553f8e8927ac"
+    },
+    "flux2-dev": {
+      "file": "flux2-dev.png",
+      "key": "img/d82cd38f57b1703c66338fa5c87de2644016268f"
+    },
+    "flux2-flex-2k": {
+      "file": "flux2-flex-2k.png",
+      "key": "img/56702c9f22d22a2f4d8176114a77204a1785ddde"
+    },
+    "flux2-klein-4b": {
+      "file": "flux2-klein-4b.png",
+      "key": "img/658eba483a0ec249847b1bef5d516093e6f83f3b"
+    },
+    "flux2-klein-9b": {
+      "file": "flux2-klein-9b.png",
+      "key": "img/0a563498c7cd042c0f0683b4b198d092c3037688"
+    },
+    "flux2-klein-base-4b": {
+      "file": "flux2-klein-base-4b.png",
+      "key": "img/db86ff38862512f9677a7feaac91bf7027553a91"
+    },
+    "flux2-klein-base-9b": {
+      "file": "flux2-klein-base-9b.png",
+      "key": "img/9d13502c65b9848d091b1d5bd8f8b002bc2b3278"
+    },
+    "flux2-max-2k": {
+      "file": "flux2-max-2k.png",
+      "key": "img/6d0257ead4c96d1307f285b85e26132ba74950f4"
+    },
+    "flux2-pro-2k": {
+      "file": "flux2-pro-2k.png",
+      "key": "img/f5efe80d02309544b9fb92471cc7d98e11f1834f"
+    },
+    "fluxmaniaV": {
+      "file": "fluxmaniaV.png",
+      "key": "img/90252a4de8e83c6554e316cf73f7123c2259b229"
+    },
+    "gemini-2.0-flash-0507": {
+      "file": "gemini-2.0-flash-0507.jpg",
+      "key": "img/6ffe7c9b4b3b97be0aae03187a35ad9fc95e646c"
+    },
+    "gemini-flash": {
+      "file": "gemini-flash.jpeg",
+      "key": "img/a4ee39efa54cafe5e4f8c7ae1c8c7faa39c1e3b1"
+    },
+    "gemini25flashimagepreview": {
+      "file": "gemini25flashimagepreview.png",
+      "key": "img/aae703627db924dc211ec3b2ce37ceb159721178"
+    },
+    "glm-image": {
+      "file": "glm-image.png",
+      "key": "img/1711d1913f891e6d7a28832cb7f8358282e6e6dc"
+    },
+    "gpt-5-image-mini-high": {
+      "file": "gpt-5-image-mini-high.png",
+      "key": "img/b1c9901556f15717c79774433ffc8d607256f6f7"
+    },
+    "gpt-5-image-mini-low": {
+      "file": "gpt-5-image-mini-low.png",
+      "key": "img/454bee4c047909505d097af652279313bd783e1f"
+    },
+    "gpt-5-image-mini-medium": {
+      "file": "gpt-5-image-mini-medium.png",
+      "key": "img/fb6863485e28a7cd9769e2116fdc1bcf3d243108"
+    },
+    "gpt-image-1": {
+      "file": "gpt-image-1.png",
+      "key": "img/d65e0f9e78ebae062f11fd944530d6267a790b85"
+    },
+    "gpt-image-1.5": {
+      "file": "gpt-image-1.5.png",
+      "key": "img/2fac898a3c92dd69781008af842f2f00ae2a6ff9"
+    },
+    "gpt-image-2-3k": {
+      "file": "gpt-image-2-3k.png",
+      "key": "img/72ea1a4afdf5df8d96f6d738232845ed7e5326a5"
+    },
+    "gpt-image-2-5-sunburst-1k-low": {
+      "file": "gpt-image-2-5-sunburst-1k-low.png",
+      "key": "img/17ca44ece7e0e977dff4f3ddf107ecdf426f10c4"
+    },
+    "gpt-image-2-5-sunburst-4k-max": {
+      "file": "gpt-image-2-5-sunburst-4k-max.png",
+      "key": "img/c0ec8e4c3c97a3ec93b5e4e786600f473d6bb7e2"
+    },
+    "gpt-image-2-chatgpt": {
+      "file": "gpt-image-2-chatgpt.png",
+      "key": "img/f2bd657bd61331e264accf4f6669b8e4a78bcc0c"
+    },
+    "grok": {
+      "file": "grok.jpg",
+      "key": "img/1071fcdc6bd145468356d2e3fa12b252c82f0013"
+    },
+    "grok-imagine-image-20260201": {
+      "file": "grok-imagine-image-20260201.jpg",
+      "key": "img/92dfa97e8877698432962cd21a8729db4be5279e"
+    },
+    "hidreami1": {
+      "file": "hidreami1.png",
+      "key": "img/aab8be78f5c7df02bdcdc247e772ad4475b13093"
+    },
+    "hunyuan-image-2.0": {
+      "file": "hunyuan-image-2.0.jpg",
+      "key": "img/8b7022b317fd9fe8ce8bbd1e12fff2d2868a554b"
+    },
+    "hunyuan-image-2.1": {
+      "file": "hunyuan-image-2.1.png",
+      "key": "img/ba1a9619b66c4d16088d1f25acaf5beccb484b9b"
+    },
+    "hunyuan-image-3.0": {
+      "file": "hunyuan-image-3.0.jpg",
+      "key": "img/ba78e5b5f81af549516758db17c4f4c6e18b472b"
+    },
+    "hunyuan-image-3.0-instruct": {
+      "file": "hunyuan-image-3.0-instruct.png",
+      "key": "img/4c480ce07a220cb2eb9f271c8fc1db3300a3f79e"
+    },
+    "ideogram3": {
+      "file": "ideogram3.jpeg",
+      "key": "img/fec85c143f631966a84d60a4a53243ca7760509d"
+    },
+    "imagen3": {
+      "file": "imagen3.jpg",
+      "key": "img/78e16f5274e67a70faea0e0bc92ff768f47a2042"
+    },
+    "imagen4": {
+      "file": "imagen4.png",
+      "key": "img/8f5359f0f6a40466bc9de7f1ea867495b413fd62"
+    },
+    "imagen4ultra": {
+      "file": "imagen4ultra.jpg",
+      "key": "img/7ffc802cfe79c0e8c27962599b34d3ac1ff27177"
+    },
+    "imagineart-2-0": {
+      "file": "imagineart-2-0.png",
+      "key": "img/d274f02bc5f22d658bc28094475e705af8bf0bf8"
+    },
+    "juggernautxl": {
+      "file": "juggernautxl.png",
+      "key": "img/612024cc0209a09966f5d2a78ddc0b82ee667e1a"
+    },
+    "klingai-kolors-2.1": {
+      "file": "klingai-kolors-2.1.png",
+      "key": "img/d4dd7dcfc5a24b600c43870bc8d47f82739179b1"
+    },
+    "klingai-omni-image-1.0": {
+      "file": "klingai-omni-image-1.0.png",
+      "key": "img/e2cdacce76b5cde6996b31ee330e42e510d3dcf8"
+    },
+    "krea2-turbo-int8": {
+      "file": "krea2-turbo-int8.png",
+      "key": "img/89559f3a0454b603bf3a541c1f8672ab7d210d14"
+    },
+    "lens": {
+      "file": "lens.png",
+      "key": "img/ab8637b51cac5698797c1447ad1d623b3c29bfed"
+    },
+    "lumina2": {
+      "file": "lumina2.png",
+      "key": "img/863a116a065c1414271f6f53521f3b136fb051b8"
+    },
+    "mai-image-1": {
+      "file": "mai-image-1.png",
+      "key": "img/f2649769f142e2cb177325a258f5b635329ead8c"
+    },
+    "mai-image-2": {
+      "file": "mai-image-2.png",
+      "key": "img/a3d22277d418523a89032887e9469887832c389a"
+    },
+    "mai-image-2-5": {
+      "file": "mai-image-2-5.png",
+      "key": "img/e3ef290ce952aaabafdd58c121ed3f570d165402"
+    },
+    "mai-image-2-5-flash": {
+      "file": "mai-image-2-5-flash.png",
+      "key": "img/60c5f21e38bb39bbcdf4164bae586be4fbdcdd94"
+    },
+    "mai-image-2-5-pro": {
+      "file": "mai-image-2-5-pro.png",
+      "key": "img/4f3c9326e397ecc5186be3c90c9181d2cfb623f4"
+    },
+    "mai-image-2-6-pre": {
+      "file": "mai-image-2-6-pre.png",
+      "key": "img/0f1c0ca0792028040b36c16b7be70d20b49fc333"
+    },
+    "midjourney-v8.1-alpha": {
+      "file": "midjourney-v8.1-alpha.png",
+      "key": "img/57d88bf39907f2f0aeeb80c7b6edd13af4cbfd96"
+    },
+    "midjourneyv61": {
+      "file": "midjourneyv61.png",
+      "key": "img/f9302997e7f358d0f4d27bb9fe1c4b5e8e689e5f"
+    },
+    "midjourneyv7": {
+      "file": "midjourneyv7.png",
+      "key": "img/911513421187025d6b77f96af204db1c6d60a631"
+    },
+    "midjourneyv7-20250501": {
+      "file": "midjourneyv7-20250501.png",
+      "key": "img/30f5299cef1a8883e7ad1efe4d19c47f1f5679cd"
+    },
+    "midjourneyv8alpha": {
+      "file": "midjourneyv8alpha.png",
+      "key": "img/c7d956f661ee77a8f90e365bfdc8b2330fdfdbe4"
+    },
+    "nanobanana-2-4k": {
+      "file": "nanobanana-2-4k.png",
+      "key": "img/924b0d313e71e56bd563170d35161c7d400932a7"
+    },
+    "nanobananapro-4k": {
+      "file": "nanobananapro-4k.png",
+      "key": "img/c68626fc61868bfd7d12c08298b6e56a0cfe0b6c"
+    },
+    "piclumen-realistic-v2": {
+      "file": "piclumen-realistic-v2.png",
+      "key": "img/e5d303de34a48ce67a8f845cca65f8b73f89d036"
+    },
+    "qwen-image": {
+      "file": "qwen-image.png",
+      "key": "img/284ec30bbd27ec08cb303279e9f98875449022a8"
+    },
+    "qwen-image-2.0": {
+      "file": "qwen-image-2.0.png",
+      "key": "img/891a6be9133ba6350e29dbb1d26b9ae5b4d71e2e"
+    },
+    "qwen-image-2.1": {
+      "file": "qwen-image-2.1.png",
+      "key": "img/28c889cd66cc0de40fabc1e6468f025c073ff18e"
+    },
+    "qwen-image-2512": {
+      "file": "qwen-image-2512.png",
+      "key": "img/268134f16e29339f31f3e6bb61d54a9d6db49d53"
+    },
+    "qwen-image-3.0": {
+      "file": "qwen-image-3.0.png",
+      "key": "img/724a4a87bbd40966706fa4c152eea45364fd925f"
+    },
+    "qwen-image-3.0-pro": {
+      "file": "qwen-image-3.0-pro.png",
+      "key": "img/91a667a70dea4f346f2bb6a5c55ae63f52cca1fd"
+    },
+    "recraft-v3-raw": {
+      "file": "recraft-v3-raw.png",
+      "key": "img/7c8eb4807d9b5d8131d7e68b89d8268eca451d41"
+    },
+    "recraft-v4": {
+      "file": "recraft-v4.png",
+      "key": "img/d1fe72b6a08872e5f69727af526d2126b85a6706"
+    },
+    "reve": {
+      "file": "reve.png",
+      "key": "img/7bdfd74aafc69ffb2a35a284273f0ae26682fb83"
+    },
+    "reve-1.5": {
+      "file": "reve-1.5.png",
+      "key": "img/0d710626f9d68106c068b6382c8e965a0e405d7e"
+    },
+    "seedream-4.0-4k": {
+      "file": "seedream-4.0-4k.png",
+      "key": "img/da86b93f39d647c3c066cd609c078580266a8c4b"
+    },
+    "seedream-4.5-4k": {
+      "file": "seedream-4.5-4k.png",
+      "key": "img/5b8fce3ced462ffec99b0edd05e0fc7debe47faf"
+    },
+    "seedream-5.0-lite": {
+      "file": "seedream-5.0-lite.png",
+      "key": "img/472d80237479ec88be4185e2f7cabf780103ad6e"
+    },
+    "seedream-5.0-pro": {
+      "file": "seedream-5.0-pro.png",
+      "key": "img/e52ee605a2d2f2f8cc9e216bd8a7db9854d211d6"
+    },
+    "tengrai": {
+      "file": "tengrai.png",
+      "key": "img/9fc53ffa479dd57e8faf03fe5b62426e558eaa80"
+    },
+    "tengrai-q": {
+      "file": "tengrai-q.png",
+      "key": "img/63e1388cf11887dc583f2a64ee2a8ebfaa8ddfc2"
+    },
+    "uni-1": {
+      "file": "uni-1.png",
+      "key": "img/81a435a7c8d3ae90278fef46a459ac85a79f3ca2"
+    },
+    "uni-1.1": {
+      "file": "uni-1.1.png",
+      "key": "img/bf124e59834fc92e31e06ae1a18af538117f002e"
+    },
+    "uni-1.1-max": {
+      "file": "uni-1.1-max.png",
+      "key": "img/98c355338b56eda5b44fe766058d72bf9177a265"
+    },
+    "wan-2-7-pro-2k": {
+      "file": "wan-2-7-pro-2k.png",
+      "key": "img/02f41afb1c363ab4a927a5260355277428fe7225"
+    },
+    "z-image-base": {
+      "file": "z-image-base.png",
+      "key": "img/1202fe7378ba4fbbb79128b712c455d0a5cd70b9"
+    },
+    "z-image-turbo": {
+      "file": "z-image-turbo.png",
+      "key": "img/8fec11f20a2ba3211bd04e15e7de5075564ee047"
+    }
   },
   "007": {
-    "bagel": "bagel.webp",
-    "bitdance": "bitdance.png",
-    "chroma-34": "chroma-34.png",
-    "dreamina-image20pro": "dreamina-image20pro.jpeg",
-    "dreamina-image3": "dreamina-image3.jpeg",
-    "ernie-45turbo": "ernie-45turbo.png",
-    "ernie-image": "ernie-image.png",
-    "ernie-image-turbo": "ernie-image-turbo.png",
-    "f-lite-standard": "f-lite-standard.webp",
-    "firefly-image-5-preview": "firefly-image-5-preview.png",
-    "firefly4": "firefly4.jpg",
-    "flux1-kontext-pro": "flux1-kontext-pro.png",
-    "flux1-krea": "flux1-krea.png",
-    "flux2-dev": "flux2-dev.png",
-    "flux2-flex-2k": "flux2-flex-2k.png",
-    "flux2-klein-4b": "flux2-klein-4b.png",
-    "flux2-klein-9b": "flux2-klein-9b.png",
-    "flux2-klein-base-4b": "flux2-klein-base-4b.png",
-    "flux2-klein-base-9b": "flux2-klein-base-9b.png",
-    "flux2-max-2k": "flux2-max-2k.png",
-    "flux2-pro-2k": "flux2-pro-2k.png",
-    "fluxmaniaV": "fluxmaniaV.png",
-    "gemini-2.0-flash-0507": "gemini-2.0-flash-0507.jpg",
-    "gemini-flash": "gemini-flash.jpeg",
-    "gemini25flashimagepreview": "gemini25flashimagepreview.png",
-    "glm-image": "glm-image.png",
-    "gpt-5-image-mini-high": "gpt-5-image-mini-high.png",
-    "gpt-5-image-mini-low": "gpt-5-image-mini-low.png",
-    "gpt-5-image-mini-medium": "gpt-5-image-mini-medium.png",
-    "gpt-image-1": "gpt-image-1.png",
-    "gpt-image-1.5": "gpt-image-1.5.png",
-    "gpt-image-2-3k": "gpt-image-2-3k.png",
-    "gpt-image-2-5-sunburst-1k-low": "gpt-image-2-5-sunburst-1k-low.png",
-    "gpt-image-2-5-sunburst-4k-max": "gpt-image-2-5-sunburst-4k-max.png",
-    "gpt-image-2-chatgpt": "gpt-image-2-chatgpt.png",
-    "grok": "grok.jpg",
-    "grok-imagine-image-20260201": "grok-imagine-image-20260201.png",
-    "hidreami1": "hidreami1.png",
-    "hunyuan-image-2.0": "hunyuan-image-2.0.jpg",
-    "hunyuan-image-2.1": "hunyuan-image-2.1.png",
-    "hunyuan-image-3.0": "hunyuan-image-3.0.jpg",
-    "hunyuan-image-3.0-instruct": "hunyuan-image-3.0-instruct.png",
-    "ideogram3": "ideogram3.jpeg",
-    "imagen3": "imagen3.jpg",
-    "imagen4": "imagen4.png",
-    "imagen4ultra": "imagen4ultra.png",
-    "imagineart-2-0": "imagineart-2-0.png",
-    "juggernautxl": "juggernautxl.png",
-    "klingai-kolors-2.1": "klingai-kolors-2.1.png",
-    "klingai-omni-image-1.0": "klingai-omni-image-1.0.png",
-    "krea2-turbo-int8": "krea2-turbo-int8.png",
-    "lens": "lens.png",
-    "lumina2": "lumina2.png",
-    "mai-image-1": "mai-image-1.png",
-    "mai-image-2": "mai-image-2.png",
-    "mai-image-2-5": "mai-image-2-5.png",
-    "mai-image-2-5-flash": "mai-image-2-5-flash.png",
-    "mai-image-2-5-pro": "mai-image-2-5-pro.png",
-    "mai-image-2-6-pre": "mai-image-2-6-pre.png",
-    "midjourney-v8.1-alpha": "midjourney-v8.1-alpha.png",
-    "midjourneyv61": "midjourneyv61.png",
-    "midjourneyv7": "midjourneyv7.png",
-    "midjourneyv7-20250501": "midjourneyv7-20250501.png",
-    "midjourneyv8alpha": "midjourneyv8alpha.png",
-    "nanobanana-2-4k": "nanobanana-2-4k.png",
-    "nanobananapro-4k": "nanobananapro-4k.png",
-    "piclumen-realistic-v2": "piclumen-realistic-v2.png",
-    "qwen-image": "qwen-image.png",
-    "qwen-image-2.0": "qwen-image-2.0.png",
-    "qwen-image-2.1": "qwen-image-2.1.png",
-    "qwen-image-2512": "qwen-image-2512.png",
-    "qwen-image-3.0": "qwen-image-3.0.png",
-    "qwen-image-3.0-pro": "qwen-image-3.0-pro.png",
-    "recraft-v3-raw": "recraft-v3-raw.png",
-    "recraft-v4": "recraft-v4.png",
-    "reve": "reve.png",
-    "reve-1.5": "reve-1.5.png",
-    "seedream-4.0-4k": "seedream-4.0-4k.png",
-    "seedream-4.5-4k": "seedream-4.5-4k.png",
-    "seedream-5.0-lite": "seedream-5.0-lite.png",
-    "seedream-5.0-pro": "seedream-5.0-pro.png",
-    "tengrai": "tengrai.png",
-    "tengrai-q": "tengrai-q.png",
-    "uni-1": "uni-1.png",
-    "uni-1.1": "uni-1.1.png",
-    "uni-1.1-max": "uni-1.1-max.png",
-    "wan-2-7-pro-2k": "wan-2-7-pro-2k.png",
-    "z-image-base": "z-image-base.png",
-    "z-image-turbo": "z-image-turbo.png"
+    "bagel": {
+      "file": "bagel.webp",
+      "key": "img/c2bf970ceb592f4683f23dd78b2fcdf1e7a1385f"
+    },
+    "bitdance": {
+      "file": "bitdance.png",
+      "key": "img/7482995429239df960f23df3757f6b075fffb9d8"
+    },
+    "chroma-34": {
+      "file": "chroma-34.png",
+      "key": "img/08cfb196b8af30275288404c4823d931c99fce37"
+    },
+    "dreamina-image20pro": {
+      "file": "dreamina-image20pro.jpeg",
+      "key": "img/12213b22163c116b3e04c5ec345d69017f21bd0a"
+    },
+    "dreamina-image3": {
+      "file": "dreamina-image3.jpeg",
+      "key": "img/92b418e0c85af092ba0cef41b7e39212aae12daf"
+    },
+    "ernie-45turbo": {
+      "file": "ernie-45turbo.png",
+      "key": "img/8666aab8ebab65a3394f39739e95e845ad29a246"
+    },
+    "ernie-image": {
+      "file": "ernie-image.png",
+      "key": "img/520995ddf7a653081c0b71fd8a6421fcbf5dc5ab"
+    },
+    "ernie-image-turbo": {
+      "file": "ernie-image-turbo.png",
+      "key": "img/17ce22dc39966619f468d4d0d496c76c431feabf"
+    },
+    "f-lite-standard": {
+      "file": "f-lite-standard.webp",
+      "key": "img/30bc1676b1ad234d62965988a8843b0b7527b30f"
+    },
+    "firefly-image-5-preview": {
+      "file": "firefly-image-5-preview.png",
+      "key": "img/6995c3efb46d92cf85a59531434387bd7fd4da43"
+    },
+    "firefly4": {
+      "file": "firefly4.jpg",
+      "key": "img/d4058a368014d09f7a2900f890bc652805dfb34d"
+    },
+    "flux1-kontext-pro": {
+      "file": "flux1-kontext-pro.png",
+      "key": "img/7443dd615ec8325d13345ef8d2496f7ad8524931"
+    },
+    "flux1-krea": {
+      "file": "flux1-krea.png",
+      "key": "img/d3df28b0744c935b282d5ce06c0f0038f7befee7"
+    },
+    "flux2-dev": {
+      "file": "flux2-dev.png",
+      "key": "img/eec8cb2fcd291e517dde6a2aafd1d48bb0c6fdd0"
+    },
+    "flux2-flex-2k": {
+      "file": "flux2-flex-2k.png",
+      "key": "img/a4291af029d04c1dd17e2a3d059276d594cf44ac"
+    },
+    "flux2-klein-4b": {
+      "file": "flux2-klein-4b.png",
+      "key": "img/6c992e1a0c02f7a003b3da7671c0aef169344259"
+    },
+    "flux2-klein-9b": {
+      "file": "flux2-klein-9b.png",
+      "key": "img/58b39a220e1e527c328cb8eae05a12ec30c73b30"
+    },
+    "flux2-klein-base-4b": {
+      "file": "flux2-klein-base-4b.png",
+      "key": "img/8f4d7ae8a901b2cbf90558a1416cdc65d854f8c5"
+    },
+    "flux2-klein-base-9b": {
+      "file": "flux2-klein-base-9b.png",
+      "key": "img/2646867ef78928b64cd0e53c2c50614ffe087ad2"
+    },
+    "flux2-max-2k": {
+      "file": "flux2-max-2k.png",
+      "key": "img/6c377d72df90eb4c57d5991c6c50ffd747d1b700"
+    },
+    "flux2-pro-2k": {
+      "file": "flux2-pro-2k.png",
+      "key": "img/de56e47bf506a568db3bd4a6cc09d4987942eb01"
+    },
+    "fluxmaniaV": {
+      "file": "fluxmaniaV.png",
+      "key": "img/841c2548219ab05136bb48ad2c9a26b027f59e9e"
+    },
+    "gemini-2.0-flash-0507": {
+      "file": "gemini-2.0-flash-0507.jpg",
+      "key": "img/99204d365444cc941086ea412637e8307c120aff"
+    },
+    "gemini-flash": {
+      "file": "gemini-flash.jpeg",
+      "key": "img/46643111d967a4acb1a35d6be1fe7b24f5009e90"
+    },
+    "gemini25flashimagepreview": {
+      "file": "gemini25flashimagepreview.png",
+      "key": "img/956311437868b20db3c0853083be3a704f8c8b65"
+    },
+    "glm-image": {
+      "file": "glm-image.png",
+      "key": "img/eed33752a44823560a2d15f967d2e73e25fe43ab"
+    },
+    "gpt-5-image-mini-high": {
+      "file": "gpt-5-image-mini-high.png",
+      "key": "img/aafd26ad7e801698447536b2b186ca7b68a0e4d9"
+    },
+    "gpt-5-image-mini-low": {
+      "file": "gpt-5-image-mini-low.png",
+      "key": "img/85841647c9a9a6d563132365ec6786d1b0042e63"
+    },
+    "gpt-5-image-mini-medium": {
+      "file": "gpt-5-image-mini-medium.png",
+      "key": "img/a2b068f918767bf4c60ac95c3582e0929012b60f"
+    },
+    "gpt-image-1": {
+      "file": "gpt-image-1.png",
+      "key": "img/0431dd6975838cb637a5549ccc37360580ff192b"
+    },
+    "gpt-image-1.5": {
+      "file": "gpt-image-1.5.png",
+      "key": "img/02fe93a827d877908a3a085ab0543e5e9b099c8a"
+    },
+    "gpt-image-2-3k": {
+      "file": "gpt-image-2-3k.png",
+      "key": "img/58014f6b1c7d6b21a39f5f0985b21b74599686a2"
+    },
+    "gpt-image-2-5-sunburst-1k-low": {
+      "file": "gpt-image-2-5-sunburst-1k-low.png",
+      "key": "img/5f5d666865d45e042440b801a66bb2422d43b545"
+    },
+    "gpt-image-2-5-sunburst-4k-max": {
+      "file": "gpt-image-2-5-sunburst-4k-max.png",
+      "key": "img/151c5af6a7eadbc88a4f95c9f89606483025e047"
+    },
+    "gpt-image-2-chatgpt": {
+      "file": "gpt-image-2-chatgpt.png",
+      "key": "img/7fab98d6d49e0664ff4f6fcacd25db24b018c4da"
+    },
+    "grok": {
+      "file": "grok.jpg",
+      "key": "img/4c27fa3c832bce0750ea18937d680b5003ca586d"
+    },
+    "grok-imagine-image-20260201": {
+      "file": "grok-imagine-image-20260201.png",
+      "key": "img/1676989dfb159667def5145ab8d713526f4b0e46"
+    },
+    "hidreami1": {
+      "file": "hidreami1.png",
+      "key": "img/39ca95ad4713d61a3e2b3b6e4db3424ce8e4dbd4"
+    },
+    "hunyuan-image-2.0": {
+      "file": "hunyuan-image-2.0.jpg",
+      "key": "img/20aa988505c25a4ce186ad0fc5ad3c8a5f7407f2"
+    },
+    "hunyuan-image-2.1": {
+      "file": "hunyuan-image-2.1.png",
+      "key": "img/d318d990d6af9000bd115703d74d5c165934376e"
+    },
+    "hunyuan-image-3.0": {
+      "file": "hunyuan-image-3.0.jpg",
+      "key": "img/7f01a92b59cb889c2e86b52602effd37c94fc52a"
+    },
+    "hunyuan-image-3.0-instruct": {
+      "file": "hunyuan-image-3.0-instruct.png",
+      "key": "img/822bb577a4971c8c30d7054df974c6dddb574a24"
+    },
+    "ideogram3": {
+      "file": "ideogram3.jpeg",
+      "key": "img/f0d9c6ef7d5df32bc24bf86f345f222cf5f93ba9"
+    },
+    "imagen3": {
+      "file": "imagen3.jpg",
+      "key": "img/e8724d7deaad7f110358d50dc08350686089a379"
+    },
+    "imagen4": {
+      "file": "imagen4.png",
+      "key": "img/aca51c1e436a83e404d8c38507c1ab307519c530"
+    },
+    "imagen4ultra": {
+      "file": "imagen4ultra.png",
+      "key": "img/2ff583e9e86631875084ec029a9c83c1a89aa2ef"
+    },
+    "imagineart-2-0": {
+      "file": "imagineart-2-0.png",
+      "key": "img/7cd013f2ac6dd1b60c39c7017b9ee0166a17ce03"
+    },
+    "juggernautxl": {
+      "file": "juggernautxl.png",
+      "key": "img/16e124fa205fd52554b06c52e0aaf82948322a69"
+    },
+    "klingai-kolors-2.1": {
+      "file": "klingai-kolors-2.1.png",
+      "key": "img/aa705a2efd427c38bc4b37c2f5c48b31a2f77eff"
+    },
+    "klingai-omni-image-1.0": {
+      "file": "klingai-omni-image-1.0.png",
+      "key": "img/d81f1c987b0265393023d2b13735555eec90d0a7"
+    },
+    "krea2-turbo-int8": {
+      "file": "krea2-turbo-int8.png",
+      "key": "img/6870d26df686e2642a1bce9052cf59bb46456db9"
+    },
+    "lens": {
+      "file": "lens.png",
+      "key": "img/80e04a8b2547f527b0e03d69d4d359106a676f48"
+    },
+    "lumina2": {
+      "file": "lumina2.png",
+      "key": "img/886330d4d2c58c2e88f4bf91e7ad657cab2fcbc0"
+    },
+    "mai-image-1": {
+      "file": "mai-image-1.png",
+      "key": "img/6ba19cb8a86031538bd21ee71b533996cb594d38"
+    },
+    "mai-image-2": {
+      "file": "mai-image-2.png",
+      "key": "img/a616f21e95734b07c98f7b988ba49c11d011816f"
+    },
+    "mai-image-2-5": {
+      "file": "mai-image-2-5.png",
+      "key": "img/57c35aa487fa897e6f426ddc3e35855222b4b4e3"
+    },
+    "mai-image-2-5-flash": {
+      "file": "mai-image-2-5-flash.png",
+      "key": "img/d039fea1a1c303da8f2a35c94ba79cb1c719c5b6"
+    },
+    "mai-image-2-5-pro": {
+      "file": "mai-image-2-5-pro.png",
+      "key": "img/6400692e12cd93e45bf703534e72451e18211e4e"
+    },
+    "mai-image-2-6-pre": {
+      "file": "mai-image-2-6-pre.png",
+      "key": "img/593e7d63c323b04d431cdf82ca0ce34dba36c2f4"
+    },
+    "midjourney-v8.1-alpha": {
+      "file": "midjourney-v8.1-alpha.png",
+      "key": "img/d80da370a65741fda81ef3dea8ac301e07d52fda"
+    },
+    "midjourneyv61": {
+      "file": "midjourneyv61.png",
+      "key": "img/7fcea2d90ddca2f6958dc751f25db91372190181"
+    },
+    "midjourneyv7": {
+      "file": "midjourneyv7.png",
+      "key": "img/b2de342912235fefa6bee0809df96ccf80b01f1a"
+    },
+    "midjourneyv7-20250501": {
+      "file": "midjourneyv7-20250501.png",
+      "key": "img/1094ca956ddd8fffd4b6ac521d00ef8cab3d2b8e"
+    },
+    "midjourneyv8alpha": {
+      "file": "midjourneyv8alpha.png",
+      "key": "img/5e7186ed0b881a4f448e1815995e42ebd515f684"
+    },
+    "nanobanana-2-4k": {
+      "file": "nanobanana-2-4k.png",
+      "key": "img/37848c75406d92a683e4edce6beb2377ca4925de"
+    },
+    "nanobananapro-4k": {
+      "file": "nanobananapro-4k.png",
+      "key": "img/c5864a05ffebe6a1d9bf7b1fc25ba579011af2d5"
+    },
+    "piclumen-realistic-v2": {
+      "file": "piclumen-realistic-v2.png",
+      "key": "img/74fa674fdd6b55ea683404d59b6f3e5d6053842c"
+    },
+    "qwen-image": {
+      "file": "qwen-image.png",
+      "key": "img/c68b905c9a78a6f3534d67fe2a1f5e766f55750f"
+    },
+    "qwen-image-2.0": {
+      "file": "qwen-image-2.0.png",
+      "key": "img/e4802787a6d02c4b32cba3b7e880c186be464b3f"
+    },
+    "qwen-image-2.1": {
+      "file": "qwen-image-2.1.png",
+      "key": "img/8db5d2503ed30e56cdfdfda0623892b51abb584c"
+    },
+    "qwen-image-2512": {
+      "file": "qwen-image-2512.png",
+      "key": "img/65cabc45031ec0281c63037865753a386fc3683d"
+    },
+    "qwen-image-3.0": {
+      "file": "qwen-image-3.0.png",
+      "key": "img/c9ebbf7fe2690c84ec638c3f1bb4343697f4c6cc"
+    },
+    "qwen-image-3.0-pro": {
+      "file": "qwen-image-3.0-pro.png",
+      "key": "img/3d11a3387b0e4a42346d872e520381280471ee78"
+    },
+    "recraft-v3-raw": {
+      "file": "recraft-v3-raw.png",
+      "key": "img/1015c3ea431c080a4d1e4675e9b82a8194a9f947"
+    },
+    "recraft-v4": {
+      "file": "recraft-v4.png",
+      "key": "img/0af29ff6506f41c0a31ada863498d38eb506a48b"
+    },
+    "reve": {
+      "file": "reve.png",
+      "key": "img/986bcebe54a482db90ca09230c545d13e3524657"
+    },
+    "reve-1.5": {
+      "file": "reve-1.5.png",
+      "key": "img/5d758fb89af1469af9ecfd2fda764c31f54b766a"
+    },
+    "seedream-4.0-4k": {
+      "file": "seedream-4.0-4k.png",
+      "key": "img/f4b52aae518bbb7a791b8a48dc6a918a5208ae76"
+    },
+    "seedream-4.5-4k": {
+      "file": "seedream-4.5-4k.png",
+      "key": "img/4d7fef3ba660a27de67b85b07825ff9a6af99434"
+    },
+    "seedream-5.0-lite": {
+      "file": "seedream-5.0-lite.png",
+      "key": "img/147e5d6e341c1638cb49e2bcc1574980ad34de22"
+    },
+    "seedream-5.0-pro": {
+      "file": "seedream-5.0-pro.png",
+      "key": "img/65fd48291ef8f7244ee6018ea17d59ad2f5d784b"
+    },
+    "tengrai": {
+      "file": "tengrai.png",
+      "key": "img/c310a033c8ca990e7fa7ad9b8902db3740a43a63"
+    },
+    "tengrai-q": {
+      "file": "tengrai-q.png",
+      "key": "img/8d9ae3215045fe98bd86aac789425ef98cde9812"
+    },
+    "uni-1": {
+      "file": "uni-1.png",
+      "key": "img/ffc775bc1b45b00446013e6d06a373870bc05eb1"
+    },
+    "uni-1.1": {
+      "file": "uni-1.1.png",
+      "key": "img/d2f2459e8affd878767ef6af9f7613d49f08d513"
+    },
+    "uni-1.1-max": {
+      "file": "uni-1.1-max.png",
+      "key": "img/fcafb8ea0b411d771334c8f108e3a73de772855c"
+    },
+    "wan-2-7-pro-2k": {
+      "file": "wan-2-7-pro-2k.png",
+      "key": "img/d52f96e91b3f7a24b83c0a93be5c026f1d19ef43"
+    },
+    "z-image-base": {
+      "file": "z-image-base.png",
+      "key": "img/24364c310d2773ec983b784ca39fa8287a362759"
+    },
+    "z-image-turbo": {
+      "file": "z-image-turbo.png",
+      "key": "img/7360473d6e031d240a2f02eec6d72fd014c4fd1a"
+    }
   },
   "008": {
-    "bagel": "bagel.webp",
-    "bitdance": "bitdance.png",
-    "chroma-34": "chroma-34.png",
-    "dreamina-image20pro": "dreamina-image20pro.jpeg",
-    "dreamina-image3": "dreamina-image3.jpeg",
-    "ernie-45turbo": "ernie-45turbo.png",
-    "ernie-image": "ernie-image.png",
-    "ernie-image-turbo": "ernie-image-turbo.png",
-    "f-lite-standard": "f-lite-standard.webp",
-    "firefly-image-5-preview": "firefly-image-5-preview.png",
-    "firefly4": "firefly4.jpg",
-    "flux1-kontext-pro": "flux1-kontext-pro.png",
-    "flux1-krea": "flux1-krea.png",
-    "flux11ultra": "flux11ultra.jpg",
-    "flux2-dev": "flux2-dev.png",
-    "flux2-flex-2k": "flux2-flex-2k.png",
-    "flux2-klein-4b": "flux2-klein-4b.png",
-    "flux2-klein-9b": "flux2-klein-9b.png",
-    "flux2-klein-base-4b": "flux2-klein-base-4b.png",
-    "flux2-klein-base-9b": "flux2-klein-base-9b.png",
-    "flux2-max-2k": "flux2-max-2k.png",
-    "flux2-pro-2k": "flux2-pro-2k.png",
-    "fluxmaniaV": "fluxmaniaV.png",
-    "gemini-2.0-flash-0507": "gemini-2.0-flash-0507.jpg",
-    "gemini-flash": "gemini-flash.jpeg",
-    "gemini25flashimagepreview": "gemini25flashimagepreview.png",
-    "glm-image": "glm-image.png",
-    "gpt-5-image-mini-high": "gpt-5-image-mini-high.png",
-    "gpt-5-image-mini-low": "gpt-5-image-mini-low.png",
-    "gpt-5-image-mini-medium": "gpt-5-image-mini-medium.png",
-    "gpt-image-1": "gpt-image-1.png",
-    "gpt-image-1.5": "gpt-image-1.5.jpg",
-    "gpt-image-2-3k": "gpt-image-2-3k.png",
-    "gpt-image-2-5-sunburst-1k-low": "gpt-image-2-5-sunburst-1k-low.png",
-    "gpt-image-2-5-sunburst-4k-max": "gpt-image-2-5-sunburst-4k-max.png",
-    "gpt-image-2-chatgpt": "gpt-image-2-chatgpt.png",
-    "grok": "grok.jpg",
-    "grok-imagine-image-20260201": "grok-imagine-image-20260201.jpg",
-    "hidreami1": "hidreami1.png",
-    "hunyuan-image-2.0": "hunyuan-image-2.0.jpg",
-    "hunyuan-image-2.1": "hunyuan-image-2.1.png",
-    "hunyuan-image-3.0": "hunyuan-image-3.0.jpg",
-    "hunyuan-image-3.0-instruct": "hunyuan-image-3.0-instruct.png",
-    "ideogram3": "ideogram3.jpeg",
-    "imagen3": "imagen3.jpg",
-    "imagen4": "imagen4.jpg",
-    "imagen4ultra": "imagen4ultra.jpg",
-    "imagineart-2-0": "imagineart-2-0.png",
-    "juggernautxl": "juggernautxl.png",
-    "klingai-kolors-2.1": "klingai-kolors-2.1.png",
-    "klingai-omni-image-1.0": "klingai-omni-image-1.0.png",
-    "krea2-turbo-int8": "krea2-turbo-int8.png",
-    "lens": "lens.png",
-    "lumina2": "lumina2.png",
-    "mai-image-1": "mai-image-1.png",
-    "mai-image-2": "mai-image-2.png",
-    "mai-image-2-5": "mai-image-2-5.png",
-    "mai-image-2-5-flash": "mai-image-2-5-flash.png",
-    "mai-image-2-5-pro": "mai-image-2-5-pro.png",
-    "mai-image-2-6-pre": "mai-image-2-6-pre.png",
-    "midjourney-v8.1-alpha": "midjourney-v8.1-alpha.png",
-    "midjourneyv61": "midjourneyv61.png",
-    "midjourneyv7": "midjourneyv7.png",
-    "midjourneyv7-20250501": "midjourneyv7-20250501.png",
-    "midjourneyv8alpha": "midjourneyv8alpha.png",
-    "nanobanana-2-4k": "nanobanana-2-4k.png",
-    "nanobananapro-4k": "nanobananapro-4k.png",
-    "piclumen-realistic-v2": "piclumen-realistic-v2.png",
-    "qwen-image": "qwen-image.png",
-    "qwen-image-2.0": "qwen-image-2.0.png",
-    "qwen-image-2.1": "qwen-image-2.1.png",
-    "qwen-image-2512": "qwen-image-2512.png",
-    "qwen-image-3.0": "qwen-image-3.0.png",
-    "qwen-image-3.0-pro": "qwen-image-3.0-pro.png",
-    "recraft-v3-raw": "recraft-v3-raw.png",
-    "recraft-v4": "recraft-v4.png",
-    "reve": "reve.png",
-    "reve-1.5": "reve-1.5.png",
-    "seedream-4.0-4k": "seedream-4.0-4k.png",
-    "seedream-4.5-4k": "seedream-4.5-4k.png",
-    "seedream-5.0-lite": "seedream-5.0-lite.png",
-    "seedream-5.0-pro": "seedream-5.0-pro.png",
-    "tengrai": "tengrai.png",
-    "tengrai-q": "tengrai-q.png",
-    "uni-1": "uni-1.jpg",
-    "uni-1.1": "uni-1.1.png",
-    "uni-1.1-max": "uni-1.1-max.png",
-    "wan-2-7-pro-2k": "wan-2-7-pro-2k.png",
-    "z-image-base": "z-image-base.png",
-    "z-image-turbo": "z-image-turbo.png"
+    "bagel": {
+      "file": "bagel.webp",
+      "key": "img/edc7a2ad6ce874a722d504e9e17a8550069250a3"
+    },
+    "bitdance": {
+      "file": "bitdance.png",
+      "key": "img/2cb66074d932b7fa3879c79b0f68a606630e19a7"
+    },
+    "chroma-34": {
+      "file": "chroma-34.png",
+      "key": "img/2acb061cffa7593e5588371a90add37c69726d3b"
+    },
+    "dreamina-image20pro": {
+      "file": "dreamina-image20pro.jpeg",
+      "key": "img/9831b8f7ff5a7ccd4f9ecea869e8a514cb4831ff"
+    },
+    "dreamina-image3": {
+      "file": "dreamina-image3.jpeg",
+      "key": "img/522df6d39707d8137eec525f3110600c9c59d854"
+    },
+    "ernie-45turbo": {
+      "file": "ernie-45turbo.png",
+      "key": "img/b0b1a5ecf3a05aa80aa9a3445d5da6ec84e2fa75"
+    },
+    "ernie-image": {
+      "file": "ernie-image.png",
+      "key": "img/64dc58c951585a66274729aa35080a074d7aa964"
+    },
+    "ernie-image-turbo": {
+      "file": "ernie-image-turbo.png",
+      "key": "img/4de1a68865718ca969f5dcf3094d52e271268c22"
+    },
+    "f-lite-standard": {
+      "file": "f-lite-standard.webp",
+      "key": "img/7afde1a49542716d497a7ff15b9cd35d5eb6c84b"
+    },
+    "firefly-image-5-preview": {
+      "file": "firefly-image-5-preview.png",
+      "key": "img/5b7796ddd5539b4e9c3206f031b7bdbde0840df6"
+    },
+    "firefly4": {
+      "file": "firefly4.jpg",
+      "key": "img/1a998e5139fbf82261739b86ba210b5707bf7923"
+    },
+    "flux1-kontext-pro": {
+      "file": "flux1-kontext-pro.png",
+      "key": "img/bdc668e6be361696572ebaf9e8e4f823144023fc"
+    },
+    "flux1-krea": {
+      "file": "flux1-krea.png",
+      "key": "img/8af6944518d640a47fe6cfbf198cde314ed7d6c8"
+    },
+    "flux11ultra": {
+      "file": "flux11ultra.jpg",
+      "key": "img/03fa909077601f4dfb73c7c1cf3e4af8d3afbbf9"
+    },
+    "flux2-dev": {
+      "file": "flux2-dev.png",
+      "key": "img/b1fd548024cae53eaa8f125ee25f835fc3e76e6a"
+    },
+    "flux2-flex-2k": {
+      "file": "flux2-flex-2k.png",
+      "key": "img/0dfded9bd568cd9a5276adfb2129ff57fbd2b1be"
+    },
+    "flux2-klein-4b": {
+      "file": "flux2-klein-4b.png",
+      "key": "img/2fca0edd70a70c278ac7a18d626fa5848f09e2e3"
+    },
+    "flux2-klein-9b": {
+      "file": "flux2-klein-9b.png",
+      "key": "img/1bd8925636272eaa2263beffafc1fb30ec32325f"
+    },
+    "flux2-klein-base-4b": {
+      "file": "flux2-klein-base-4b.png",
+      "key": "img/d8e84aa66374853e5ec5fe7af8e0df2cdf41a3c3"
+    },
+    "flux2-klein-base-9b": {
+      "file": "flux2-klein-base-9b.png",
+      "key": "img/7ea3f73dc93650c16c3156739829428e341181c3"
+    },
+    "flux2-max-2k": {
+      "file": "flux2-max-2k.png",
+      "key": "img/4627c7cc8d5e0674c6dff50a1142c06a681a7f4d"
+    },
+    "flux2-pro-2k": {
+      "file": "flux2-pro-2k.png",
+      "key": "img/1189bec4d15c206db233d857116417afbbeb89d0"
+    },
+    "fluxmaniaV": {
+      "file": "fluxmaniaV.png",
+      "key": "img/531943912324e5f3b8b8d7aa5bfe202be6b6672d"
+    },
+    "gemini-2.0-flash-0507": {
+      "file": "gemini-2.0-flash-0507.jpg",
+      "key": "img/054b8fd045e44ee374229b324e4be8bb198abc83"
+    },
+    "gemini-flash": {
+      "file": "gemini-flash.jpeg",
+      "key": "img/0ef05356b704e20230abb0b0bab1be06b9d259ee"
+    },
+    "gemini25flashimagepreview": {
+      "file": "gemini25flashimagepreview.png",
+      "key": "img/d2f2ad0c83550ea32e5025de8ab0fb0e1246e1aa"
+    },
+    "glm-image": {
+      "file": "glm-image.png",
+      "key": "img/65b754c4bac45e3e18383eaebcddda16affdb7b3"
+    },
+    "gpt-5-image-mini-high": {
+      "file": "gpt-5-image-mini-high.png",
+      "key": "img/7090067287bf252580ed0c063e091709c5d6cee1"
+    },
+    "gpt-5-image-mini-low": {
+      "file": "gpt-5-image-mini-low.png",
+      "key": "img/ea5e16ec1066d07051b76bbfb9dda577e510c5e1"
+    },
+    "gpt-5-image-mini-medium": {
+      "file": "gpt-5-image-mini-medium.png",
+      "key": "img/e8f9fc4c09d96838908c087c9adc526ece743b75"
+    },
+    "gpt-image-1": {
+      "file": "gpt-image-1.png",
+      "key": "img/0f6e8ed9da8f54970cc5b85c825de9f7ce735015"
+    },
+    "gpt-image-1.5": {
+      "file": "gpt-image-1.5.jpg",
+      "key": "img/22bdf1517d52d5c2602cf2dbc93ba5fd0d4f1345"
+    },
+    "gpt-image-2-3k": {
+      "file": "gpt-image-2-3k.png",
+      "key": "img/73f49a076f6d571f704734ac75f4834294510b9d"
+    },
+    "gpt-image-2-5-sunburst-1k-low": {
+      "file": "gpt-image-2-5-sunburst-1k-low.png",
+      "key": "img/79ab982a3a1b5466b2e8898a2f2d499be7df38c9"
+    },
+    "gpt-image-2-5-sunburst-4k-max": {
+      "file": "gpt-image-2-5-sunburst-4k-max.png",
+      "key": "img/49bb9d99e08dff29c443a6854cb3684e0e00ea79"
+    },
+    "gpt-image-2-chatgpt": {
+      "file": "gpt-image-2-chatgpt.png",
+      "key": "img/73f49a076f6d571f704734ac75f4834294510b9d"
+    },
+    "grok": {
+      "file": "grok.jpg",
+      "key": "img/ea2e1acbf3723c3d6f9e5256777b4b12cdedea28"
+    },
+    "grok-imagine-image-20260201": {
+      "file": "grok-imagine-image-20260201.jpg",
+      "key": "img/08499280c7fab4a449441ae79864b8febadcdc4e"
+    },
+    "hidreami1": {
+      "file": "hidreami1.png",
+      "key": "img/7a67b5718a0bc189e29b8c8ee4e3fcd14959d00f"
+    },
+    "hunyuan-image-2.0": {
+      "file": "hunyuan-image-2.0.jpg",
+      "key": "img/6a5c4dbb355f5778927d7a9ab20ca0c7bf7e2ca1"
+    },
+    "hunyuan-image-2.1": {
+      "file": "hunyuan-image-2.1.png",
+      "key": "img/0e625e44edeeed3aed04985d487368c5e29ab028"
+    },
+    "hunyuan-image-3.0": {
+      "file": "hunyuan-image-3.0.jpg",
+      "key": "img/5352e4e89cb442cf5f3e7e11538c08e6d0e9d8e4"
+    },
+    "hunyuan-image-3.0-instruct": {
+      "file": "hunyuan-image-3.0-instruct.png",
+      "key": "img/853c8c617e3a2b1d2e6351a22428b65cd469cd47"
+    },
+    "ideogram3": {
+      "file": "ideogram3.jpeg",
+      "key": "img/271a2e6875e38378487e8c5a4828cbd5447b16d9"
+    },
+    "imagen3": {
+      "file": "imagen3.jpg",
+      "key": "img/7ffc802cfe79c0e8c27962599b34d3ac1ff27177"
+    },
+    "imagen4": {
+      "file": "imagen4.jpg",
+      "key": "img/7ffc802cfe79c0e8c27962599b34d3ac1ff27177"
+    },
+    "imagen4ultra": {
+      "file": "imagen4ultra.jpg",
+      "key": "img/7ffc802cfe79c0e8c27962599b34d3ac1ff27177"
+    },
+    "imagineart-2-0": {
+      "file": "imagineart-2-0.png",
+      "key": "img/56fb973f782f191630c6a6cf8a6220eae458fca6"
+    },
+    "juggernautxl": {
+      "file": "juggernautxl.png",
+      "key": "img/e64e14b072ba1b752b1852f3ba42c94432990025"
+    },
+    "klingai-kolors-2.1": {
+      "file": "klingai-kolors-2.1.png",
+      "key": "img/518ba3126c2039b8fcd71366a37badae1bc6b712"
+    },
+    "klingai-omni-image-1.0": {
+      "file": "klingai-omni-image-1.0.png",
+      "key": "img/517c8abb846110d0aa70e389f67b7465643e823c"
+    },
+    "krea2-turbo-int8": {
+      "file": "krea2-turbo-int8.png",
+      "key": "img/1e080065e93dac49c76362618b7edb3fb6be8a89"
+    },
+    "lens": {
+      "file": "lens.png",
+      "key": "img/a38e19cdb13fa48c6342ce15d0f2e835743b93f4"
+    },
+    "lumina2": {
+      "file": "lumina2.png",
+      "key": "img/ea7b33097a5dd1f6e841903ddef195ba364861e2"
+    },
+    "mai-image-1": {
+      "file": "mai-image-1.png",
+      "key": "img/2dfabcb501ac87783cdabfc9e8b8891d556148f6"
+    },
+    "mai-image-2": {
+      "file": "mai-image-2.png",
+      "key": "img/7c1dadece7e4317efcfa7e9777f7b83282b2df99"
+    },
+    "mai-image-2-5": {
+      "file": "mai-image-2-5.png",
+      "key": "img/dd767f2db894b8bcd8596b26db7b7a8001dcc4e2"
+    },
+    "mai-image-2-5-flash": {
+      "file": "mai-image-2-5-flash.png",
+      "key": "img/dd767f2db894b8bcd8596b26db7b7a8001dcc4e2"
+    },
+    "mai-image-2-5-pro": {
+      "file": "mai-image-2-5-pro.png",
+      "key": "img/6400692e12cd93e45bf703534e72451e18211e4e"
+    },
+    "mai-image-2-6-pre": {
+      "file": "mai-image-2-6-pre.png",
+      "key": "img/f0f8a7102441ab257d6235519476013007264d0e"
+    },
+    "midjourney-v8.1-alpha": {
+      "file": "midjourney-v8.1-alpha.png",
+      "key": "img/2e790c3b4b5c6ccc7f55a8535e216cd069080066"
+    },
+    "midjourneyv61": {
+      "file": "midjourneyv61.png",
+      "key": "img/43d2a0ec7382d2367b1ce4754a1fa4d65b3ec29c"
+    },
+    "midjourneyv7": {
+      "file": "midjourneyv7.png",
+      "key": "img/064363d68dece96247f3d32add9fbc5ab656df56"
+    },
+    "midjourneyv7-20250501": {
+      "file": "midjourneyv7-20250501.png",
+      "key": "img/6bad06efc8281078cd731af09510db5532ea5efd"
+    },
+    "midjourneyv8alpha": {
+      "file": "midjourneyv8alpha.png",
+      "key": "img/b9ee9eb00b4a182f8e12d66b70b26153236bfbf2"
+    },
+    "nanobanana-2-4k": {
+      "file": "nanobanana-2-4k.png",
+      "key": "img/4fba2c4ebfffd11e80f23df4bd19f9ef447443ff"
+    },
+    "nanobananapro-4k": {
+      "file": "nanobananapro-4k.png",
+      "key": "img/80b59a551b2cb096bbbc3785c978c49956f63ae1"
+    },
+    "piclumen-realistic-v2": {
+      "file": "piclumen-realistic-v2.png",
+      "key": "img/5be2e709cc9a17cd7da44a5938291cf3a6f33666"
+    },
+    "qwen-image": {
+      "file": "qwen-image.png",
+      "key": "img/96e0ac660a32e86d74ea41174023f73d37e94845"
+    },
+    "qwen-image-2.0": {
+      "file": "qwen-image-2.0.png",
+      "key": "img/f5d36d08ef3ab3c503e9b39cc1e461e8fb2e283b"
+    },
+    "qwen-image-2.1": {
+      "file": "qwen-image-2.1.png",
+      "key": "img/142ad7bfb6e3ba41c4f150f4549ee8b2e8f1b07e"
+    },
+    "qwen-image-2512": {
+      "file": "qwen-image-2512.png",
+      "key": "img/7274eb31977b216f4a648d793675073edf924a52"
+    },
+    "qwen-image-3.0": {
+      "file": "qwen-image-3.0.png",
+      "key": "img/a0204517ff223339e786e9954c3a73ac1ce919f4"
+    },
+    "qwen-image-3.0-pro": {
+      "file": "qwen-image-3.0-pro.png",
+      "key": "img/dd767f2db894b8bcd8596b26db7b7a8001dcc4e2"
+    },
+    "recraft-v3-raw": {
+      "file": "recraft-v3-raw.png",
+      "key": "img/c6295e77fd6c4b6a7ea970aff5965c62737a5cb6"
+    },
+    "recraft-v4": {
+      "file": "recraft-v4.png",
+      "key": "img/eef09635f0f3d3e6305690b3f70951de571d1dc4"
+    },
+    "reve": {
+      "file": "reve.png",
+      "key": "img/f675e8d673185bca2520da247c39662f9f8212ba"
+    },
+    "reve-1.5": {
+      "file": "reve-1.5.png",
+      "key": "img/2daf11fe6e3bae7724c21fed9fabed5a737efb2c"
+    },
+    "seedream-4.0-4k": {
+      "file": "seedream-4.0-4k.png",
+      "key": "img/8ff276a80fbdf5c82cf1515afee0d746d6265ce1"
+    },
+    "seedream-4.5-4k": {
+      "file": "seedream-4.5-4k.png",
+      "key": "img/e14cecf895845b645bf2037cdb0b29971eb26a4a"
+    },
+    "seedream-5.0-lite": {
+      "file": "seedream-5.0-lite.png",
+      "key": "img/087a2e395f72da88273ddf115e08a05c88406ccc"
+    },
+    "seedream-5.0-pro": {
+      "file": "seedream-5.0-pro.png",
+      "key": "img/48d5755ccc39c7bc0c1cb2e15974aaf027027808"
+    },
+    "tengrai": {
+      "file": "tengrai.png",
+      "key": "img/626f6b51bff5e61a159905671e4bb9634f5b70b5"
+    },
+    "tengrai-q": {
+      "file": "tengrai-q.png",
+      "key": "img/c13568988579d31ee27823e359741aac03fb2dc8"
+    },
+    "uni-1": {
+      "file": "uni-1.jpg",
+      "key": "img/5330afddb7d0c6e8a49bd66d275a7ef3681d107a"
+    },
+    "uni-1.1": {
+      "file": "uni-1.1.png",
+      "key": "img/aa6e71b3a6cda5151d7dee1323d5be9bd12808ce"
+    },
+    "uni-1.1-max": {
+      "file": "uni-1.1-max.png",
+      "key": "img/2dd66e22fe622c589d0190fb6ebd5ebf93f5b925"
+    },
+    "wan-2-7-pro-2k": {
+      "file": "wan-2-7-pro-2k.png",
+      "key": "img/8140ddbccb1ffb4f01e327b15969e4d939ce5cfb"
+    },
+    "z-image-base": {
+      "file": "z-image-base.png",
+      "key": "img/6db432985205614d45ae1f6af6ded5565f6b8c97"
+    },
+    "z-image-turbo": {
+      "file": "z-image-turbo.png",
+      "key": "img/2ea2d195a6fdb3e774f1773445bd2bf96b46dbd8"
+    }
   },
   "009": {
-    "bagel": "bagel.webp",
-    "bitdance": "bitdance.png",
-    "chroma-34": "chroma-34.png",
-    "dreamina-image20pro": "dreamina-image20pro.jpeg",
-    "dreamina-image3": "dreamina-image3.jpeg",
-    "ernie-45turbo": "ernie-45turbo.png",
-    "ernie-image": "ernie-image.png",
-    "ernie-image-turbo": "ernie-image-turbo.png",
-    "f-lite-standard": "f-lite-standard.webp",
-    "firefly-image-5-preview": "firefly-image-5-preview.png",
-    "firefly4": "firefly4.jpg",
-    "flux1-kontext-max": "flux1-kontext-max.png",
-    "flux1-kontext-pro": "flux1-kontext-pro.png",
-    "flux1-krea": "flux1-krea.png",
-    "flux2-dev": "flux2-dev.png",
-    "flux2-flex-2k": "flux2-flex-2k.png",
-    "flux2-klein-4b": "flux2-klein-4b.png",
-    "flux2-klein-9b": "flux2-klein-9b.png",
-    "flux2-klein-base-4b": "flux2-klein-base-4b.png",
-    "flux2-klein-base-9b": "flux2-klein-base-9b.png",
-    "flux2-max-2k": "flux2-max-2k.png",
-    "flux2-pro-2k": "flux2-pro-2k.png",
-    "fluxmaniaV": "fluxmaniaV.png",
-    "gemini-2.0-flash-0507": "gemini-2.0-flash-0507.jpg",
-    "gemini-flash": "gemini-flash.jpeg",
-    "gemini25flashimagepreview": "gemini25flashimagepreview.png",
-    "glm-image": "glm-image.png",
-    "gpt-5-image-mini-high": "gpt-5-image-mini-high.png",
-    "gpt-5-image-mini-low": "gpt-5-image-mini-low.png",
-    "gpt-5-image-mini-medium": "gpt-5-image-mini-medium.png",
-    "gpt-image-1": "gpt-image-1.png",
-    "gpt-image-1.5": "gpt-image-1.5.png",
-    "gpt-image-2-3k": "gpt-image-2-3k.png",
-    "gpt-image-2-5-sunburst-1k-low": "gpt-image-2-5-sunburst-1k-low.png",
-    "gpt-image-2-5-sunburst-4k-max": "gpt-image-2-5-sunburst-4k-max.png",
-    "gpt-image-2-chatgpt": "gpt-image-2-chatgpt.png",
-    "grok": "grok.jpg",
-    "grok-imagine-image-20260201": "grok-imagine-image-20260201.jpg",
-    "hidreami1": "hidreami1.png",
-    "hunyuan-image-2.0": "hunyuan-image-2.0.jpg",
-    "hunyuan-image-2.1": "hunyuan-image-2.1.png",
-    "hunyuan-image-3.0": "hunyuan-image-3.0.jpg",
-    "hunyuan-image-3.0-instruct": "hunyuan-image-3.0-instruct.png",
-    "ideogram3": "ideogram3.jpeg",
-    "imagen3": "imagen3.jpg",
-    "imagen4": "imagen4.png",
-    "imagen4ultra": "imagen4ultra.jpg",
-    "imagineart-2-0": "imagineart-2-0.png",
-    "juggernautxl": "juggernautxl.png",
-    "klingai-kolors-2.1": "klingai-kolors-2.1.png",
-    "klingai-omni-image-1.0": "klingai-omni-image-1.0.png",
-    "krea2-turbo-int8": "krea2-turbo-int8.png",
-    "lens": "lens.png",
-    "lumina2": "lumina2.png",
-    "mai-image-1": "mai-image-1.png",
-    "mai-image-2": "mai-image-2.png",
-    "mai-image-2-5": "mai-image-2-5.png",
-    "mai-image-2-5-flash": "mai-image-2-5-flash.png",
-    "mai-image-2-5-pro": "mai-image-2-5-pro.png",
-    "mai-image-2-6-pre": "mai-image-2-6-pre.png",
-    "midjourney-v8.1-alpha": "midjourney-v8.1-alpha.png",
-    "midjourneyv61": "midjourneyv61.png",
-    "midjourneyv7": "midjourneyv7.png",
-    "midjourneyv7-20250501": "midjourneyv7-20250501.png",
-    "midjourneyv8alpha": "midjourneyv8alpha.png",
-    "nanobanana-2-4k": "nanobanana-2-4k.png",
-    "nanobananapro-4k": "nanobananapro-4k.png",
-    "piclumen-realistic-v2": "piclumen-realistic-v2.png",
-    "qwen-image": "qwen-image.png",
-    "qwen-image-2.0": "qwen-image-2.0.png",
-    "qwen-image-2.1": "qwen-image-2.1.png",
-    "qwen-image-2512": "qwen-image-2512.png",
-    "qwen-image-3.0": "qwen-image-3.0.png",
-    "qwen-image-3.0-pro": "qwen-image-3.0-pro.png",
-    "recraft-v3-raw": "recraft-v3-raw.png",
-    "recraft-v4": "recraft-v4.png",
-    "reve": "reve.png",
-    "reve-1.5": "reve-1.5.png",
-    "seedream-4.0-4k": "seedream-4.0-4k.png",
-    "seedream-4.5-4k": "seedream-4.5-4k.jpg",
-    "seedream-5.0-lite": "seedream-5.0-lite.png",
-    "seedream-5.0-pro": "seedream-5.0-pro.png",
-    "tengrai": "tengrai.png",
-    "tengrai-q": "tengrai-q.png",
-    "uni-1": "uni-1.png",
-    "uni-1.1": "uni-1.1.png",
-    "uni-1.1-max": "uni-1.1-max.png",
-    "wan-2-7-pro-2k": "wan-2-7-pro-2k.png",
-    "z-image-base": "z-image-base.png",
-    "z-image-turbo": "z-image-turbo.png"
+    "bagel": {
+      "file": "bagel.webp",
+      "key": "img/da14d7bf80f27733d6f4a927e8f70ade9533ebda"
+    },
+    "bitdance": {
+      "file": "bitdance.png",
+      "key": "img/96bbe360640caa1bcb513843f929d31100086546"
+    },
+    "chroma-34": {
+      "file": "chroma-34.png",
+      "key": "img/ba6fc025c05cb6b21b5ce119d6c19376f999dc97"
+    },
+    "dreamina-image20pro": {
+      "file": "dreamina-image20pro.jpeg",
+      "key": "img/43aad4e8f9eeeda3ee3fccac34a60aeefba1ee00"
+    },
+    "dreamina-image3": {
+      "file": "dreamina-image3.jpeg",
+      "key": "img/44dfc134a970d0887c3d1173cc18dabcf401cc66"
+    },
+    "ernie-45turbo": {
+      "file": "ernie-45turbo.png",
+      "key": "img/8647ba225939ba79f39fb88f6478c1ff800d31d1"
+    },
+    "ernie-image": {
+      "file": "ernie-image.png",
+      "key": "img/590ed039e6b5440094eade7bd96179adb7db2b98"
+    },
+    "ernie-image-turbo": {
+      "file": "ernie-image-turbo.png",
+      "key": "img/68577576f8e7614df503bb70bc51f2f6ffb09685"
+    },
+    "f-lite-standard": {
+      "file": "f-lite-standard.webp",
+      "key": "img/ed61e5ccaaeb29c54bcc4c1104e4e4115698477d"
+    },
+    "firefly-image-5-preview": {
+      "file": "firefly-image-5-preview.png",
+      "key": "img/5b7796ddd5539b4e9c3206f031b7bdbde0840df6"
+    },
+    "firefly4": {
+      "file": "firefly4.jpg",
+      "key": "img/e6a1f41835faf1f8563bb2a6fa1f2e12fcf2e93e"
+    },
+    "flux1-kontext-max": {
+      "file": "flux1-kontext-max.png",
+      "key": "img/ef42ada69e5803b4b1ee1226fbe910fe7dbfe784"
+    },
+    "flux1-kontext-pro": {
+      "file": "flux1-kontext-pro.png",
+      "key": "img/0103e2287e4245bced2f50843913b237b7bbbb9b"
+    },
+    "flux1-krea": {
+      "file": "flux1-krea.png",
+      "key": "img/1d78a815345d2249c2eb3c574f6ba09c6f271cc7"
+    },
+    "flux2-dev": {
+      "file": "flux2-dev.png",
+      "key": "img/ac54aae58f80a27480271cb85a9e9ef3699fc596"
+    },
+    "flux2-flex-2k": {
+      "file": "flux2-flex-2k.png",
+      "key": "img/3e5712a3d4cfb864b1e0953a01993cc0c63eff59"
+    },
+    "flux2-klein-4b": {
+      "file": "flux2-klein-4b.png",
+      "key": "img/5c47ed16382ea8578004af454a3e95155eb553d3"
+    },
+    "flux2-klein-9b": {
+      "file": "flux2-klein-9b.png",
+      "key": "img/9a372dbe3066efcab09e22f72f2fee43aeac9aa2"
+    },
+    "flux2-klein-base-4b": {
+      "file": "flux2-klein-base-4b.png",
+      "key": "img/89f61183ee1b9dc9d55096b42a0fbe68b0652c34"
+    },
+    "flux2-klein-base-9b": {
+      "file": "flux2-klein-base-9b.png",
+      "key": "img/3adbbab2548875d5bdc83c257e77f5b48fcb6060"
+    },
+    "flux2-max-2k": {
+      "file": "flux2-max-2k.png",
+      "key": "img/d0ede13d462692c175fba4d5f1f87508056b85cb"
+    },
+    "flux2-pro-2k": {
+      "file": "flux2-pro-2k.png",
+      "key": "img/d1f5707457bbc726e42ba6fc6b7eade5721dfe0a"
+    },
+    "fluxmaniaV": {
+      "file": "fluxmaniaV.png",
+      "key": "img/25e5c09b70ad403156e6f09f73b1d3a0d4cf1640"
+    },
+    "gemini-2.0-flash-0507": {
+      "file": "gemini-2.0-flash-0507.jpg",
+      "key": "img/56eb4eae1b77c9e68d22c39af8f3ef37cdbbad52"
+    },
+    "gemini-flash": {
+      "file": "gemini-flash.jpeg",
+      "key": "img/aead819e061453edef36d189e02cc8c45e3e3881"
+    },
+    "gemini25flashimagepreview": {
+      "file": "gemini25flashimagepreview.png",
+      "key": "img/d2f2ad0c83550ea32e5025de8ab0fb0e1246e1aa"
+    },
+    "glm-image": {
+      "file": "glm-image.png",
+      "key": "img/f9a6e81c8f9796ec9e04a8f2ba6e130677278f62"
+    },
+    "gpt-5-image-mini-high": {
+      "file": "gpt-5-image-mini-high.png",
+      "key": "img/f6834193418849011262c341bab5aaa203c61ad7"
+    },
+    "gpt-5-image-mini-low": {
+      "file": "gpt-5-image-mini-low.png",
+      "key": "img/41cd823d41ba1a0bee7aec3360f23ab0705951ef"
+    },
+    "gpt-5-image-mini-medium": {
+      "file": "gpt-5-image-mini-medium.png",
+      "key": "img/4d4cab8d6af30f194ba0ef6d5e5f265ba4704660"
+    },
+    "gpt-image-1": {
+      "file": "gpt-image-1.png",
+      "key": "img/75c427d7a8f4dee23e2ec0f1ea4caa1e2d500aa6"
+    },
+    "gpt-image-1.5": {
+      "file": "gpt-image-1.5.png",
+      "key": "img/75318b299a981bf1106574ec23199b525815e7cc"
+    },
+    "gpt-image-2-3k": {
+      "file": "gpt-image-2-3k.png",
+      "key": "img/efe7be9fa858bceeaf6caffdf1d17555f016b041"
+    },
+    "gpt-image-2-5-sunburst-1k-low": {
+      "file": "gpt-image-2-5-sunburst-1k-low.png",
+      "key": "img/53c023d7c5c43dfe810c27fe827e910367f18e23"
+    },
+    "gpt-image-2-5-sunburst-4k-max": {
+      "file": "gpt-image-2-5-sunburst-4k-max.png",
+      "key": "img/f7737e3ce9af11c41e96c66926e300c8b4de2788"
+    },
+    "gpt-image-2-chatgpt": {
+      "file": "gpt-image-2-chatgpt.png",
+      "key": "img/0eec5141a0ea6845e7211231850b904ea3237c6e"
+    },
+    "grok": {
+      "file": "grok.jpg",
+      "key": "img/d521e1059cadbdf8c55bd4407f4ebf53287fab8b"
+    },
+    "grok-imagine-image-20260201": {
+      "file": "grok-imagine-image-20260201.jpg",
+      "key": "img/424a09ce7da9fe0d9a00d9a9e9d87acee9e0b655"
+    },
+    "hidreami1": {
+      "file": "hidreami1.png",
+      "key": "img/ee3a9385267253711ddf0a127947fa5c51333882"
+    },
+    "hunyuan-image-2.0": {
+      "file": "hunyuan-image-2.0.jpg",
+      "key": "img/9bf602c99d69a8d09d9f7755a737891233f967cd"
+    },
+    "hunyuan-image-2.1": {
+      "file": "hunyuan-image-2.1.png",
+      "key": "img/8882376b9fa810808969fc1bf5f040e8c905e59b"
+    },
+    "hunyuan-image-3.0": {
+      "file": "hunyuan-image-3.0.jpg",
+      "key": "img/97591f8ccfb90b908ae63befe5cb368b9ee04a50"
+    },
+    "hunyuan-image-3.0-instruct": {
+      "file": "hunyuan-image-3.0-instruct.png",
+      "key": "img/b73cef46f1a0a4a2c87067a65ebbc221e72f4d37"
+    },
+    "ideogram3": {
+      "file": "ideogram3.jpeg",
+      "key": "img/9a34056c476b6bf8a52bb4bbf68053b2c1846ef6"
+    },
+    "imagen3": {
+      "file": "imagen3.jpg",
+      "key": "img/cb5ff726496db42d4b259c2cf469f407eb87429a"
+    },
+    "imagen4": {
+      "file": "imagen4.png",
+      "key": "img/82656915cc7729a56b6a693cfb7e98a36cd56724"
+    },
+    "imagen4ultra": {
+      "file": "imagen4ultra.jpg",
+      "key": "img/7ffc802cfe79c0e8c27962599b34d3ac1ff27177"
+    },
+    "imagineart-2-0": {
+      "file": "imagineart-2-0.png",
+      "key": "img/85495d8d8ab5ed7b982c9a41350f79b32c05789c"
+    },
+    "juggernautxl": {
+      "file": "juggernautxl.png",
+      "key": "img/7464f887ab4d8bc1006166327be55f5b2d37f074"
+    },
+    "klingai-kolors-2.1": {
+      "file": "klingai-kolors-2.1.png",
+      "key": "img/5a8e973118a77b80ff7b583dffae853ae7047e48"
+    },
+    "klingai-omni-image-1.0": {
+      "file": "klingai-omni-image-1.0.png",
+      "key": "img/9c42a203da8c67a5ef3340520eeb724511aacabb"
+    },
+    "krea2-turbo-int8": {
+      "file": "krea2-turbo-int8.png",
+      "key": "img/59f36e2343410dda5e5295d39ebaf5c848ffece0"
+    },
+    "lens": {
+      "file": "lens.png",
+      "key": "img/c62cb7f45e9bf06e1fd279b80b5036c0457380f3"
+    },
+    "lumina2": {
+      "file": "lumina2.png",
+      "key": "img/474467ab02dc658b60c8bfac37cf5f17f5c2ed0f"
+    },
+    "mai-image-1": {
+      "file": "mai-image-1.png",
+      "key": "img/a7657c73d5484645187db75428b33f034a3c2a19"
+    },
+    "mai-image-2": {
+      "file": "mai-image-2.png",
+      "key": "img/4c8670cb0d98f552f0fbe2bdf6536dd7e9c0dce6"
+    },
+    "mai-image-2-5": {
+      "file": "mai-image-2-5.png",
+      "key": "img/3d162a38c43a86b6b7d9070d1f9e45c1f21f7507"
+    },
+    "mai-image-2-5-flash": {
+      "file": "mai-image-2-5-flash.png",
+      "key": "img/41a224273459780aebd4b2877a11052978b80633"
+    },
+    "mai-image-2-5-pro": {
+      "file": "mai-image-2-5-pro.png",
+      "key": "img/10d07f247b671c1e119e5ee6131e8f55f5a34ca4"
+    },
+    "mai-image-2-6-pre": {
+      "file": "mai-image-2-6-pre.png",
+      "key": "img/d021b9b2ef4647e2c56b2f6814dcc90a52b10a02"
+    },
+    "midjourney-v8.1-alpha": {
+      "file": "midjourney-v8.1-alpha.png",
+      "key": "img/7d568505fa0e765cdf81726c4e6ddb46bf7ce946"
+    },
+    "midjourneyv61": {
+      "file": "midjourneyv61.png",
+      "key": "img/387ebd47755954efdf474c465ab772e60141de81"
+    },
+    "midjourneyv7": {
+      "file": "midjourneyv7.png",
+      "key": "img/2d4e6257dd6abca124edc0f7fb745aab542cc17d"
+    },
+    "midjourneyv7-20250501": {
+      "file": "midjourneyv7-20250501.png",
+      "key": "img/c92eb8bd0536fdcdb2df0fd7b71293e983539a5d"
+    },
+    "midjourneyv8alpha": {
+      "file": "midjourneyv8alpha.png",
+      "key": "img/cecc31821cf461f86d6af2bdfe16314789db149a"
+    },
+    "nanobanana-2-4k": {
+      "file": "nanobanana-2-4k.png",
+      "key": "img/fff26ed12176f7e685e08b2475d3e9b31585f939"
+    },
+    "nanobananapro-4k": {
+      "file": "nanobananapro-4k.png",
+      "key": "img/24d147287f79026a8272801e06af0fb4e8835d1a"
+    },
+    "piclumen-realistic-v2": {
+      "file": "piclumen-realistic-v2.png",
+      "key": "img/4198a6cdc17fe93d94766036d5b11ca7ba066c80"
+    },
+    "qwen-image": {
+      "file": "qwen-image.png",
+      "key": "img/4810eeb2406486fa24eb9219edaccbfa551f6306"
+    },
+    "qwen-image-2.0": {
+      "file": "qwen-image-2.0.png",
+      "key": "img/9964767eca10c3a195a4c44f519f3c0e4ee50d0e"
+    },
+    "qwen-image-2.1": {
+      "file": "qwen-image-2.1.png",
+      "key": "img/8c2232ee0d93f523d5303f5f0382690f98d9644b"
+    },
+    "qwen-image-2512": {
+      "file": "qwen-image-2512.png",
+      "key": "img/32f880827283467c42a7d3f27f5c9bfdf3f8220c"
+    },
+    "qwen-image-3.0": {
+      "file": "qwen-image-3.0.png",
+      "key": "img/d6578b727d75d2ad2a4766951b697b4e2c7f4ed2"
+    },
+    "qwen-image-3.0-pro": {
+      "file": "qwen-image-3.0-pro.png",
+      "key": "img/7e7743c347ac4f4c219a6d3829199037469fa702"
+    },
+    "recraft-v3-raw": {
+      "file": "recraft-v3-raw.png",
+      "key": "img/f9a80cc845646a387c26e5afbabc18939e5f0c20"
+    },
+    "recraft-v4": {
+      "file": "recraft-v4.png",
+      "key": "img/223ec55aa03d8b3cf8b869f500e757272559c654"
+    },
+    "reve": {
+      "file": "reve.png",
+      "key": "img/602d00d40646b4c6d79df98d8183cb4a34382108"
+    },
+    "reve-1.5": {
+      "file": "reve-1.5.png",
+      "key": "img/0cbaf25c483f2c4cecdb89d869d873281f4047bd"
+    },
+    "seedream-4.0-4k": {
+      "file": "seedream-4.0-4k.png",
+      "key": "img/1a21818a06dc6fbcfd8a947a30812c68746930fa"
+    },
+    "seedream-4.5-4k": {
+      "file": "seedream-4.5-4k.jpg",
+      "key": "img/9f577ce4a74b7d07bf9c799417f0e06c6508b883"
+    },
+    "seedream-5.0-lite": {
+      "file": "seedream-5.0-lite.png",
+      "key": "img/3cdd302655a9b830fe36c71f4bce28c3bf2d45ed"
+    },
+    "seedream-5.0-pro": {
+      "file": "seedream-5.0-pro.png",
+      "key": "img/48d5755ccc39c7bc0c1cb2e15974aaf027027808"
+    },
+    "tengrai": {
+      "file": "tengrai.png",
+      "key": "img/b280814eddc9c0ccb7b88486876ff47f00e41560"
+    },
+    "tengrai-q": {
+      "file": "tengrai-q.png",
+      "key": "img/dc13eeee05207a4b46b69af50be73377dfe22683"
+    },
+    "uni-1": {
+      "file": "uni-1.png",
+      "key": "img/8e89ec46274f43116a76933ed31c26e6a5d13209"
+    },
+    "uni-1.1": {
+      "file": "uni-1.1.png",
+      "key": "img/0d5811db7a2a36e8e660d470bfa45e46c06a5b55"
+    },
+    "uni-1.1-max": {
+      "file": "uni-1.1-max.png",
+      "key": "img/e3b3ad18973b3bfdbbdee89c77a9521b7086bb15"
+    },
+    "wan-2-7-pro-2k": {
+      "file": "wan-2-7-pro-2k.png",
+      "key": "img/79f0df3d76e82aac1f5a8864399deaf018c52ebc"
+    },
+    "z-image-base": {
+      "file": "z-image-base.png",
+      "key": "img/1adb49df70c05580fe58662614871463244cb5e8"
+    },
+    "z-image-turbo": {
+      "file": "z-image-turbo.png",
+      "key": "img/f853daf42beb7f29b8f44581ef2a5281dd0012f7"
+    }
   },
   "010": {
-    "bagel": "bagel.webp",
-    "bitdance": "bitdance.png",
-    "chroma-34": "chroma-34.png",
-    "dreamina-image20pro": "dreamina-image20pro.png",
-    "dreamina-image3": "dreamina-image3.jpeg",
-    "ernie-45turbo": "ernie-45turbo.png",
-    "ernie-image": "ernie-image.png",
-    "ernie-image-turbo": "ernie-image-turbo.png",
-    "f-lite-standard": "f-lite-standard.webp",
-    "firefly-image-5-preview": "firefly-image-5-preview.png",
-    "firefly4": "firefly4.jpg",
-    "flux1-kontext-max": "flux1-kontext-max.png",
-    "flux1-kontext-pro": "flux1-kontext-pro.png",
-    "flux1-krea": "flux1-krea.png",
-    "flux2-dev": "flux2-dev.png",
-    "flux2-flex-2k": "flux2-flex-2k.png",
-    "flux2-klein-4b": "flux2-klein-4b.png",
-    "flux2-klein-9b": "flux2-klein-9b.png",
-    "flux2-klein-base-4b": "flux2-klein-base-4b.png",
-    "flux2-klein-base-9b": "flux2-klein-base-9b.png",
-    "flux2-max-2k": "flux2-max-2k.png",
-    "flux2-pro-2k": "flux2-pro-2k.png",
-    "fluxmaniaV": "fluxmaniaV.png",
-    "gemini-2.0-flash-0507": "gemini-2.0-flash-0507.jpg",
-    "gemini-flash": "gemini-flash.jpg",
-    "gemini25flashimagepreview": "gemini25flashimagepreview.png",
-    "glm-image": "glm-image.png",
-    "gpt-5-image-mini-high": "gpt-5-image-mini-high.png",
-    "gpt-5-image-mini-low": "gpt-5-image-mini-low.png",
-    "gpt-5-image-mini-medium": "gpt-5-image-mini-medium.png",
-    "gpt-image-1": "gpt-image-1.png",
-    "gpt-image-1.5": "gpt-image-1.5.png",
-    "gpt-image-2-3k": "gpt-image-2-3k.png",
-    "gpt-image-2-5-sunburst-1k-low": "gpt-image-2-5-sunburst-1k-low.png",
-    "gpt-image-2-5-sunburst-4k-max": "gpt-image-2-5-sunburst-4k-max.png",
-    "gpt-image-2-chatgpt": "gpt-image-2-chatgpt.png",
-    "grok": "grok.jpg",
-    "grok-imagine-image-20260201": "grok-imagine-image-20260201.jpg",
-    "hidreami1": "hidreami1.png",
-    "hunyuan-image-2.0": "hunyuan-image-2.0.jpg",
-    "hunyuan-image-2.1": "hunyuan-image-2.1.png",
-    "hunyuan-image-3.0": "hunyuan-image-3.0.jpg",
-    "hunyuan-image-3.0-instruct": "hunyuan-image-3.0-instruct.png",
-    "ideogram3": "ideogram3.jpeg",
-    "imagen3": "imagen3.jpg",
-    "imagen4": "imagen4.png",
-    "imagen4ultra": "imagen4ultra.png",
-    "imagineart-2-0": "imagineart-2-0.png",
-    "juggernautxl": "juggernautxl.png",
-    "klingai-kolors-2.1": "klingai-kolors-2.1.png",
-    "klingai-omni-image-1.0": "klingai-omni-image-1.0.png",
-    "krea2-turbo-int8": "krea2-turbo-int8.png",
-    "lens": "lens.png",
-    "lumina2": "lumina2.png",
-    "mai-image-1": "mai-image-1.png",
-    "mai-image-2": "mai-image-2.png",
-    "mai-image-2-5": "mai-image-2-5.png",
-    "mai-image-2-5-flash": "mai-image-2-5-flash.png",
-    "mai-image-2-5-pro": "mai-image-2-5-pro.png",
-    "mai-image-2-6-pre": "mai-image-2-6-pre.png",
-    "midjourney-v8.1-alpha": "midjourney-v8.1-alpha.png",
-    "midjourneyv61": "midjourneyv61.png",
-    "midjourneyv7": "midjourneyv7.png",
-    "midjourneyv7-20250501": "midjourneyv7-20250501.png",
-    "midjourneyv8alpha": "midjourneyv8alpha.png",
-    "nanobanana-2-4k": "nanobanana-2-4k.png",
-    "nanobananapro-4k": "nanobananapro-4k.png",
-    "piclumen-realistic-v2": "piclumen-realistic-v2.png",
-    "qwen-image": "qwen-image.png",
-    "qwen-image-2.0": "qwen-image-2.0.png",
-    "qwen-image-2.1": "qwen-image-2.1.png",
-    "qwen-image-2512": "qwen-image-2512.png",
-    "qwen-image-3.0": "qwen-image-3.0.png",
-    "qwen-image-3.0-pro": "qwen-image-3.0-pro.png",
-    "recraft-v3-raw": "recraft-v3-raw.png",
-    "recraft-v4": "recraft-v4.png",
-    "reve": "reve.png",
-    "reve-1.5": "reve-1.5.png",
-    "seedream-4.0-4k": "seedream-4.0-4k.png",
-    "seedream-4.5-4k": "seedream-4.5-4k.png",
-    "seedream-5.0-lite": "seedream-5.0-lite.png",
-    "seedream-5.0-pro": "seedream-5.0-pro.png",
-    "tengrai": "tengrai.png",
-    "tengrai-q": "tengrai-q.png",
-    "uni-1": "uni-1.png",
-    "uni-1.1": "uni-1.1.png",
-    "uni-1.1-max": "uni-1.1-max.png",
-    "wan-2-7-pro-2k": "wan-2-7-pro-2k.png",
-    "z-image-base": "z-image-base.png",
-    "z-image-turbo": "z-image-turbo.png"
+    "bagel": {
+      "file": "bagel.webp",
+      "key": "img/b08cc01ae67f4aac6006c069130068ec1585a25b"
+    },
+    "bitdance": {
+      "file": "bitdance.png",
+      "key": "img/aede8d0a1aff5861b0e50a624dda1520de48ae35"
+    },
+    "chroma-34": {
+      "file": "chroma-34.png",
+      "key": "img/bdf138a41ebbe308f32622733188b05f2619aa69"
+    },
+    "dreamina-image20pro": {
+      "file": "dreamina-image20pro.png",
+      "key": "img/8853496de8b10cce1cbf89cda4ed61c250cd67ba"
+    },
+    "dreamina-image3": {
+      "file": "dreamina-image3.jpeg",
+      "key": "img/482d4bce65c886acd43e78795ff99d5b5688ae29"
+    },
+    "ernie-45turbo": {
+      "file": "ernie-45turbo.png",
+      "key": "img/30f1953b0fe1ae9aa943d85c6b32c0213db1ab98"
+    },
+    "ernie-image": {
+      "file": "ernie-image.png",
+      "key": "img/c28452274f6b181e6fcfdcb26dba716ecb4b14dc"
+    },
+    "ernie-image-turbo": {
+      "file": "ernie-image-turbo.png",
+      "key": "img/9f1408ff273da699c3d604b85b505b1b17dfe2e1"
+    },
+    "f-lite-standard": {
+      "file": "f-lite-standard.webp",
+      "key": "img/ac988d9c50c69810666a512c0bf6a5d8b66a824c"
+    },
+    "firefly-image-5-preview": {
+      "file": "firefly-image-5-preview.png",
+      "key": "img/77613b2fb5aff2d9dde7a8c70b60024ce42d9def"
+    },
+    "firefly4": {
+      "file": "firefly4.jpg",
+      "key": "img/28a9b98cbe80c6f6f5847509166c9debbc6226c6"
+    },
+    "flux1-kontext-max": {
+      "file": "flux1-kontext-max.png",
+      "key": "img/8aad9cb1e1f0463197dfe3515d01f73d3a55f28e"
+    },
+    "flux1-kontext-pro": {
+      "file": "flux1-kontext-pro.png",
+      "key": "img/da4fdce1ad40ab6540f54e0cac8f6ccfb398867e"
+    },
+    "flux1-krea": {
+      "file": "flux1-krea.png",
+      "key": "img/b3278705eebeb7bd36b343029906617c84af2ced"
+    },
+    "flux2-dev": {
+      "file": "flux2-dev.png",
+      "key": "img/8001cbdfa3be96275b8338b5acbc35ae78992953"
+    },
+    "flux2-flex-2k": {
+      "file": "flux2-flex-2k.png",
+      "key": "img/862cb5a595f2d2628123878b50fefb15ec243c39"
+    },
+    "flux2-klein-4b": {
+      "file": "flux2-klein-4b.png",
+      "key": "img/ad8c5893821f503eb6ae43425644c66c9088d836"
+    },
+    "flux2-klein-9b": {
+      "file": "flux2-klein-9b.png",
+      "key": "img/4aae9215078f42dc2019faf5c58c1b76f5933fee"
+    },
+    "flux2-klein-base-4b": {
+      "file": "flux2-klein-base-4b.png",
+      "key": "img/836dba42021f851e7b9795e6dfde8d1b09e7fd95"
+    },
+    "flux2-klein-base-9b": {
+      "file": "flux2-klein-base-9b.png",
+      "key": "img/6355c3985f80a46ac08655554a450650c1fa5f8e"
+    },
+    "flux2-max-2k": {
+      "file": "flux2-max-2k.png",
+      "key": "img/921596020d78f045d5fbc89df1053cca142887cf"
+    },
+    "flux2-pro-2k": {
+      "file": "flux2-pro-2k.png",
+      "key": "img/eaaac0cd55d72dbaf2dbae1634520bc33722fd8a"
+    },
+    "fluxmaniaV": {
+      "file": "fluxmaniaV.png",
+      "key": "img/9ce452c226fa60989c862b419fa4e1c83cbf2968"
+    },
+    "gemini-2.0-flash-0507": {
+      "file": "gemini-2.0-flash-0507.jpg",
+      "key": "img/b271180b1db652456069d007320be8489db81d5d"
+    },
+    "gemini-flash": {
+      "file": "gemini-flash.jpg",
+      "key": "img/991cacdc9ce149071e330ad56e34a25aee19b015"
+    },
+    "gemini25flashimagepreview": {
+      "file": "gemini25flashimagepreview.png",
+      "key": "img/ea2b07469d085379f149d04dc259d17f67efb513"
+    },
+    "glm-image": {
+      "file": "glm-image.png",
+      "key": "img/7faf0793f8b858f84f17988b9dd75b5f0cf0419b"
+    },
+    "gpt-5-image-mini-high": {
+      "file": "gpt-5-image-mini-high.png",
+      "key": "img/713117cd932c727523415a8172460e89a8f04357"
+    },
+    "gpt-5-image-mini-low": {
+      "file": "gpt-5-image-mini-low.png",
+      "key": "img/0d60d27059d8c5703f2bc3516832e0a1c6269125"
+    },
+    "gpt-5-image-mini-medium": {
+      "file": "gpt-5-image-mini-medium.png",
+      "key": "img/c225026f64953834ea1c14698d4549ef95113d60"
+    },
+    "gpt-image-1": {
+      "file": "gpt-image-1.png",
+      "key": "img/c83624026e328240ff92eb514c10168c291ca329"
+    },
+    "gpt-image-1.5": {
+      "file": "gpt-image-1.5.png",
+      "key": "img/65b4201d43126a6540c567e7cf67ca364c5909f0"
+    },
+    "gpt-image-2-3k": {
+      "file": "gpt-image-2-3k.png",
+      "key": "img/34ef4afee0b62ee6bc300258811fe183b6a63c92"
+    },
+    "gpt-image-2-5-sunburst-1k-low": {
+      "file": "gpt-image-2-5-sunburst-1k-low.png",
+      "key": "img/e83b06cecb2f416be9d8af38de7f1e17a9be5468"
+    },
+    "gpt-image-2-5-sunburst-4k-max": {
+      "file": "gpt-image-2-5-sunburst-4k-max.png",
+      "key": "img/6ef761c3b61361b2c5c5fe09bbae1dfa2cece346"
+    },
+    "gpt-image-2-chatgpt": {
+      "file": "gpt-image-2-chatgpt.png",
+      "key": "img/d5655b83dfcd6149b5736bef06e330c99550a972"
+    },
+    "grok": {
+      "file": "grok.jpg",
+      "key": "img/1b429bdaa88501b9f98d79e639158415b4327aac"
+    },
+    "grok-imagine-image-20260201": {
+      "file": "grok-imagine-image-20260201.jpg",
+      "key": "img/3b2573627410e4b3f069f4a351b20a4b09bf1503"
+    },
+    "hidreami1": {
+      "file": "hidreami1.png",
+      "key": "img/7d4e9b48997c6eb7e19aa572d00d5dfe93478b62"
+    },
+    "hunyuan-image-2.0": {
+      "file": "hunyuan-image-2.0.jpg",
+      "key": "img/f53b8c7b32ca4278acea8901229c02c98b60a775"
+    },
+    "hunyuan-image-2.1": {
+      "file": "hunyuan-image-2.1.png",
+      "key": "img/7f8f4a65f56cdfe6cf0d22f2fce959c009a9e9ac"
+    },
+    "hunyuan-image-3.0": {
+      "file": "hunyuan-image-3.0.jpg",
+      "key": "img/90032ae65888cb2953a6f5dfa6aa4d95facc4e90"
+    },
+    "hunyuan-image-3.0-instruct": {
+      "file": "hunyuan-image-3.0-instruct.png",
+      "key": "img/77d3f178b3ab45dc939e05764570167995d4028a"
+    },
+    "ideogram3": {
+      "file": "ideogram3.jpeg",
+      "key": "img/57101e63b8247ae0acec73d7f32631e65d5806e4"
+    },
+    "imagen3": {
+      "file": "imagen3.jpg",
+      "key": "img/d15d56124439f5b1f7c17b65d41e6b2f1236a3b4"
+    },
+    "imagen4": {
+      "file": "imagen4.png",
+      "key": "img/6903645a978c52d7258c4af50d048a7136845f14"
+    },
+    "imagen4ultra": {
+      "file": "imagen4ultra.png",
+      "key": "img/1186e0f41a5f1b8cda9e14abffc30b76fdec0465"
+    },
+    "imagineart-2-0": {
+      "file": "imagineart-2-0.png",
+      "key": "img/220b2b1b36737ee98aab7639e83f182f2c41e197"
+    },
+    "juggernautxl": {
+      "file": "juggernautxl.png",
+      "key": "img/4ad1d77bf8e59d1ea4e75895b48b42239fa92a1a"
+    },
+    "klingai-kolors-2.1": {
+      "file": "klingai-kolors-2.1.png",
+      "key": "img/7fc2c706b83b05f6cdc082cfee5ce7bee207fe66"
+    },
+    "klingai-omni-image-1.0": {
+      "file": "klingai-omni-image-1.0.png",
+      "key": "img/6d473ba4b92a8d9eb37cabebc284d6ded0828846"
+    },
+    "krea2-turbo-int8": {
+      "file": "krea2-turbo-int8.png",
+      "key": "img/a3d9c4f643d96b820c80262c964d193499976af5"
+    },
+    "lens": {
+      "file": "lens.png",
+      "key": "img/7fc5ff83454af25767ca8e8cc2c098b12ec39061"
+    },
+    "lumina2": {
+      "file": "lumina2.png",
+      "key": "img/0b407c120cd7ac59aeede7a15fb49ae460f87237"
+    },
+    "mai-image-1": {
+      "file": "mai-image-1.png",
+      "key": "img/27c4bf9499bafe51f911ed5b642d40081eb98685"
+    },
+    "mai-image-2": {
+      "file": "mai-image-2.png",
+      "key": "img/b9f87e57161738e693f8cd627df3ecb73b1760b9"
+    },
+    "mai-image-2-5": {
+      "file": "mai-image-2-5.png",
+      "key": "img/efca6a28667592e9669c7c1e1f42157099d674f8"
+    },
+    "mai-image-2-5-flash": {
+      "file": "mai-image-2-5-flash.png",
+      "key": "img/1dd021e1d1a122595d0847b65b7132e9f85cf888"
+    },
+    "mai-image-2-5-pro": {
+      "file": "mai-image-2-5-pro.png",
+      "key": "img/edfbe7c0abe1c2fa107a8752f01c7335838e6406"
+    },
+    "mai-image-2-6-pre": {
+      "file": "mai-image-2-6-pre.png",
+      "key": "img/38add9e585b48858d62e58b97e359ec8b2382844"
+    },
+    "midjourney-v8.1-alpha": {
+      "file": "midjourney-v8.1-alpha.png",
+      "key": "img/23a21b0f3f3d1175dfbf20c76c7c187016259429"
+    },
+    "midjourneyv61": {
+      "file": "midjourneyv61.png",
+      "key": "img/6701224ea1b80f63d892b4afbf40325de4177ab8"
+    },
+    "midjourneyv7": {
+      "file": "midjourneyv7.png",
+      "key": "img/f98a6e373c208ef2370cb348388e31ea20dd2e70"
+    },
+    "midjourneyv7-20250501": {
+      "file": "midjourneyv7-20250501.png",
+      "key": "img/fb504766d85d31f3bfa09df0358ba91697e63bd8"
+    },
+    "midjourneyv8alpha": {
+      "file": "midjourneyv8alpha.png",
+      "key": "img/95d9e2b674bad5968c10593d5bc81c83d57af9bd"
+    },
+    "nanobanana-2-4k": {
+      "file": "nanobanana-2-4k.png",
+      "key": "img/7d46d9530a3a4c15b0ddc235d2c6f9524915cb4d"
+    },
+    "nanobananapro-4k": {
+      "file": "nanobananapro-4k.png",
+      "key": "img/1b944d6037e036ef22944585fe7294487576a407"
+    },
+    "piclumen-realistic-v2": {
+      "file": "piclumen-realistic-v2.png",
+      "key": "img/347514cd363e137d86655bf8fcbe4e0b6ba5f39b"
+    },
+    "qwen-image": {
+      "file": "qwen-image.png",
+      "key": "img/bee3fb263e3d914489e228a0d27a7697d1b86b29"
+    },
+    "qwen-image-2.0": {
+      "file": "qwen-image-2.0.png",
+      "key": "img/84a59492d623dd3e6240a759cb3bee647b875143"
+    },
+    "qwen-image-2.1": {
+      "file": "qwen-image-2.1.png",
+      "key": "img/7594de9f89c392fbdfd9cdd6e006fd83c40c9275"
+    },
+    "qwen-image-2512": {
+      "file": "qwen-image-2512.png",
+      "key": "img/fe8719c068ece89ff63305b2306e2787a600c048"
+    },
+    "qwen-image-3.0": {
+      "file": "qwen-image-3.0.png",
+      "key": "img/df1243e2c3684a51a08b0fbcdfc473e26f73269a"
+    },
+    "qwen-image-3.0-pro": {
+      "file": "qwen-image-3.0-pro.png",
+      "key": "img/8b2867a5dad671a11b29b5b8ea2f693a2059697e"
+    },
+    "recraft-v3-raw": {
+      "file": "recraft-v3-raw.png",
+      "key": "img/568821dc7f86d63e1453cfe566b0488ffcfe9a6b"
+    },
+    "recraft-v4": {
+      "file": "recraft-v4.png",
+      "key": "img/86565870f617821fdda7c2fb4f5bb089be37ddcd"
+    },
+    "reve": {
+      "file": "reve.png",
+      "key": "img/694572cb6a08c4d51d412909b6f2d3b267c12ca3"
+    },
+    "reve-1.5": {
+      "file": "reve-1.5.png",
+      "key": "img/5260d293df624e0cc6eb66a9bb01779af0160cda"
+    },
+    "seedream-4.0-4k": {
+      "file": "seedream-4.0-4k.png",
+      "key": "img/3c5475a9dea0c3962d511b2d2d07e676c46034fd"
+    },
+    "seedream-4.5-4k": {
+      "file": "seedream-4.5-4k.png",
+      "key": "img/a2a4fc931ad7ef296c1ed745678b3116994a0d68"
+    },
+    "seedream-5.0-lite": {
+      "file": "seedream-5.0-lite.png",
+      "key": "img/3c87f6724c400a9abc0d2d894877ecf4c7dc4e1a"
+    },
+    "seedream-5.0-pro": {
+      "file": "seedream-5.0-pro.png",
+      "key": "img/02260e6d1f9b52e7940e67d7cc85e32991e12fdc"
+    },
+    "tengrai": {
+      "file": "tengrai.png",
+      "key": "img/05f9cbf8b01c230f48fc584db10d4951e395ffc4"
+    },
+    "tengrai-q": {
+      "file": "tengrai-q.png",
+      "key": "img/274ff623b09339ff4969a18b78f59f55a8ca33ca"
+    },
+    "uni-1": {
+      "file": "uni-1.png",
+      "key": "img/ca19fbf57ff8a7995727147322cddb84f88b6747"
+    },
+    "uni-1.1": {
+      "file": "uni-1.1.png",
+      "key": "img/d1798e3bbc041d7944a71c0190ee6f18316eb1fd"
+    },
+    "uni-1.1-max": {
+      "file": "uni-1.1-max.png",
+      "key": "img/919b9a844f63a584aa69e3fd7428e9584fd6fe3b"
+    },
+    "wan-2-7-pro-2k": {
+      "file": "wan-2-7-pro-2k.png",
+      "key": "img/be8b638ee5136f255a3f5ff33fecfcdb7b838b73"
+    },
+    "z-image-base": {
+      "file": "z-image-base.png",
+      "key": "img/acc08f8af834b16dc722895466c10c0407ab257a"
+    },
+    "z-image-turbo": {
+      "file": "z-image-turbo.png",
+      "key": "img/94f493dca1fca39e3ded1b29312bda42a2517377"
+    }
   },
   "011": {
-    "bagel": "bagel.webp",
-    "bitdance": "bitdance.png",
-    "chroma-34": "chroma-34.png",
-    "dreamina-image20pro": "dreamina-image20pro.jpeg",
-    "dreamina-image3": "dreamina-image3.jpeg",
-    "ernie-45turbo": "ernie-45turbo.png",
-    "ernie-image": "ernie-image.png",
-    "ernie-image-turbo": "ernie-image-turbo.png",
-    "f-lite-standard": "f-lite-standard.webp",
-    "firefly-image-5-preview": "firefly-image-5-preview.png",
-    "firefly4": "firefly4.jpg",
-    "flux1-kontext-max": "flux1-kontext-max.png",
-    "flux1-kontext-pro": "flux1-kontext-pro.png",
-    "flux1-krea": "flux1-krea.png",
-    "flux2-dev": "flux2-dev.png",
-    "flux2-flex-2k": "flux2-flex-2k.png",
-    "flux2-klein-4b": "flux2-klein-4b.png",
-    "flux2-klein-9b": "flux2-klein-9b.png",
-    "flux2-klein-base-4b": "flux2-klein-base-4b.png",
-    "flux2-klein-base-9b": "flux2-klein-base-9b.png",
-    "flux2-max-2k": "flux2-max-2k.png",
-    "flux2-pro-2k": "flux2-pro-2k.jpg",
-    "fluxmaniaV": "fluxmaniaV.png",
-    "gemini-2.0-flash-0507": "gemini-2.0-flash-0507.jpg",
-    "gemini-flash": "gemini-flash.jpeg",
-    "gemini25flashimagepreview": "gemini25flashimagepreview.png",
-    "glm-image": "glm-image.png",
-    "gpt-5-image-mini-high": "gpt-5-image-mini-high.png",
-    "gpt-5-image-mini-low": "gpt-5-image-mini-low.png",
-    "gpt-5-image-mini-medium": "gpt-5-image-mini-medium.png",
-    "gpt-image-1": "gpt-image-1.png",
-    "gpt-image-1.5": "gpt-image-1.5.png",
-    "gpt-image-2-3k": "gpt-image-2-3k.png",
-    "gpt-image-2-5-sunburst-1k-low": "gpt-image-2-5-sunburst-1k-low.png",
-    "gpt-image-2-5-sunburst-4k-max": "gpt-image-2-5-sunburst-4k-max.png",
-    "gpt-image-2-chatgpt": "gpt-image-2-chatgpt.png",
-    "grok": "grok.jpg",
-    "grok-imagine-image-20260201": "grok-imagine-image-20260201.jpg",
-    "hidreami1": "hidreami1.png",
-    "hunyuan-image-2.0": "hunyuan-image-2.0.jpg",
-    "hunyuan-image-2.1": "hunyuan-image-2.1.png",
-    "hunyuan-image-3.0": "hunyuan-image-3.0.jpg",
-    "hunyuan-image-3.0-instruct": "hunyuan-image-3.0-instruct.png",
-    "ideogram3": "ideogram3.jpeg",
-    "imagen3": "imagen3.jpg",
-    "imagen4": "imagen4.jpg",
-    "imagen4ultra": "imagen4ultra.jpg",
-    "imagineart-2-0": "imagineart-2-0.png",
-    "juggernautxl": "juggernautxl.png",
-    "klingai-kolors-2.1": "klingai-kolors-2.1.png",
-    "klingai-omni-image-1.0": "klingai-omni-image-1.0.png",
-    "krea2-turbo-int8": "krea2-turbo-int8.png",
-    "lens": "lens.png",
-    "lumina2": "lumina2.png",
-    "mai-image-1": "mai-image-1.png",
-    "mai-image-2": "mai-image-2.png",
-    "mai-image-2-5": "mai-image-2-5.png",
-    "mai-image-2-5-flash": "mai-image-2-5-flash.png",
-    "mai-image-2-5-pro": "mai-image-2-5-pro.png",
-    "mai-image-2-6-pre": "mai-image-2-6-pre.png",
-    "midjourney-v8.1-alpha": "midjourney-v8.1-alpha.png",
-    "midjourneyv61": "midjourneyv61.png",
-    "midjourneyv7": "midjourneyv7.png",
-    "midjourneyv7-20250501": "midjourneyv7-20250501.png",
-    "midjourneyv8alpha": "midjourneyv8alpha.png",
-    "nanobanana-2-4k": "nanobanana-2-4k.png",
-    "nanobananapro-4k": "nanobananapro-4k.png",
-    "piclumen-realistic-v2": "piclumen-realistic-v2.png",
-    "qwen-image": "qwen-image.png",
-    "qwen-image-2.0": "qwen-image-2.0.png",
-    "qwen-image-2.1": "qwen-image-2.1.png",
-    "qwen-image-2512": "qwen-image-2512.png",
-    "qwen-image-3.0": "qwen-image-3.0.png",
-    "qwen-image-3.0-pro": "qwen-image-3.0-pro.png",
-    "recraft-v3-raw": "recraft-v3-raw.png",
-    "recraft-v4": "recraft-v4.png",
-    "reve": "reve.png",
-    "reve-1.5": "reve-1.5.png",
-    "seedream-4.0-4k": "seedream-4.0-4k.png",
-    "seedream-4.5-4k": "seedream-4.5-4k.jpg",
-    "seedream-5.0-lite": "seedream-5.0-lite.png",
-    "seedream-5.0-pro": "seedream-5.0-pro.png",
-    "tengrai": "tengrai.png",
-    "tengrai-q": "tengrai-q.png",
-    "uni-1": "uni-1.png",
-    "uni-1.1": "uni-1.1.png",
-    "uni-1.1-max": "uni-1.1-max.png",
-    "wan-2-7-pro-2k": "wan-2-7-pro-2k.png",
-    "z-image-base": "z-image-base.png",
-    "z-image-turbo": "z-image-turbo.png"
+    "bagel": {
+      "file": "bagel.webp",
+      "key": "img/a3df23d9a3738868b8afe0db3b8e4684934e3b11"
+    },
+    "bitdance": {
+      "file": "bitdance.png",
+      "key": "img/0f1f8c519620744d2ea88c07ca35b254fe4b9404"
+    },
+    "chroma-34": {
+      "file": "chroma-34.png",
+      "key": "img/c9fee81fdd6559cd99a9303c65aea43c7d0f102a"
+    },
+    "dreamina-image20pro": {
+      "file": "dreamina-image20pro.jpeg",
+      "key": "img/25b48716a247e53b4c66f2e55cde5f97daf78fd8"
+    },
+    "dreamina-image3": {
+      "file": "dreamina-image3.jpeg",
+      "key": "img/841ad51563a2b7bc29c2ac096a9e6a7e9e6434c0"
+    },
+    "ernie-45turbo": {
+      "file": "ernie-45turbo.png",
+      "key": "img/fa56b87acc9cff048bfd45b9ed72662b0ed47896"
+    },
+    "ernie-image": {
+      "file": "ernie-image.png",
+      "key": "img/ec9cee13787c7308c3ddca2aa508a4f1d35f1fdf"
+    },
+    "ernie-image-turbo": {
+      "file": "ernie-image-turbo.png",
+      "key": "img/11a162bb7613485c7600b82b7444268b7289711b"
+    },
+    "f-lite-standard": {
+      "file": "f-lite-standard.webp",
+      "key": "img/9bacf5db4fbb6e7c040b26fdb6af76ee3233aeb9"
+    },
+    "firefly-image-5-preview": {
+      "file": "firefly-image-5-preview.png",
+      "key": "img/5b7796ddd5539b4e9c3206f031b7bdbde0840df6"
+    },
+    "firefly4": {
+      "file": "firefly4.jpg",
+      "key": "img/392325c7460d64085d7cf5a442b3821011a0abbe"
+    },
+    "flux1-kontext-max": {
+      "file": "flux1-kontext-max.png",
+      "key": "img/a09cbcca0d94b7dd73e86fb507f06192cd01e6d5"
+    },
+    "flux1-kontext-pro": {
+      "file": "flux1-kontext-pro.png",
+      "key": "img/e5d69a8505358ff50aed58aa6a9f68db25952e6a"
+    },
+    "flux1-krea": {
+      "file": "flux1-krea.png",
+      "key": "img/c43c43ec3bba0a419fa9146a3f3b4d441e4fd42d"
+    },
+    "flux2-dev": {
+      "file": "flux2-dev.png",
+      "key": "img/7c5255d1abc8856ece0fb22899ff2857c3b14f2b"
+    },
+    "flux2-flex-2k": {
+      "file": "flux2-flex-2k.png",
+      "key": "img/6b5dd9ee510634a20455c658e9034d9672ea0fa9"
+    },
+    "flux2-klein-4b": {
+      "file": "flux2-klein-4b.png",
+      "key": "img/6b439c4f896651bfe97aa1ef50f9419b34bfeeb5"
+    },
+    "flux2-klein-9b": {
+      "file": "flux2-klein-9b.png",
+      "key": "img/a7ac05308d4da262961065d0501fa53883eac7b9"
+    },
+    "flux2-klein-base-4b": {
+      "file": "flux2-klein-base-4b.png",
+      "key": "img/1d4e5abcf24a43d3525bf683b326ef0bb3a6d2b3"
+    },
+    "flux2-klein-base-9b": {
+      "file": "flux2-klein-base-9b.png",
+      "key": "img/ec3695c792fc1bdd5a132f96afca4517a96a0243"
+    },
+    "flux2-max-2k": {
+      "file": "flux2-max-2k.png",
+      "key": "img/ab115738c9e3b036f49e66e7a5795722caaa1b10"
+    },
+    "flux2-pro-2k": {
+      "file": "flux2-pro-2k.jpg",
+      "key": "img/d029d0526ed5a03dad3c174ffdcd2f1d43d4c9be"
+    },
+    "fluxmaniaV": {
+      "file": "fluxmaniaV.png",
+      "key": "img/b0f2e5043c3b445c59d68207a3e273bbc504fdad"
+    },
+    "gemini-2.0-flash-0507": {
+      "file": "gemini-2.0-flash-0507.jpg",
+      "key": "img/b6c97caef5d81dec3f8090fe796afdbff0e94806"
+    },
+    "gemini-flash": {
+      "file": "gemini-flash.jpeg",
+      "key": "img/6ead2d9758918cc8fe0c2dce1d6975923a49257c"
+    },
+    "gemini25flashimagepreview": {
+      "file": "gemini25flashimagepreview.png",
+      "key": "img/d2f2ad0c83550ea32e5025de8ab0fb0e1246e1aa"
+    },
+    "glm-image": {
+      "file": "glm-image.png",
+      "key": "img/61340bbcd6bdb40654218ba7698428dcbaa30f5b"
+    },
+    "gpt-5-image-mini-high": {
+      "file": "gpt-5-image-mini-high.png",
+      "key": "img/180f1107beb9b28e3703f0dfd069f4983fcbca74"
+    },
+    "gpt-5-image-mini-low": {
+      "file": "gpt-5-image-mini-low.png",
+      "key": "img/e5f05ee0e2cce228c53dd89fc402c4509878333f"
+    },
+    "gpt-5-image-mini-medium": {
+      "file": "gpt-5-image-mini-medium.png",
+      "key": "img/d6e8e3e286d93bf360aac2e4121dd9bc06b6e22f"
+    },
+    "gpt-image-1": {
+      "file": "gpt-image-1.png",
+      "key": "img/e04ae7a6775bd6edc43871d1bacc64fa444ed0a5"
+    },
+    "gpt-image-1.5": {
+      "file": "gpt-image-1.5.png",
+      "key": "img/8c854c7ca8ec05214f952bb17bad64bc4a57f9b7"
+    },
+    "gpt-image-2-3k": {
+      "file": "gpt-image-2-3k.png",
+      "key": "img/ceab2953cba34426f26d210ee4ace9f5ce3d143c"
+    },
+    "gpt-image-2-5-sunburst-1k-low": {
+      "file": "gpt-image-2-5-sunburst-1k-low.png",
+      "key": "img/fc8d3371ba3fc2a65007518646f84a6eac4c24eb"
+    },
+    "gpt-image-2-5-sunburst-4k-max": {
+      "file": "gpt-image-2-5-sunburst-4k-max.png",
+      "key": "img/20ea60eb52bdaf34cf3561324a1ddc30ea8b6472"
+    },
+    "gpt-image-2-chatgpt": {
+      "file": "gpt-image-2-chatgpt.png",
+      "key": "img/2bdc14100998239fa0b5be83c1bdcefd6ef1f66a"
+    },
+    "grok": {
+      "file": "grok.jpg",
+      "key": "img/26d8ea1971c14acbedb72f277598c550b279ff20"
+    },
+    "grok-imagine-image-20260201": {
+      "file": "grok-imagine-image-20260201.jpg",
+      "key": "img/243a1c357506bf2e60023eeea9934ff7e7f8eb87"
+    },
+    "hidreami1": {
+      "file": "hidreami1.png",
+      "key": "img/2becdce87f09a9d0c84ae8864999e5746d6f6421"
+    },
+    "hunyuan-image-2.0": {
+      "file": "hunyuan-image-2.0.jpg",
+      "key": "img/4dd1e8fa0d2fa1a501ba79e5b96066362e30cc3b"
+    },
+    "hunyuan-image-2.1": {
+      "file": "hunyuan-image-2.1.png",
+      "key": "img/ec1d25f8dee77543740377ca70afdb64b9f70940"
+    },
+    "hunyuan-image-3.0": {
+      "file": "hunyuan-image-3.0.jpg",
+      "key": "img/d5b559ccb489ccd6d5a1497e8ad99dd7ace70481"
+    },
+    "hunyuan-image-3.0-instruct": {
+      "file": "hunyuan-image-3.0-instruct.png",
+      "key": "img/f351ab34d09b22ac2d2b08dcab1e33d5c3c5523b"
+    },
+    "ideogram3": {
+      "file": "ideogram3.jpeg",
+      "key": "img/4b18a6cd7dde3a541eada80a64081908c40daf7c"
+    },
+    "imagen3": {
+      "file": "imagen3.jpg",
+      "key": "img/83caf08c561497329341535514e0928d76f5b755"
+    },
+    "imagen4": {
+      "file": "imagen4.jpg",
+      "key": "img/7ffc802cfe79c0e8c27962599b34d3ac1ff27177"
+    },
+    "imagen4ultra": {
+      "file": "imagen4ultra.jpg",
+      "key": "img/7ffc802cfe79c0e8c27962599b34d3ac1ff27177"
+    },
+    "imagineart-2-0": {
+      "file": "imagineart-2-0.png",
+      "key": "img/b7df15a387365debed7b0d8513795d6e11702a2d"
+    },
+    "juggernautxl": {
+      "file": "juggernautxl.png",
+      "key": "img/0eafa9f38dbe2474195e5bcbe9070055373f5f74"
+    },
+    "klingai-kolors-2.1": {
+      "file": "klingai-kolors-2.1.png",
+      "key": "img/f4b3e25f75993d8a48945db78f43105fc68e644b"
+    },
+    "klingai-omni-image-1.0": {
+      "file": "klingai-omni-image-1.0.png",
+      "key": "img/ac898d5c56aabb8414a81829017147d1463252a4"
+    },
+    "krea2-turbo-int8": {
+      "file": "krea2-turbo-int8.png",
+      "key": "img/af8c13e465bec640f574bba987691664953bf17a"
+    },
+    "lens": {
+      "file": "lens.png",
+      "key": "img/977aaed8d769faa646e9888812b42ed53b8d06eb"
+    },
+    "lumina2": {
+      "file": "lumina2.png",
+      "key": "img/b20b8124eee3bdb44f6be88f57c608de5022f7c0"
+    },
+    "mai-image-1": {
+      "file": "mai-image-1.png",
+      "key": "img/885c70f8b3c1d402cd5e0bfb49ba7cf0f376602f"
+    },
+    "mai-image-2": {
+      "file": "mai-image-2.png",
+      "key": "img/50050d1fd75a30c70420e110ee40a3c7c38801b9"
+    },
+    "mai-image-2-5": {
+      "file": "mai-image-2-5.png",
+      "key": "img/dd767f2db894b8bcd8596b26db7b7a8001dcc4e2"
+    },
+    "mai-image-2-5-flash": {
+      "file": "mai-image-2-5-flash.png",
+      "key": "img/dd767f2db894b8bcd8596b26db7b7a8001dcc4e2"
+    },
+    "mai-image-2-5-pro": {
+      "file": "mai-image-2-5-pro.png",
+      "key": "img/6400692e12cd93e45bf703534e72451e18211e4e"
+    },
+    "mai-image-2-6-pre": {
+      "file": "mai-image-2-6-pre.png",
+      "key": "img/f0f8a7102441ab257d6235519476013007264d0e"
+    },
+    "midjourney-v8.1-alpha": {
+      "file": "midjourney-v8.1-alpha.png",
+      "key": "img/bd22b471b7e5c2d7eb2854d4e973209830e06850"
+    },
+    "midjourneyv61": {
+      "file": "midjourneyv61.png",
+      "key": "img/fbab3e71ff9bf0c4396282236494529d9a008cb8"
+    },
+    "midjourneyv7": {
+      "file": "midjourneyv7.png",
+      "key": "img/157bbc329c0edfffad13bd0ecc616993d5b4d4c3"
+    },
+    "midjourneyv7-20250501": {
+      "file": "midjourneyv7-20250501.png",
+      "key": "img/87d2e29df465b2d8fa8b304b1cb396cf44e5c4c7"
+    },
+    "midjourneyv8alpha": {
+      "file": "midjourneyv8alpha.png",
+      "key": "img/41ed7eb965aeb469f89a65472cc8de523741ecbe"
+    },
+    "nanobanana-2-4k": {
+      "file": "nanobanana-2-4k.png",
+      "key": "img/de1a16735edd2ce31051af16fcf9c0cac990fe63"
+    },
+    "nanobananapro-4k": {
+      "file": "nanobananapro-4k.png",
+      "key": "img/b38f175c9541e11f859503d91557f573897799e8"
+    },
+    "piclumen-realistic-v2": {
+      "file": "piclumen-realistic-v2.png",
+      "key": "img/9d4ca2d2b4fe48e957c07e2c383eae8aa5ceeff2"
+    },
+    "qwen-image": {
+      "file": "qwen-image.png",
+      "key": "img/4c5d0f86210098ab233c1fbb3a48ebd6b177770f"
+    },
+    "qwen-image-2.0": {
+      "file": "qwen-image-2.0.png",
+      "key": "img/6e46ee03f08cc8ba89596e4c4dcea7a08ebd1c70"
+    },
+    "qwen-image-2.1": {
+      "file": "qwen-image-2.1.png",
+      "key": "img/08d31570d5ea2a84dc70eee9fb606dd57817306b"
+    },
+    "qwen-image-2512": {
+      "file": "qwen-image-2512.png",
+      "key": "img/6a53c4cdc5965eab03b3c66f135b17e31638708a"
+    },
+    "qwen-image-3.0": {
+      "file": "qwen-image-3.0.png",
+      "key": "img/18f05504bdde2c3b3f27f24a64b07079271b0f10"
+    },
+    "qwen-image-3.0-pro": {
+      "file": "qwen-image-3.0-pro.png",
+      "key": "img/dd767f2db894b8bcd8596b26db7b7a8001dcc4e2"
+    },
+    "recraft-v3-raw": {
+      "file": "recraft-v3-raw.png",
+      "key": "img/a6311f3bbe8d51a418a7be5c59cab7edb73fa4ea"
+    },
+    "recraft-v4": {
+      "file": "recraft-v4.png",
+      "key": "img/9c1096c28abd00b110b4526d3d999eff7d6739b6"
+    },
+    "reve": {
+      "file": "reve.png",
+      "key": "img/74948762fc10a8953c4c657b5326a0021a3c5fdf"
+    },
+    "reve-1.5": {
+      "file": "reve-1.5.png",
+      "key": "img/078866fba2c3cbf2b0ee7b1083a41165a28a21b9"
+    },
+    "seedream-4.0-4k": {
+      "file": "seedream-4.0-4k.png",
+      "key": "img/e908ae8c73b0f52df526e3e2612d085c40431669"
+    },
+    "seedream-4.5-4k": {
+      "file": "seedream-4.5-4k.jpg",
+      "key": "img/9f577ce4a74b7d07bf9c799417f0e06c6508b883"
+    },
+    "seedream-5.0-lite": {
+      "file": "seedream-5.0-lite.png",
+      "key": "img/3cdd302655a9b830fe36c71f4bce28c3bf2d45ed"
+    },
+    "seedream-5.0-pro": {
+      "file": "seedream-5.0-pro.png",
+      "key": "img/48d5755ccc39c7bc0c1cb2e15974aaf027027808"
+    },
+    "tengrai": {
+      "file": "tengrai.png",
+      "key": "img/6fa6ba86ccee1d0c80d4d2d808acc5a31fa14ac6"
+    },
+    "tengrai-q": {
+      "file": "tengrai-q.png",
+      "key": "img/e2a0851c1d3b444e06309ebd9ad06c6ae07842df"
+    },
+    "uni-1": {
+      "file": "uni-1.png",
+      "key": "img/8f3c34cf6b0bec66ec25eaa361378c78bf84c4aa"
+    },
+    "uni-1.1": {
+      "file": "uni-1.1.png",
+      "key": "img/d15dffc133c22fd82cdfabda19bec695f598aca5"
+    },
+    "uni-1.1-max": {
+      "file": "uni-1.1-max.png",
+      "key": "img/cf7c5cc08f7110f3551f38a74190115edaac504e"
+    },
+    "wan-2-7-pro-2k": {
+      "file": "wan-2-7-pro-2k.png",
+      "key": "img/44c3752790f0aed0044e6a6577b58c7cd3080d6b"
+    },
+    "z-image-base": {
+      "file": "z-image-base.png",
+      "key": "img/6dd2168260980fb5f2562d61e749dc88182352c6"
+    },
+    "z-image-turbo": {
+      "file": "z-image-turbo.png",
+      "key": "img/3eabb59749f95d2176c1b19e3357368919f56caf"
+    }
   },
   "012": {
-    "bagel": "bagel.webp",
-    "bitdance": "bitdance.png",
-    "chroma-34": "chroma-34.png",
-    "dreamina-image20pro": "dreamina-image20pro.jpeg",
-    "dreamina-image3": "dreamina-image3.jpeg",
-    "ernie-45turbo": "ernie-45turbo.png",
-    "ernie-image": "ernie-image.png",
-    "ernie-image-turbo": "ernie-image-turbo.png",
-    "f-lite-standard": "f-lite-standard.webp",
-    "firefly-image-5-preview": "firefly-image-5-preview.png",
-    "firefly4": "firefly4.jpg",
-    "flux1-kontext-max": "flux1-kontext-max.png",
-    "flux1-kontext-pro": "flux1-kontext-pro.png",
-    "flux1-krea": "flux1-krea.png",
-    "flux11ultra": "flux11ultra.jpg",
-    "flux2-dev": "flux2-dev.png",
-    "flux2-flex-2k": "flux2-flex-2k.png",
-    "flux2-klein-4b": "flux2-klein-4b.png",
-    "flux2-klein-9b": "flux2-klein-9b.png",
-    "flux2-klein-base-4b": "flux2-klein-base-4b.png",
-    "flux2-klein-base-9b": "flux2-klein-base-9b.png",
-    "flux2-max-2k": "flux2-max-2k.png",
-    "flux2-pro-2k": "flux2-pro-2k.png",
-    "fluxmaniaV": "fluxmaniaV.png",
-    "gemini-2.0-flash-0507": "gemini-2.0-flash-0507.jpg",
-    "gemini-flash": "gemini-flash.jpg",
-    "gemini25flashimagepreview": "gemini25flashimagepreview.png",
-    "glm-image": "glm-image.png",
-    "gpt-5-image-mini-high": "gpt-5-image-mini-high.png",
-    "gpt-5-image-mini-low": "gpt-5-image-mini-low.png",
-    "gpt-5-image-mini-medium": "gpt-5-image-mini-medium.png",
-    "gpt-image-1": "gpt-image-1.png",
-    "gpt-image-1.5": "gpt-image-1.5.png",
-    "gpt-image-2-3k": "gpt-image-2-3k.png",
-    "gpt-image-2-5-sunburst-1k-low": "gpt-image-2-5-sunburst-1k-low.png",
-    "gpt-image-2-5-sunburst-4k-max": "gpt-image-2-5-sunburst-4k-max.png",
-    "gpt-image-2-chatgpt": "gpt-image-2-chatgpt.png",
-    "grok": "grok.jpg",
-    "grok-imagine-image-20260201": "grok-imagine-image-20260201.jpg",
-    "hidreami1": "hidreami1.png",
-    "hunyuan-image-2.0": "hunyuan-image-2.0.jpg",
-    "hunyuan-image-2.1": "hunyuan-image-2.1.png",
-    "hunyuan-image-3.0": "hunyuan-image-3.0.jpg",
-    "hunyuan-image-3.0-instruct": "hunyuan-image-3.0-instruct.png",
-    "ideogram3": "ideogram3.jpeg",
-    "imagen3": "imagen3.jpg",
-    "imagen4": "imagen4.png",
-    "imagen4ultra": "imagen4ultra.png",
-    "imagineart-2-0": "imagineart-2-0.png",
-    "juggernautxl": "juggernautxl.png",
-    "klingai-kolors-2.1": "klingai-kolors-2.1.png",
-    "klingai-omni-image-1.0": "klingai-omni-image-1.0.png",
-    "krea2-turbo-int8": "krea2-turbo-int8.png",
-    "lens": "lens.png",
-    "lumina2": "lumina2.png",
-    "mai-image-1": "mai-image-1.png",
-    "mai-image-2": "mai-image-2.png",
-    "mai-image-2-5": "mai-image-2-5.png",
-    "mai-image-2-5-flash": "mai-image-2-5-flash.png",
-    "mai-image-2-5-pro": "mai-image-2-5-pro.png",
-    "mai-image-2-6-pre": "mai-image-2-6-pre.png",
-    "midjourney-v8.1-alpha": "midjourney-v8.1-alpha.png",
-    "midjourneyv61": "midjourneyv61.png",
-    "midjourneyv7": "midjourneyv7.png",
-    "midjourneyv7-20250501": "midjourneyv7-20250501.png",
-    "midjourneyv8alpha": "midjourneyv8alpha.png",
-    "nanobanana-2-4k": "nanobanana-2-4k.png",
-    "nanobananapro-4k": "nanobananapro-4k.png",
-    "piclumen-realistic-v2": "piclumen-realistic-v2.png",
-    "qwen-image": "qwen-image.png",
-    "qwen-image-2.0": "qwen-image-2.0.png",
-    "qwen-image-2.1": "qwen-image-2.1.png",
-    "qwen-image-2512": "qwen-image-2512.png",
-    "qwen-image-3.0": "qwen-image-3.0.png",
-    "qwen-image-3.0-pro": "qwen-image-3.0-pro.png",
-    "recraft-v3-raw": "recraft-v3-raw.png",
-    "recraft-v4": "recraft-v4.png",
-    "reve": "reve.png",
-    "reve-1.5": "reve-1.5.png",
-    "seedream-4.0-4k": "seedream-4.0-4k.png",
-    "seedream-4.5-4k": "seedream-4.5-4k.png",
-    "seedream-5.0-lite": "seedream-5.0-lite.png",
-    "seedream-5.0-pro": "seedream-5.0-pro.png",
-    "tengrai": "tengrai.png",
-    "tengrai-q": "tengrai-q.png",
-    "uni-1": "uni-1.png",
-    "uni-1.1": "uni-1.1.png",
-    "uni-1.1-max": "uni-1.1-max.png",
-    "wan-2-7-pro-2k": "wan-2-7-pro-2k.png",
-    "z-image-base": "z-image-base.png",
-    "z-image-turbo": "z-image-turbo.png"
+    "bagel": {
+      "file": "bagel.webp",
+      "key": "img/7970ece25a206df39a71abead4410f623bc61c51"
+    },
+    "bitdance": {
+      "file": "bitdance.png",
+      "key": "img/01054a6591272debba5ba9d129e604b92435e4f6"
+    },
+    "chroma-34": {
+      "file": "chroma-34.png",
+      "key": "img/3bbd36b90f293140b695a26ed4c2d474acdcd39d"
+    },
+    "dreamina-image20pro": {
+      "file": "dreamina-image20pro.jpeg",
+      "key": "img/61616f0dbb23bdd28915dfde9777441746e992b8"
+    },
+    "dreamina-image3": {
+      "file": "dreamina-image3.jpeg",
+      "key": "img/82a4616b9acec71a301c48411fd7edf875fff8b8"
+    },
+    "ernie-45turbo": {
+      "file": "ernie-45turbo.png",
+      "key": "img/14883b57b46b65b7290774b1635f3920b16a2b2d"
+    },
+    "ernie-image": {
+      "file": "ernie-image.png",
+      "key": "img/79e388bce666d6787f525c99de5c4858ea0d2a2e"
+    },
+    "ernie-image-turbo": {
+      "file": "ernie-image-turbo.png",
+      "key": "img/6c5bbe864fe6769cb60a6a87146b3422a8fc1cdc"
+    },
+    "f-lite-standard": {
+      "file": "f-lite-standard.webp",
+      "key": "img/386f410cdc3fc429f16835fbd43a92d684d70654"
+    },
+    "firefly-image-5-preview": {
+      "file": "firefly-image-5-preview.png",
+      "key": "img/ab7b082c215e054713d586e874e1438d9d1c91dc"
+    },
+    "firefly4": {
+      "file": "firefly4.jpg",
+      "key": "img/8d37ebcb1e7acc02313d91e41628d58f10ec1246"
+    },
+    "flux1-kontext-max": {
+      "file": "flux1-kontext-max.png",
+      "key": "img/91a7935ab24b89bdad4c581a8ca157ec530f0b2b"
+    },
+    "flux1-kontext-pro": {
+      "file": "flux1-kontext-pro.png",
+      "key": "img/50db8bdcb17caa227c5f6c2c52aac75f9f70c5a4"
+    },
+    "flux1-krea": {
+      "file": "flux1-krea.png",
+      "key": "img/303a7a395c9653879932a8e767758035bcbab68c"
+    },
+    "flux11ultra": {
+      "file": "flux11ultra.jpg",
+      "key": "img/2c38572988a314856d3b922cd4d616668b995185"
+    },
+    "flux2-dev": {
+      "file": "flux2-dev.png",
+      "key": "img/7d2a278bbddb4eb853993d48af6e7f6f7c450701"
+    },
+    "flux2-flex-2k": {
+      "file": "flux2-flex-2k.png",
+      "key": "img/4c4cd636318dbaec92db6b2fae49e86f709fd028"
+    },
+    "flux2-klein-4b": {
+      "file": "flux2-klein-4b.png",
+      "key": "img/1c4bddeaf2ceeffa32bc8214b665f5c8753dc324"
+    },
+    "flux2-klein-9b": {
+      "file": "flux2-klein-9b.png",
+      "key": "img/2ae51d8e540bbe446eaf9eb2c2fc7c31a8cf50a6"
+    },
+    "flux2-klein-base-4b": {
+      "file": "flux2-klein-base-4b.png",
+      "key": "img/ce24ba47b5f708c05516c32a9e2d6555df6d8d78"
+    },
+    "flux2-klein-base-9b": {
+      "file": "flux2-klein-base-9b.png",
+      "key": "img/f3968e8b7fa00f809f85a8ab233910499d43f1a1"
+    },
+    "flux2-max-2k": {
+      "file": "flux2-max-2k.png",
+      "key": "img/bd3cd24e6fc518f6ce84d68ce4ecd6d842d36ebc"
+    },
+    "flux2-pro-2k": {
+      "file": "flux2-pro-2k.png",
+      "key": "img/360b7f63e1f22a13ec9807228c69bbea655377c5"
+    },
+    "fluxmaniaV": {
+      "file": "fluxmaniaV.png",
+      "key": "img/bcb0baa9e9b7c5c31051876521d6106c1aa92bd2"
+    },
+    "gemini-2.0-flash-0507": {
+      "file": "gemini-2.0-flash-0507.jpg",
+      "key": "img/77c72dc203e764c54f4cd3c4c5ea5177d493d7f5"
+    },
+    "gemini-flash": {
+      "file": "gemini-flash.jpg",
+      "key": "img/df1eb34aca73888950a858b46f02e57b318d4639"
+    },
+    "gemini25flashimagepreview": {
+      "file": "gemini25flashimagepreview.png",
+      "key": "img/1a7535452de131daf2abf1f3128b7f5b437d1777"
+    },
+    "glm-image": {
+      "file": "glm-image.png",
+      "key": "img/fb35fc413896b88d366327eacec7831b7247cefa"
+    },
+    "gpt-5-image-mini-high": {
+      "file": "gpt-5-image-mini-high.png",
+      "key": "img/27257a77c02af6dc39e3e4ee30c98a33e25375d1"
+    },
+    "gpt-5-image-mini-low": {
+      "file": "gpt-5-image-mini-low.png",
+      "key": "img/31eeec6ea137831fa430ee09ac36f6f905760397"
+    },
+    "gpt-5-image-mini-medium": {
+      "file": "gpt-5-image-mini-medium.png",
+      "key": "img/57f20097eb3dad66b613b5633df700177466bad1"
+    },
+    "gpt-image-1": {
+      "file": "gpt-image-1.png",
+      "key": "img/90ca1d4ed31fc8dcdfc1ca07ad071dbf7145eb79"
+    },
+    "gpt-image-1.5": {
+      "file": "gpt-image-1.5.png",
+      "key": "img/afb32b72bcdef0197ed2f26ba766c3ab1724e77e"
+    },
+    "gpt-image-2-3k": {
+      "file": "gpt-image-2-3k.png",
+      "key": "img/7ed7d58071578502a68cf019d1dd4edb26c28e44"
+    },
+    "gpt-image-2-5-sunburst-1k-low": {
+      "file": "gpt-image-2-5-sunburst-1k-low.png",
+      "key": "img/e6f0351ea4015e16ba17afaf25dfb69772a5e354"
+    },
+    "gpt-image-2-5-sunburst-4k-max": {
+      "file": "gpt-image-2-5-sunburst-4k-max.png",
+      "key": "img/ed5c0040b146c281f6dff36f439ea3e5a34ee132"
+    },
+    "gpt-image-2-chatgpt": {
+      "file": "gpt-image-2-chatgpt.png",
+      "key": "img/e6417600cdd79f6731f24a6adfac521b6e069ff9"
+    },
+    "grok": {
+      "file": "grok.jpg",
+      "key": "img/d82d76d701fa1937221b2c5929889ad58738126e"
+    },
+    "grok-imagine-image-20260201": {
+      "file": "grok-imagine-image-20260201.jpg",
+      "key": "img/eb071e4078d210bd4604f57e87b486ac27e79ee1"
+    },
+    "hidreami1": {
+      "file": "hidreami1.png",
+      "key": "img/cd7a503a8cedc60ced05311d3832c575c33f2e19"
+    },
+    "hunyuan-image-2.0": {
+      "file": "hunyuan-image-2.0.jpg",
+      "key": "img/066ff1ec5f5b6a7a475f830cc76c370c041142aa"
+    },
+    "hunyuan-image-2.1": {
+      "file": "hunyuan-image-2.1.png",
+      "key": "img/ef4278df8f944bdcd455e624616c8c783a3b5c77"
+    },
+    "hunyuan-image-3.0": {
+      "file": "hunyuan-image-3.0.jpg",
+      "key": "img/a08e6dc50ad263acf1348f4cd68ca43be3f5f191"
+    },
+    "hunyuan-image-3.0-instruct": {
+      "file": "hunyuan-image-3.0-instruct.png",
+      "key": "img/5ceb3f423ef659eceec823633de49dda65da41bb"
+    },
+    "ideogram3": {
+      "file": "ideogram3.jpeg",
+      "key": "img/82cda5e04a7b0578fff70967fcc2b245fe688c11"
+    },
+    "imagen3": {
+      "file": "imagen3.jpg",
+      "key": "img/6f4366b45490fdfe0ffb60b41c9d91f5942052f9"
+    },
+    "imagen4": {
+      "file": "imagen4.png",
+      "key": "img/0188b9cb0bd7b480825aefd35cb4087c9e7ac033"
+    },
+    "imagen4ultra": {
+      "file": "imagen4ultra.png",
+      "key": "img/7cc1e7dacc7347ef4a14784d4e6125de6dfcd336"
+    },
+    "imagineart-2-0": {
+      "file": "imagineart-2-0.png",
+      "key": "img/7d36d2e769a56c0743c04cb0bbf69dfae463ef1a"
+    },
+    "juggernautxl": {
+      "file": "juggernautxl.png",
+      "key": "img/6a13305344298cba9ba84270797ea77043a54f38"
+    },
+    "klingai-kolors-2.1": {
+      "file": "klingai-kolors-2.1.png",
+      "key": "img/206cec199c6c62b42f434e51b9a0dfed14db5bd3"
+    },
+    "klingai-omni-image-1.0": {
+      "file": "klingai-omni-image-1.0.png",
+      "key": "img/7118c1215a50ca587f1f49f3b37636227590c19a"
+    },
+    "krea2-turbo-int8": {
+      "file": "krea2-turbo-int8.png",
+      "key": "img/a11c88114249c61f760c94d84dd8ced96208c182"
+    },
+    "lens": {
+      "file": "lens.png",
+      "key": "img/4b2ee19e3d4c8140fea6a1fb3a255320811f3cfb"
+    },
+    "lumina2": {
+      "file": "lumina2.png",
+      "key": "img/7de11b8efb92eeb49e8826b4d2082881ed8ae6ea"
+    },
+    "mai-image-1": {
+      "file": "mai-image-1.png",
+      "key": "img/724ae7b0fbb2281f4d1a88c4d2bae3bebc1b8d64"
+    },
+    "mai-image-2": {
+      "file": "mai-image-2.png",
+      "key": "img/38f09bd325e25eeaab409624a870f694c4af3045"
+    },
+    "mai-image-2-5": {
+      "file": "mai-image-2-5.png",
+      "key": "img/03c56b03a52e4f9962e7d677ac526a926e7157e9"
+    },
+    "mai-image-2-5-flash": {
+      "file": "mai-image-2-5-flash.png",
+      "key": "img/6631b34fe547ab60ff78d446d2ce2cf069635269"
+    },
+    "mai-image-2-5-pro": {
+      "file": "mai-image-2-5-pro.png",
+      "key": "img/6da740c614a5c5bb2570470a139e89940e64c1d9"
+    },
+    "mai-image-2-6-pre": {
+      "file": "mai-image-2-6-pre.png",
+      "key": "img/05db1ad64a1b95bff07b477430305ce005422d08"
+    },
+    "midjourney-v8.1-alpha": {
+      "file": "midjourney-v8.1-alpha.png",
+      "key": "img/90093fe1b4e33a7c2ddc75bd7e1964c1e208b03d"
+    },
+    "midjourneyv61": {
+      "file": "midjourneyv61.png",
+      "key": "img/22bb6ed837829a70b85048ccb8f6ef4a166a53c9"
+    },
+    "midjourneyv7": {
+      "file": "midjourneyv7.png",
+      "key": "img/0532743144294c1c306f1d10397e187a61afb38b"
+    },
+    "midjourneyv7-20250501": {
+      "file": "midjourneyv7-20250501.png",
+      "key": "img/7a40881d0d79ba7c5cf4e65dfb67c68a57077301"
+    },
+    "midjourneyv8alpha": {
+      "file": "midjourneyv8alpha.png",
+      "key": "img/33a58f406c5a946fd65f92f0082c017165898f5a"
+    },
+    "nanobanana-2-4k": {
+      "file": "nanobanana-2-4k.png",
+      "key": "img/9b2678f0d1491f652a757beda50e7b9ebe9ebc7f"
+    },
+    "nanobananapro-4k": {
+      "file": "nanobananapro-4k.png",
+      "key": "img/d0e274991d20e018fa34c2a70b0f1eb196bc0915"
+    },
+    "piclumen-realistic-v2": {
+      "file": "piclumen-realistic-v2.png",
+      "key": "img/f88479048d98339efcc3315ad0076a5cac52a0dd"
+    },
+    "qwen-image": {
+      "file": "qwen-image.png",
+      "key": "img/7dc66189822bd8850934087e3fe6c2e9f333cbe4"
+    },
+    "qwen-image-2.0": {
+      "file": "qwen-image-2.0.png",
+      "key": "img/118866f5e03ccbf291a8f4f05d468bd639d61a39"
+    },
+    "qwen-image-2.1": {
+      "file": "qwen-image-2.1.png",
+      "key": "img/40d2b4b18b96cc7c5b209a70bcec067ab3901755"
+    },
+    "qwen-image-2512": {
+      "file": "qwen-image-2512.png",
+      "key": "img/2f540342072fd1ab613fb23978ff8f4f8c910eba"
+    },
+    "qwen-image-3.0": {
+      "file": "qwen-image-3.0.png",
+      "key": "img/b6115a440eff579d187e88d3593d299f35359c0a"
+    },
+    "qwen-image-3.0-pro": {
+      "file": "qwen-image-3.0-pro.png",
+      "key": "img/5be24d05094befdb10ec5590712ff43160792339"
+    },
+    "recraft-v3-raw": {
+      "file": "recraft-v3-raw.png",
+      "key": "img/6c3a32383e4ef0ccdc6e0bbb1732df13c79a71ce"
+    },
+    "recraft-v4": {
+      "file": "recraft-v4.png",
+      "key": "img/1f75b2399f0c3af8ef28a4917352427a92e37d0c"
+    },
+    "reve": {
+      "file": "reve.png",
+      "key": "img/2aea50e3b2654edeec88d104b4df0a46c9c074e5"
+    },
+    "reve-1.5": {
+      "file": "reve-1.5.png",
+      "key": "img/bd26891a7565541e3102970cdf6002ed30468040"
+    },
+    "seedream-4.0-4k": {
+      "file": "seedream-4.0-4k.png",
+      "key": "img/d322e396a74770df2914a0ad223effa5c5df7957"
+    },
+    "seedream-4.5-4k": {
+      "file": "seedream-4.5-4k.png",
+      "key": "img/05a2a3416cc38ac76bc38ef1333e7caa9fab2df6"
+    },
+    "seedream-5.0-lite": {
+      "file": "seedream-5.0-lite.png",
+      "key": "img/198010f8e55b4cf76dcc7a4e79eba5987fdbe7b5"
+    },
+    "seedream-5.0-pro": {
+      "file": "seedream-5.0-pro.png",
+      "key": "img/c829bb9d7ee30f258de9957d1cb1124b1396a87d"
+    },
+    "tengrai": {
+      "file": "tengrai.png",
+      "key": "img/893bdf28fa7b1859e8a063a4a280a06aca8c6c3b"
+    },
+    "tengrai-q": {
+      "file": "tengrai-q.png",
+      "key": "img/433f3d109c0895061d3798775a2cf95628d85450"
+    },
+    "uni-1": {
+      "file": "uni-1.png",
+      "key": "img/f2ac02f82a2a7bb1a5098e7d0dc081821a130b4a"
+    },
+    "uni-1.1": {
+      "file": "uni-1.1.png",
+      "key": "img/17261f3bd1e871014c7a429225874c40a1d84021"
+    },
+    "uni-1.1-max": {
+      "file": "uni-1.1-max.png",
+      "key": "img/7c170304b49730f8218d28486e0d1fe67a0b8adb"
+    },
+    "wan-2-7-pro-2k": {
+      "file": "wan-2-7-pro-2k.png",
+      "key": "img/c6ce71f75a4ea48992e2a4dbc85e390905f65d17"
+    },
+    "z-image-base": {
+      "file": "z-image-base.png",
+      "key": "img/98af6b04302e3911109bd77da70ddea72b2f4f87"
+    },
+    "z-image-turbo": {
+      "file": "z-image-turbo.png",
+      "key": "img/ccc1c4a41dcc23afc74dd0b240ab6a939a47c129"
+    }
   }
 }
