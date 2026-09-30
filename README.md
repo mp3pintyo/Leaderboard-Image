@@ -11,6 +11,7 @@ A Képgenerátor Aréna egy webalkalmazás, amelyben AI képgenerátorok ugyanar
 - **Leaderboard:** Bradley-Terry rangsor 95%-os konfidenciaintervallummal, minőség–ár térkép és párharc-mátrix.
 - **ELO fejlődés:** az online ELO időbeli alakulása a top modelleknél.
 - **Összehasonlítás:** két modell adatlapja, pontszáma, egymás elleni eredménye és promptonkénti képei.
+- **Súgó:** közérthető magyarázat mindenről – szavazás, pontszám, 95% CI, bootstrap eloszlás, helyezéssáv, párosítás, adatkezelés, GYIK és szószedet, élő statisztikával.
 
 Minden nézet saját, megosztható linket kap (lásd [Útvonalak](#-útvonalak-megosztható-linkek)).
 
@@ -75,7 +76,7 @@ Két véletlenszerűen párosított modell képe jelenik meg ugyanarra a promptr
 | Egyik sem jó | *Mindkettő rossz* | `X` |
 | Új pár szavazat nélkül | *Kihagyás* | `S` |
 
-Szavazás után megjelenik a két modell neve és az ELO-változás, közben már töltődik a következő pár. Bármelyik képre kattintva nagyítható.
+Szavazás után megjelenik a két modell neve és a **Leaderboard-pontszám változása** (pl. `1913 → 1915`) – ugyanaz a szám, ami a rangsorban látszik –, közben már töltődik a következő pár. Bármelyik képre kattintva nagyítható.
 
 ### Side-by-Side
 
@@ -109,7 +110,9 @@ Két modell adatlapja, Arena pontszáma CI-vel, győzelmi aránya, egymás ellen
 - **Helyezés (#):** sorszám a pontszám szerinti listában. A **helyezéssáv** (tooltipben): legjobb helyezés = 1 + a statisztikailag biztosan jobb modellek száma; legrosszabb = az átfedő vagy jobb intervallumú modellek száma.
 - **Célzott párosítás:** a pár súlya `(1 + TARGETED_PAIRING_STRENGTH · információ) / (1 + eddigi meccsek)`, ahol az információ a kimenet bizonytalanságából (közeli pontszám) és a két modell CI-szélességéből adódik.
 - **Előzetes:** `PRELIMINARY_MATCH_THRESHOLD` (30) meccs alatt.
-- Az **online ELO** (K = 32) továbbra is frissül minden szavazatnál – ez adja az ELO-történet grafikont és a befagyasztási logikát.
+- **Frissítés:** a pontszám minden szavazat után azonnal újraszámolódik (~15 ms); a bootstrap CI legfeljebb 30 másodpercig gyorsítótárazott.
+- Az **online ELO** (K = 32) továbbra is frissül minden szavazatnál – ez adja az ELO-történet grafikont, az opcionális „Online ELO” oszlopot és a befagyasztási logikát.
+- A felhasználóknak szóló, részletes magyarázat az alkalmazás **Súgó** menüpontjában található (`templates/help.html`).
 
 ## ⚙️ Konfiguráció (`config.py`)
 
@@ -138,6 +141,7 @@ Két modell adatlapja, Arena pontszáma CI-vel, győzelmi aránya, egymás ellen
 | `#/leaderboard`, `#/leaderboard/quality-price`, `#/leaderboard/matrix` | Leaderboard fülek |
 | `#/elo-history` | ELO fejlődés |
 | `#/compare?a=model-001&b=model-002` | Két modell összehasonlítása |
+| `#/help`, `#/help/<fejezet>` (pl. `#/help/ci`, `#/help/pontszam`) | Súgó, adott fejezetre ugorva |
 
 ## 🖼️ Képek és Cloudflare R2
 
@@ -303,7 +307,7 @@ SQLite, WAL módban. A séma verzióját a `PRAGMA user_version` jelzi; a migrá
 | Végpont | Metódus | Leírás |
 | --- | --- | --- |
 | `/api/battle_data` | GET | Új vak battle: `battle_id`, prompt, két kép URL, `vote_delay_ms` (modellnév nélkül). |
-| `/api/vote` | POST | Szavazat: `{battle_id, choice: a / b / tie / both_bad}` – bejelentkezés + CSRF token szükséges; a válasz felfedi a modelleket és az ELO-változást. |
+| `/api/vote` | POST | Szavazat: `{battle_id, choice: a / b / tie / both_bad}` – bejelentkezés + CSRF token szükséges; a válasz felfedi a modelleket, a Leaderboard-pontszám változását (`score_before`, `score_after`, `score_delta`) és az online ELO változását (`elo_*`). |
 | `/api/battle/skip` | POST | Battle kihagyása (CSRF): lezárja a párt és felfedi a modelleket. |
 | `/api/side_by_side_data` | GET | `model1`, `model2`, [`model3`] + `prompt_id` / `after` / `previous_prompt_id`. |
 | `/api/get_image` | GET | Egy modell képének URL-je egy prompthoz. |

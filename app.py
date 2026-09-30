@@ -17,7 +17,7 @@ from flask import Flask, render_template, jsonify, request, send_from_directory,
 from werkzeug.middleware.proxy_fix import ProxyFix
 from database import (close_db, get_db, init_db, get_prompt_ids, update_elo, immediate_transaction, utc_now_iso,
                       utc_now_naive, utc_iso_from_datetime, to_iso_utc, OUTCOME_WIN, OUTCOME_TIE, OUTCOME_BOTH_BAD)
-from config import (DATA_DIR, ALLOWED_EXTENSIONS, DEFAULT_ELO, MODELS, DEFAULT_VIDEO_URL, REVEAL_DELAY_MS,
+from config import (DATA_DIR, ALLOWED_EXTENSIONS, DEFAULT_ELO, K_FACTOR, MODELS, DEFAULT_VIDEO_URL, REVEAL_DELAY_MS,
                     FROZEN_BOTTOM_COUNT, NEW_MODEL_BOOST_THRESHOLD, NEW_MODEL_BOOST_WEIGHT, TARGETED_PAIRING_STRENGTH,
                     BATTLE_TTL_SECONDS, MAX_OPEN_BATTLES, MIN_VOTE_DELAY_MS, DAILY_VOTE_LIMIT,
                     BATTLE_RATE_LIMIT_PER_MINUTE, BT_BOOTSTRAP_ROUNDS, BT_PRIOR_GAMES, PRELIMINARY_MATCH_THRESHOLD,
@@ -393,7 +393,30 @@ def index():
 
     return render_template('index.html', models=models_for_template, reveal_delay_ms=REVEAL_DELAY_MS,
                            user=user_info, auth_providers=auth_providers, csrf_token=get_csrf_token(),
-                           dev_mode=app.debug, login_error=request.args.get('login_error') == '1')
+                           dev_mode=app.debug, login_error=request.args.get('login_error') == '1',
+                           help_cfg=HELP_CONFIG, help_win_table=HELP_WIN_TABLE)
+
+
+# A Súgó oldal a tényleges beállításokat mutatja, így a szöveg nem avul el, ha a config változik
+HELP_CONFIG = {
+    'reveal_delay_ms': REVEAL_DELAY_MS,
+    'min_vote_delay_ms': MIN_VOTE_DELAY_MS,
+    'daily_vote_limit': DAILY_VOTE_LIMIT,
+    'max_open_battles': MAX_OPEN_BATTLES,
+    'battle_ttl_seconds': BATTLE_TTL_SECONDS,
+    'new_model_threshold': NEW_MODEL_BOOST_THRESHOLD,
+    'new_model_weight': NEW_MODEL_BOOST_WEIGHT,
+    'frozen_count': FROZEN_BOTTOM_COUNT,
+    'bootstrap_rounds': BT_BOOTSTRAP_ROUNDS,
+    'preliminary_threshold': PRELIMINARY_MATCH_THRESHOLD,
+    'personal_min_votes': PERSONAL_LEADERBOARD_MIN_VOTES,
+    'default_elo': DEFAULT_ELO,
+    'k_factor': K_FACTOR,
+    'cache_seconds': 30,
+}
+# Pontkülönbség → a magasabb pontszámú modell nyerési esélye (%)
+HELP_WIN_TABLE = [(diff, str(round(100 / (1 + 10 ** (-diff / 400)))))
+                  for diff in (0, 25, 50, 100, 150, 200, 300, 400)]
 
 
 # --- Auth Endpoints ---
@@ -774,10 +797,20 @@ def record_vote():
     if FROZEN_BOTTOM_COUNT and FROZEN_BOTTOM_COUNT > 0:
         update_frozen_models(db)
 
+    try:
+        score_changes = score_change_for_vote(db, model_a, model_b, score_a)
+    except Exception:
+        logger.exception("Could not compute score change for vote")
+        score_changes = {}
+
     def reveal(model_id):
         old, new = elo_changes[model_id]
-        return {**model_public(model_id), "elo_before": round(old, 1), "elo_after": round(new, 1),
+        data = {**model_public(model_id), "elo_before": round(old, 1), "elo_after": round(new, 1),
                 "elo_delta": round(new - old, 1)}
+        if model_id in score_changes:
+            before, after = score_changes[model_id]
+            data.update(score_before=round(before, 1), score_after=round(after, 1), score_delta=round(after - before, 1))
+        return data
 
     return jsonify({
         "success": True,
@@ -935,8 +968,16 @@ def build_leaderboard_row(model_id, stats, elo, frozen=False):
 MODEL_IDS = list(MODELS.keys())
 MODEL_INDEX = {model_id: index for index, model_id in enumerate(MODEL_IDS)}
 RANKING_CACHE_SECONDS = 30
-_ranking_cache = {'key': None, 'computed_at': 0.0, 'data': None}
+_point_cache = {'key': None, 'data': None}
+_bootstrap_cache = {'key': None, 'computed_at': 0.0, 'data': None}
 _ranking_lock = threading.Lock()
+
+
+def reset_ranking_cache():
+    """A rangsor-gyorsítótárak ürítése (pl. tesztekben vagy adatbázis-csere után)."""
+    with _ranking_lock:
+        _point_cache.update(key=None, data=None)
+        _bootstrap_cache.update(key=None, computed_at=0.0, data=None)
 
 
 def load_vote_pairs(db, user_id=None):
@@ -955,19 +996,65 @@ def load_vote_pairs(db, user_id=None):
     return pairs
 
 
+def _votes_key(db):
+    return tuple(db.execute('SELECT COUNT(*), COALESCE(MAX(id), 0) FROM votes').fetchone())
+
+
+def get_point_ranking(db):
+    """A Bradley-Terry pontszámok (CI nélkül) – mindig a legfrissebb szavazatokból.
+    Gyors (~15 ms), ezért minden új szavazat után újraszámoljuk."""
+    key = _votes_key(db)
+    with _ranking_lock:
+        if _point_cache['key'] == key and _point_cache['data'] is not None:
+            return _point_cache['data']
+    pairs = load_vote_pairs(db)
+    wins = ranking.build_win_matrix(pairs, len(MODEL_IDS))
+    rating = ranking.to_rating(ranking.fit_bradley_terry(wins, BT_PRIOR_GAMES))
+    data = {'key': key, 'pairs': pairs, 'wins': wins, 'rating': rating}
+    with _ranking_lock:
+        _point_cache.update(key=key, data=data)
+    return data
+
+
 def get_global_ranking(db):
-    """A globális BT rangsor. Új szavazat után legfeljebb RANKING_CACHE_SECONDS-ig a régi eredményt adja,
-    így gyakori szavazásnál sem számolunk minden kérésre újra."""
-    key = tuple(db.execute('SELECT COUNT(*), COALESCE(MAX(id), 0) FROM votes').fetchone())
+    """A globális BT rangsor: friss pontszám + bootstrap konfidenciaintervallum.
+
+    A pontszám mindig friss. A bootstrap CI (~0,3 s) új szavazat után legfeljebb
+    RANKING_CACHE_SECONDS-ig a korábbi számításból jön; ha közben a pontszám kicsit elmozdult,
+    az intervallumot kiterjesztjük, hogy mindig tartalmazza a pontszámot.
+    """
+    point = get_point_ranking(db)
     now = time.monotonic()
     with _ranking_lock:
-        cached = _ranking_cache['data']
-        if cached is not None and (_ranking_cache['key'] == key or now - _ranking_cache['computed_at'] < RANKING_CACHE_SECONDS):
-            return cached
-        result = ranking.compute_ratings(load_vote_pairs(db), len(MODEL_IDS), BT_PRIOR_GAMES, BT_BOOTSTRAP_ROUNDS)
-        data = {**result, 'computed_at': utc_now_iso(), 'vote_count': key[0]}
-        _ranking_cache.update(key=key, computed_at=now, data=data)
-        return data
+        cached = _bootstrap_cache['data']
+        fresh = cached is not None and (_bootstrap_cache['key'] == point['key']
+                                        or now - _bootstrap_cache['computed_at'] < RANKING_CACHE_SECONDS)
+    if not fresh:
+        result = ranking.compute_ratings(point['pairs'], len(MODEL_IDS), BT_PRIOR_GAMES, BT_BOOTSTRAP_ROUNDS)
+        cached = {'ci_lower': result['ci_lower'], 'ci_upper': result['ci_upper'], 'computed_at': utc_now_iso()}
+        with _ranking_lock:
+            _bootstrap_cache.update(key=point['key'], computed_at=now, data=cached)
+    rating = point['rating']
+    return {
+        'rating': rating,
+        'wins': point['wins'],
+        'ci_lower': np.minimum(cached['ci_lower'], rating),
+        'ci_upper': np.maximum(cached['ci_upper'], rating),
+        'computed_at': cached['computed_at'],
+        'vote_count': point['key'][0],
+    }
+
+
+def score_change_for_vote(db, model_a, model_b, score_a):
+    """A két modell Leaderboard-pontszáma a szavazat előtt és után (a szavazat már az adatbázisban van)."""
+    point = get_point_ranking(db)
+    i, j = MODEL_INDEX[model_a], MODEL_INDEX[model_b]
+    wins_before = point['wins'].copy()
+    wins_before[i, j] -= score_a
+    wins_before[j, i] -= 1.0 - score_a
+    before = ranking.to_rating(ranking.fit_bradley_terry(wins_before, BT_PRIOR_GAMES))
+    after = point['rating']
+    return {model_id: (float(before[index]), float(after[index])) for model_id, index in ((model_a, i), (model_b, j))}
 
 
 def apply_ranking(rows, rating, ci_lower=None, ci_upper=None):

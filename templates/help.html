@@ -1,0 +1,384 @@
+        <!-- Súgó -->
+        <div id="help-mode" class="arena-mode" style="display: none;">
+            <div class="leaderboard-heading text-center">
+                <span class="leaderboard-eyebrow">SÚGÓ</span>
+                <h2>Hogyan működik az Aréna?</h2>
+                <p>Minden, amit a szavazásról, a pontszámokról és a rangsorról tudni érdemes – képletek nélkül is érthetően.</p>
+            </div>
+
+            <div class="help-layout">
+                <nav class="help-toc" aria-label="A súgó tartalomjegyzéke">
+                    <strong class="help-toc-title">Tartalom</strong>
+                    <ol>
+                        <li><a href="#/help/gyorsan" data-help-link="gyorsan">Röviden</a></li>
+                        <li><a href="#/help/szavazas" data-help-link="szavazas">Szavazás az Arena Battle-ben</a></li>
+                        <li><a href="#/help/dontetlen" data-help-link="dontetlen">Döntetlen és „Mindkettő rossz”</a></li>
+                        <li><a href="#/help/pontszam" data-help-link="pontszam">A pontszám (Bradley-Terry)</a></li>
+                        <li><a href="#/help/szavazat-utan" data-help-link="szavazat-utan">Mi történik a szavazatod után?</a></li>
+                        <li><a href="#/help/elo" data-help-link="elo">Online ELO – miben más?</a></li>
+                        <li><a href="#/help/ci" data-help-link="ci">95%-os konfidenciaintervallum</a></li>
+                        <li><a href="#/help/eloszlas" data-help-link="eloszlas">Honnan jön az intervallum?</a></li>
+                        <li><a href="#/help/helyezes" data-help-link="helyezes">Helyezés és helyezéssáv</a></li>
+                        <li><a href="#/help/elozetes" data-help-link="elozetes">„Előzetes” jelvény</a></li>
+                        <li><a href="#/help/oszlopok" data-help-link="oszlopok">A táblázat oszlopai</a></li>
+                        <li><a href="#/help/parositas" data-help-link="parositas">Miért éppen ezt a párt látom?</a></li>
+                        <li><a href="#/help/matrix" data-help-link="matrix">Párharc-mátrix</a></li>
+                        <li><a href="#/help/ar" data-help-link="ar">Minőség vs. ár</a></li>
+                        <li><a href="#/help/sajat" data-help-link="sajat">Saját toplista</a></li>
+                        <li><a href="#/help/oldal" data-help-link="oldal">Oldaltorzítás</a></li>
+                        <li><a href="#/help/statisztika" data-help-link="statisztika">Élő statisztika</a></li>
+                        <li><a href="#/help/nezetek" data-help-link="nezetek">A többi nézet és funkció</a></li>
+                        <li><a href="#/help/tisztesseg" data-help-link="tisztesseg">Tisztességes szavazás</a></li>
+                        <li><a href="#/help/adatok" data-help-link="adatok">Milyen adatokat tárolunk?</a></li>
+                        <li><a href="#/help/gyik" data-help-link="gyik">Gyakori kérdések</a></li>
+                        <li><a href="#/help/szoszedet" data-help-link="szoszedet">Szószedet</a></li>
+                    </ol>
+                </nav>
+
+                <div class="help-content">
+
+                    <section id="help-gyorsan" class="help-section">
+                        <h3>Röviden</h3>
+                        <p>Az Aréna AI képgenerátorokat hasonlít össze úgy, ahogy egy ember tenné: <strong>ugyanarra a szöveges utasításra (promptra)</strong> készült két képet mutat, és te döntöd el, melyik tetszik jobban. Sok ilyen döntésből áll össze a rangsor.</p>
+                        <div class="help-steps">
+                            <div class="help-step"><span class="help-step-num">1</span><div><strong>Nézd meg a két képet.</strong> Nem tudod, melyik modell készítette őket – így a márka nem befolyásol.</div></div>
+                            <div class="help-step"><span class="help-step-num">2</span><div><strong>Szavazz.</strong> A jobb, B jobb, döntetlen vagy mindkettő rossz. Utána kiderül, melyik modell melyik volt.</div></div>
+                            <div class="help-step"><span class="help-step-num">3</span><div><strong>A rangsor frissül.</strong> Minden szavazat egy kicsit pontosítja, melyik modell mennyire jó.</div></div>
+                        </div>
+                        <div class="help-callout">
+                            <strong>A legfontosabb három szám a Leaderboardon:</strong>
+                            <ul class="mb-0">
+                                <li><strong>Pontszám</strong> – mennyire jó a modell a többiekhez képest (1500 ≈ átlagos, minél több, annál jobb).</li>
+                                <li><strong>95% CI</strong> – mennyire biztos ez a pontszám (minél szűkebb, annál biztosabb).</li>
+                                <li><strong>Szavazatok</strong> – hány összecsapásból számoltuk (minél több, annál megbízhatóbb).</li>
+                            </ul>
+                        </div>
+                    </section>
+
+                    <section id="help-szavazas" class="help-section">
+                        <h3>Szavazás az Arena Battle-ben</h3>
+                        <p>Szavazni bejelentkezve lehet (Google vagy GitHub fiókkal). Bejelentkezés nélkül is nézelődhetsz és kihagyhatsz párokat.</p>
+                        <div class="table-responsive">
+                            <table class="table help-table align-middle">
+                                <thead><tr><th scope="col">Gomb</th><th scope="col">Billentyű</th><th scope="col">Mikor válaszd?</th><th scope="col">Hogyan számít?</th></tr></thead>
+                                <tbody>
+                                    <tr><td><strong>A a jobb</strong></td><td><kbd>1</kbd> vagy <kbd>←</kbd></td><td>A bal oldali kép tetszik jobban.</td><td>Az A modell győzelme.</td></tr>
+                                    <tr><td><strong>B a jobb</strong></td><td><kbd>2</kbd> vagy <kbd>→</kbd></td><td>A jobb oldali kép tetszik jobban.</td><td>A B modell győzelme.</td></tr>
+                                    <tr><td><strong>Döntetlen</strong></td><td><kbd>0</kbd> vagy <kbd>T</kbd></td><td>Mindkettő jó, nem tudsz dönteni.</td><td>Fél győzelem mindkettőnek (lásd lent).</td></tr>
+                                    <tr><td><strong>Mindkettő rossz</strong></td><td><kbd>X</kbd></td><td>Egyik kép sem sikerült.</td><td>Fél győzelem mindkettőnek, és külön is rögzítjük.</td></tr>
+                                    <tr><td><strong>Kihagyás</strong></td><td><kbd>S</kbd></td><td>Nem akarsz szavazni erre a párra.</td><td>Nem számít; a pár lezárul, a modellek kiderülnek.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <ul>
+                            <li><strong>Vak szavazás:</strong> a modellek neve csak a szavazatod után jelenik meg – a képek címéből sem olvasható ki.</li>
+                            <li><strong>Véletlen oldal:</strong> hogy melyik modell kerül balra és melyik jobbra, minden párnál véletlenszerű.</li>
+                            <li><strong>Nézd meg a képeket:</strong> egy pár megjelenése után kb. {{ '%.1f' | format(help_cfg.min_vote_delay_ms / 1000) | replace('.', ',') }} másodpercig nem lehet szavazni, hogy ne kattintásverseny legyen.</li>
+                            <li><strong>Napi limit:</strong> egy fiókkal naponta legfeljebb {{ help_cfg.daily_vote_limit }} szavazat adható le.</li>
+                            <li><strong>Nagyítás:</strong> bármelyik képre kattintva teljes képernyőn, nagyítva is megnézheted (lásd <a href="#/help/nezetek">A többi nézet és funkció</a>).</li>
+                            <li>A szavazás után {{ '%.1f' | format(help_cfg.reveal_delay_ms / 1000) | replace('.', ',') }} másodpercig látszik az eredmény, közben már töltődik a következő pár.</li>
+                        </ul>
+                    </section>
+
+                    <section id="help-dontetlen" class="help-section">
+                        <h3>Döntetlen és „Mindkettő rossz”</h3>
+                        <p>Mindkét gomb <strong>döntetlennek</strong> számít: a két modell egy-egy fél győzelmet kap. Pontosan így számol az LMArena és a GenAI-Arena is. A „Mindkettő rossz” szavazatokat ezen felül külön is számoljuk (lásd <a href="#/help/statisztika">Élő statisztika</a>).</p>
+                        <div class="help-callout help-callout-warning">
+                            <strong>Miért kap pontot az egyik modell egy döntetlennél?</strong>
+                            <p class="mb-0">Mert a rangsor <strong>relatív</strong>: azt méri, melyik modell jobb a másiknál, nem azt, hogy egy kép önmagában jó-e. A döntetlen azt üzeni: „a kettő egyforma”. Ha az egyik modellnek eddig sokkal kisebb volt a pontszáma, a döntetlen azt mutatja, hogy <em>alulbecsültük</em> – ezért ő kicsit felfelé, a másik kicsit lefelé mozdul. Ha a két modell pontszáma azonos, egyikük sem mozdul.</p>
+                        </div>
+                        <p><strong>Példa:</strong> egy 1800-as és egy 1500-as pontszámú modell döntetlent játszik. A rendszer azt várta, hogy az 1800-as az esetek kb. 85%-ában nyer. A döntetlen jobb eredmény annál, amit az 1500-astól vártunk, ezért ő nyer néhány pontot, az 1800-as pedig ugyanannyit veszít.</p>
+                        <p class="text-body-secondary">A sakk ELO-rendszere ugyanígy működik: aki erősebb ellenféllel játszik döntetlent, pontot szerez.</p>
+                    </section>
+
+                    <section id="help-pontszam" class="help-section">
+                        <h3>A pontszám (Bradley-Terry)</h3>
+                        <p>A Leaderboard <strong>Pontszám</strong> oszlopa minden modellhez egy számot rendel úgy, hogy a pontszámok a lehető legjobban megmagyarázzák az <strong>összes eddigi szavazatot</strong>. Ezt a módszert Bradley-Terry modellnek hívják; ezt használja az LMArena és az Artificial Analysis is.</p>
+                        <div class="help-callout">
+                            <strong>Hogyan olvasd?</strong> Csak a <em>különbség</em> számít. Minél nagyobb a különbség két modell pontszáma között, annál valószínűbb, hogy a magasabb pontszámú nyer egy összecsapásban:
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table help-table help-table-compact">
+                                <thead><tr><th scope="col">Pontkülönbség</th>{% for diff, pct in help_win_table %}<th scope="col">{{ diff }}</th>{% endfor %}</tr></thead>
+                                <tbody><tr><th scope="row">A jobbik nyerési esélye</th>{% for diff, pct in help_win_table %}<td>{{ pct }}%</td>{% endfor %}</tr></tbody>
+                            </table>
+                        </div>
+                        <ul>
+                            <li><strong>{{ help_cfg.default_elo }} ≈ átlagos modell.</strong> A skála ugyanolyan, mint a sakkban megszokott ELO: 400 pont különbség kb. 10:1 esélyt jelent.</li>
+                            <li><strong>A sorrend nem számít.</strong> Mindegy, hogy egy szavazat tegnap vagy ma érkezett: a pontszám minden szavazatot egyformán vesz figyelembe (ellentétben az <a href="#/help/elo">online ELO-val</a>).</li>
+                            <li><strong>Óvatosság a kevés adatnál:</strong> minden modell kap egy képzeletbeli döntetlent egy {{ help_cfg.default_elo }}-as ellenféllel. Ez a néhány szavazatos modelleket az átlag felé húzza, hogy 2-3 szerencsés győzelemtől ne ugorjanak az élre.</li>
+                            <li>A pontszám <strong>relatív</strong>: ha új, erős modellek jönnek, a régiek pontszáma kicsit csökkenhet anélkül, hogy rosszabbak lettek volna.</li>
+                        </ul>
+                    </section>
+
+                    <section id="help-szavazat-utan" class="help-section">
+                        <h3>Mi történik a szavazatod után?</h3>
+                        <p>A szavazás után a két modell neve mellett ilyen jelvény jelenik meg:</p>
+                        <p class="help-demo">
+                            <span class="battle-side-badge" aria-hidden="true">A</span>
+                            <strong>Példa modell</strong>
+                            <span class="elo-delta text-bg-success">1913 → 1915</span>
+                        </p>
+                        <p>Ez a modell <strong>Leaderboard-pontszámának</strong> változása: a szavazatod előtt 1913 volt, utána 1915 – pontosan az a szám, ami a rangsorban is látszik.</p>
+                        <ul>
+                            <li><strong>Kevés szavazatos modellnél nagyobb az elmozdulás</strong> (akár 5–15 pont), sok szavazatosnál kicsi (1–3 pont) – egy újabb vélemény annál kevesebbet számít, minél több van már.</li>
+                            <li><strong>A többi modell is mozdulhat egy kicsit</strong> (általában fél pontnál kevesebbet), mert a pontszámok egymáshoz viszonyítva, együtt számolódnak.</li>
+                            <li>A pontszám azonnal frissül; a <a href="#/help/ci">konfidenciaintervallum</a> számítása lassabb, ezért az legfeljebb {{ help_cfg.cache_seconds }} másodperc késéssel követi.</li>
+                            <li>Szürke a jelvény, ha a változás elhanyagolható (pl. döntetlen két közel azonos modell között).</li>
+                        </ul>
+                    </section>
+
+                    <section id="help-elo" class="help-section">
+                        <h3>Online ELO – miben más?</h3>
+                        <p>Az <strong>online ELO</strong> a klasszikus módszer: minden szavazat után azonnal odaad néhány pontot a győztesnek a vesztestől (legfeljebb {{ help_cfg.k_factor }} pontot, attól függően, mennyire volt váratlan az eredmény).</p>
+                        <div class="help-compare">
+                            <div class="help-compare-col">
+                                <h4>Pontszám (Bradley-Terry)</h4>
+                                <ul>
+                                    <li>Az összes szavazatot egyszerre elemzi.</li>
+                                    <li>Nem függ a szavazatok sorrendjétől.</li>
+                                    <li>Van hozzá megbízhatósági intervallum.</li>
+                                    <li><strong>Ez alapján készül a rangsor.</strong></li>
+                                </ul>
+                            </div>
+                            <div class="help-compare-col">
+                                <h4>Online ELO</h4>
+                                <ul>
+                                    <li>Szavazatról szavazatra frissül.</li>
+                                    <li>Függ a sorrendtől: ugyanazokból a szavazatokból más sorrendben akár 40–50 ponttal eltérő eredmény jön ki.</li>
+                                    <li>Jól mutatja az időbeli alakulást.</li>
+                                    <li>Hol látod: <a href="#/elo-history">ELO fejlődés</a> grafikon, a Leaderboard „Online ELO” opcionális oszlopa, az Összehasonlítás oldal.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <p class="text-body-secondary">A két szám hasonló skálán mozog (1500 körül indul), de nem ugyanaz – ezért térhet el kicsit a sorrendjük.</p>
+                    </section>
+
+                    <section id="help-ci" class="help-section">
+                        <h3>95%-os konfidenciaintervallum (95% CI)</h3>
+                        <p>Egy pontszám soha nem teljesen biztos: ha más emberek szavaztak volna, vagy más párok jöttek volna ki, kicsit más szám jönne ki. A <strong>konfidenciaintervallum</strong> (angolul <em>confidence interval</em>, röviden CI) azt a sávot mutatja, amelyben a modell <strong>valódi</strong> pontszáma nagy valószínűséggel van.</p>
+                        <div class="help-ci-demo" aria-hidden="true">
+                            <div class="help-ci-row">
+                                <span class="help-ci-label">Sok szavazat (400)</span>
+                                <span class="ci-bar help-ci-bar"><span class="ci-band" style="left: 42%; width: 16%;"></span><span class="ci-point" style="left: 50%;"></span></span>
+                                <span class="help-ci-text">1900 &nbsp;+55 / −52</span>
+                            </div>
+                            <div class="help-ci-row">
+                                <span class="help-ci-label">Kevés szavazat (40)</span>
+                                <span class="ci-bar help-ci-bar"><span class="ci-band" style="left: 26%; width: 50%;"></span><span class="ci-point" style="left: 50%;"></span></span>
+                                <span class="help-ci-text">1900 &nbsp;+170 / −160</span>
+                            </div>
+                        </div>
+                        <ul>
+                            <li><strong>Hogyan olvasd a „+55 / −52”-t?</strong> A pontszám 1900, és 95% eséllyel valahol 1848 és 1955 között van a valódi érték.</li>
+                            <li><strong>A táblázat kis sávja</strong> ugyanezt mutatja: a halvány rész az intervallum, a sötét vonás a pontszám. Minél rövidebb a sáv, annál biztosabb az érték.</li>
+                            <li><strong>Miért nem szimmetrikus?</strong> Mert a becslés bizonytalansága nem mindig egyforma felfelé és lefelé – például egy szinte mindig nyerő modellnél felfelé nagyobb a bizonytalanság.</li>
+                            <li><strong>Két modell összehasonlítása:</strong> ha a két sáv nem ér össze, szinte biztos, hogy a magasabb pontszámú a jobb. Ha átfednek, a sorrendjük még nem dőlt el.</li>
+                        </ul>
+                        <p><strong>Mitől szűkül?</strong> A szavazatok számától: négyszer annyi szavazat nagyjából fele olyan széles intervallumot ad. A mostani adatok alapján nagyjából:</p>
+                        <div class="table-responsive">
+                            <table class="table help-table help-table-compact">
+                                <thead><tr><th scope="col">Meccsek száma</th><td>~15</td><td>~70</td><td>~150</td><td>~400</td></tr></thead>
+                                <tbody><tr><th scope="row">Tipikus intervallum</th><td>±250</td><td>±140</td><td>±80</td><td>±55</td></tr></tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <section id="help-eloszlas" class="help-section">
+                        <h3>Honnan jön az intervallum? – a bootstrap eloszlás</h3>
+                        <p>Az intervallumot egy egyszerű, de nagyon hasznos trükkel számoljuk, amit <strong>bootstrapnek</strong> hívnak:</p>
+                        <ol>
+                            <li>Vesszük az összes szavazatot, és <strong>véletlenszerűen újrahúzunk</strong> belőlük ugyanannyit (visszatevéssel – így egyes szavazatok kétszer, mások egyszer sem kerülnek bele). Ez olyan, mintha kicsit más emberek szavaztak volna.</li>
+                            <li>Ebből az „alternatív” szavazathalmazból újraszámoljuk az összes pontszámot.</li>
+                            <li>Ezt <strong>{{ help_cfg.bootstrap_rounds }}-szor</strong> megismételjük. Így minden modellnek {{ help_cfg.bootstrap_rounds }} lehetséges pontszáma lesz – ez az <strong>eloszlás</strong>.</li>
+                            <li>A 95%-os intervallum ennek a {{ help_cfg.bootstrap_rounds }} értéknek a <strong>középső 95%-a</strong>: a legalsó 2,5%-ot és a legfelső 2,5%-ot levágjuk.</li>
+                        </ol>
+                        <figure class="help-figure">
+                            <svg class="help-histogram" viewBox="0 0 420 170" role="img" aria-labelledby="help-histogram-title">
+                                <title id="help-histogram-title">Egy modell {{ help_cfg.bootstrap_rounds }} bootstrap pontszámának eloszlása, kiemelve a középső 95%-ot</title>
+                                {% set heights = [2, 4, 7, 12, 19, 28, 38, 48, 55, 58, 55, 48, 38, 28, 19, 12, 7, 4, 2] %}
+                                {% for h in heights %}
+                                <rect class="{{ 'hist-bar-tail' if loop.index0 < 2 or loop.index0 > 16 else 'hist-bar' }}" x="{{ 20 + loop.index0 * 20 }}" y="{{ 130 - h * 1.7 }}" width="17" height="{{ h * 1.7 }}" rx="2"></rect>
+                                {% endfor %}
+                                <line class="hist-line" x1="60" y1="4" x2="60" y2="134"></line>
+                                <line class="hist-line" x1="357" y1="4" x2="357" y2="134"></line>
+                                <line class="hist-axis" x1="15" y1="131" x2="405" y2="131"></line>
+                                <text class="hist-text" x="60" y="150" text-anchor="middle">alsó határ</text>
+                                <text class="hist-text" x="357" y="150" text-anchor="middle">felső határ</text>
+                                <text class="hist-text" x="208" y="150" text-anchor="middle">pontszám →</text>
+                                <text class="hist-text hist-text-strong" x="208" y="16" text-anchor="middle">középső 95%</text>
+                                <text class="hist-text" x="30" y="166" text-anchor="middle">2,5%</text>
+                                <text class="hist-text" x="387" y="166" text-anchor="middle">2,5%</text>
+                            </svg>
+                            <figcaption>Szemléltető ábra: minden oszlop azt mutatja, hány bootstrap körben jött ki az adott pontszám. A két függőleges vonal közötti rész a 95%-os intervallum.</figcaption>
+                        </figure>
+                        <p class="text-body-secondary">Ha egy modellnek kevés szavazata van, az újrahúzások sokat változtatnak rajta, ezért az eloszlás széles – és így az intervallum is.</p>
+                    </section>
+
+                    <section id="help-helyezes" class="help-section">
+                        <h3>Helyezés (#) és helyezéssáv</h3>
+                        <p>A <strong>#</strong> oszlop egyszerűen a modell sorszáma a pontszám szerinti listában: 1., 2., 3. …</p>
+                        <p>Ha a helyezés <span class="rank-cell has-spread">pontozottan aláhúzott</span>, akkor a bizonytalanság miatt a modell valódi helye más is lehet. Vidd fölé az egeret (vagy nézd meg a 95% CI oszlop tooltipjét): ott látszik a <strong>helyezéssáv</strong>, például „1. és 17. között”.</p>
+                        <ul>
+                            <li><strong>Legjobb lehetséges helyezés</strong> = 1 + azon modellek száma, amelyek <em>biztosan</em> jobbak (az intervallumuk teljesen felette van).</li>
+                            <li><strong>Legrosszabb lehetséges helyezés</strong> = azon modellek száma (vele együtt), amelyek intervalluma átfed vele vagy felette van.</li>
+                        </ul>
+                        <div class="help-callout">
+                            <strong>Miért lehet nagyon széles (pl. 1–17)?</strong> Két ok szokott állni mögötte: a modellnek még kevés meccse van (széles az intervalluma), és/vagy sok modell pontszáma van nagyon közel egymáshoz. Ahogy nő a szavazatok száma, a sáv szűkül – ebben a <a href="#/help/parositas">célzott párosítás</a> is segít.
+                        </div>
+                    </section>
+
+                    <section id="help-elozetes" class="help-section">
+                        <h3>„Előzetes” jelvény</h3>
+                        <p>A <span class="badge text-bg-warning">Előzetes</span> jelvényt azok a modellek kapják, amelyeknek még kevesebb mint <strong>{{ help_cfg.preliminary_threshold }} meccse</strong> van. A pontszámuk ilyenkor még erősen változhat – gyakran új modellekről van szó.</p>
+                        <p>A Leaderboard „Előzetesek elrejtése” kapcsolójával ezek kiszűrhetők. Azok a modellek, amelyeknek még egyáltalán nincs meccse, helyezés nélkül a lista végén szerepelnek.</p>
+                    </section>
+
+                    <section id="help-oszlopok" class="help-section">
+                        <h3>A táblázat oszlopai</h3>
+                        <dl class="help-dl">
+                            <dt>#</dt><dd>Helyezés a pontszám szerint (lásd fent).</dd>
+                            <dt>Modell</dt><dd>Szolgáltató és modellnév, jelvényekkel: <em>Előzetes</em>, <em>Befagyasztva</em> (ha a modell épp nem vesz részt a Battle-ben).</dd>
+                            <dt>Pontszám</dt><dd>A Bradley-Terry pontszám – ez alapján rendezzük a listát.</dd>
+                            <dt>95% CI</dt><dd>A pontszám bizonytalansága: „+felfelé / −lefelé” és egy kis sáv.</dd>
+                            <dt>Szavazatok</dt><dd>Hány összecsapásban vett részt a modell (döntetlenekkel együtt).</dd>
+                            <dt>Győzelmi arány</dt><dd>Győzelmek aránya; a döntetlen fél győzelemnek számít. Vigyázat: erős ellenfelek ellen nehezebb magas arányt elérni, ezért a pontszám a megbízhatóbb mérce.</dd>
+                            <dt>Típus</dt><dd>Open Source (letölthető súlyok) vagy zárt forrású.</dd>
+                            <dt>Gy / D / V <small>(opcionális)</small></dt><dd>Győzelmek / döntetlenek (a „mindkettő rossz” is) / vereségek száma.</dd>
+                            <dt>Online ELO <small>(opcionális)</small></dt><dd>A szavazatonként frissülő klasszikus ELO (lásd <a href="#/help/elo">Online ELO</a>).</dd>
+                            <dt>Megjelenés, Max felbontás, Árazás, Videó <small>(opcionális)</small></dt><dd>A modell adatlapjából; a Videó a modellről készült YouTube-videóra vagy a csatornára mutat.</dd>
+                        </dl>
+                        <p>Minden oszlopfejlécre kattintva rendezhetsz (újra kattintva megfordul az irány), a kereső és a szolgáltató-szűrő pedig azonnal szűkíti a listát. Az opcionális oszlopok választását a böngésző megjegyzi.</p>
+                    </section>
+
+                    <section id="help-parositas" class="help-section">
+                        <h3>Miért éppen ezt a párt látom?</h3>
+                        <p>A párok nem teljesen véletlenszerűek: úgy választjuk őket, hogy a szavazatod a lehető legtöbbet segítsen a rangsornak.</p>
+                        <ul>
+                            <li><strong>Ritka párok előnyben:</strong> amelyik két modell még ritkán került egymás ellen, gyakrabban jön elő.</li>
+                            <li><strong>Új modellek:</strong> amíg egy modellnek {{ help_cfg.new_model_threshold }} meccsnél kevesebb van, a párjai {{ help_cfg.new_model_weight }}-szoros eséllyel kerülnek elő – így gyorsan kap elég szavazatot.</li>
+                            <li><strong>Célzott párosítás:</strong> gyakrabban jönnek az olyan párok, amelyek eredménye bizonytalan (közeli pontszám) és amelyek helyezése még nem dőlt el (széles intervallum). Ezekből tanul a rangsor a legtöbbet.</li>
+                            <li><strong>Közös prompt:</strong> csak olyan pár és prompt kerül elő, amelyhez mindkét modellnek van képe.</li>
+                            <li>Minden más pár is előfordulhat, csak ritkábban – így a választék változatos marad.</li>
+                            {% if help_cfg.frozen_count %}<li><strong>Befagyasztott modellek:</strong> a lista alján lévő {{ help_cfg.frozen_count }} modell átmenetileg kimarad a Battle-ből.</li>{% endif %}
+                        </ul>
+                    </section>
+
+                    <section id="help-matrix" class="help-section">
+                        <h3>Párharc-mátrix</h3>
+                        <p>A Leaderboard „Párharcok” fülén a top modellek egymás elleni eredményei láthatók. <strong>Minden cella a sor modelljének eredménye az oszlop modellje ellen.</strong> Az oszlopok számai a sorok sorszámára utalnak.</p>
+                        <ul>
+                            <li><strong>Győzelmi arány:</strong> a tényleges eredmény (döntetlen = fél). <span class="help-swatch help-swatch-good"></span> zöld = a sor modellje többször nyert, <span class="help-swatch help-swatch-bad"></span> piros = többször kapott ki; „–” = még nem találkoztak.</li>
+                            <li><strong>Meccsszám:</strong> hányszor kerültek egymás ellen – minél sötétebb, annál többször.</li>
+                            <li><strong>Várt (BT):</strong> a pontszámokból számolt nyerési esély. Ha nagyon eltér a tényleges aránytól, az kevés meccsre vagy különleges párosításra utalhat.</li>
+                        </ul>
+                        <p class="text-body-secondary">A cellák fölé húzott egérrel minden részlet látszik.</p>
+                    </section>
+
+                    <section id="help-ar" class="help-section">
+                        <h3>Minőség vs. ár</h3>
+                        <p>Pontdiagram: függőlegesen a pontszám, vízszintesen a legolcsóbb ismert API-ár 1000 képre (USD). Csak a fix, képenkénti árral rendelkező modellek szerepelnek.</p>
+                        <ul>
+                            <li><strong>Logaritmikus ártengely:</strong> a $10 → $20 ugyanakkora távolság, mint a $100 → $200, így a drága modellek nem nyomják össze az olcsókat.</li>
+                            <li><strong>Pareto élvonal</strong> (sötétzöld pontok): azok a modellek, amelyeknél nincs olyan, ami egyszerre olcsóbb és legalább olyan jó.</li>
+                            <li><strong>Háttér:</strong> a bal felső (zöldes) negyed az „olcsó és jó” térfél, a jobb alsó (pirosas) a „drága és gyengébb”; a határ a megjelenített modellek árának és pontszámának mediánja.</li>
+                        </ul>
+                    </section>
+
+                    <section id="help-sajat" class="help-section">
+                        <h3>Saját toplista</h3>
+                        <p>A Leaderboard „Saját toplista” gombjával megnézheted, milyen rangsor jönne ki <strong>csak a te szavazataidból</strong> – vagyis mit mond a saját ízlésed. Legalább <strong>{{ help_cfg.personal_min_votes }} szavazat</strong> kell hozzá, mert kevesebből túl véletlenszerű lenne; addig egy folyamatjelző mutatja, mennyi van még hátra.</p>
+                    </section>
+
+                    <section id="help-oldal" class="help-section">
+                        <h3>Oldaltorzítás</h3>
+                        <p>Ismert jelenség, hogy az emberek néha kicsit gyakrabban választják a bal (vagy a jobb) oldali képet, függetlenül a minőségtől. Ezt két módon kezeljük:</p>
+                        <ul>
+                            <li>A modellek oldala minden párnál véletlenszerű, így egy esetleges torzítás egyformán érint mindenkit.</li>
+                            <li>Minden szavazatnál rögzítjük, melyik modell volt balra, és kiszámoljuk, a bal oldali kép milyen arányban nyert. Ha ez 50% körül van (és az intervalluma tartalmazza az 50%-ot), nincs kimutatható torzítás. Az aktuális értéket lásd lent.</li>
+                        </ul>
+                    </section>
+
+                    <section id="help-statisztika" class="help-section">
+                        <h3>Élő statisztika</h3>
+                        <div class="leaderboard-stats-grid" id="help-stats" aria-live="polite">
+                            <p class="text-body-secondary mb-0">Statisztika betöltése…</p>
+                        </div>
+                        <p class="text-body-secondary small mt-2 mb-0" id="help-stats-note"></p>
+                    </section>
+
+                    <section id="help-nezetek" class="help-section">
+                        <h3>A többi nézet és funkció</h3>
+                        <dl class="help-dl">
+                            <dt>Side-by-Side</dt><dd>2–3 általad választott modell képei egymás mellett ugyanarra a promptra. A „Betöltés / Új prompt” véletlen promptot hoz, a „Következő prompt” sorban lapoz. Itt nincs szavazás.</dd>
+                            <dt>ELO fejlődés</dt><dd>Az online ELO időbeli alakulása a top 1–30 modellnél, választható időszakra. A jelmagyarázatban egy modell nevére mutatva kiemelheted a vonalát.</dd>
+                            <dt>Összehasonlítás</dt><dd>Két modell adatlapja, pontszáma intervallummal, egymás elleni eredménye és promptonkénti győzelmi aránya. Egy promptra kattintva a két kép is megjelenik. A „⇄” gomb felcseréli a modelleket.</dd>
+                            <dt>Képnagyító</dt><dd>Bármelyik képre kattintva teljes képernyőn nyílik meg. Görgővel vagy két ujjal nagyíthatsz, húzással mozgathatod, dupla kattintással 2,5×-re ugrasz; <kbd>+</kbd> / <kbd>−</kbd> / <kbd>0</kbd> nagyít, kicsinyít, visszaállít; <kbd>←</kbd> / <kbd>→</kbd> vált a képek között; <kbd>Esc</kbd> bezár. A Battle-ben a felirat szavazás előtt nem árulja el a modellt.</dd>
+                            <dt>Megosztható linkek</dt><dd>Minden nézetnek saját címe van (pl. <code>#/leaderboard/matrix</code> vagy <code>#/compare?a=…&amp;b=…</code>), így egy adott nézet vagy összehasonlítás linkje elküldhető. A böngésző Vissza gombja is működik.</dd>
+                            <dt>Sötét mód</dt><dd>A navigációs sáv napocska/hold gombjával világos, sötét vagy a rendszer beállítását követő téma választható.</dd>
+                        </dl>
+                    </section>
+
+                    <section id="help-tisztesseg" class="help-section">
+                        <h3>Tisztességes szavazás</h3>
+                        <p>Hogy a rangsor valóban a közösség véleményét tükrözze, több védelem is működik:</p>
+                        <ul>
+                            <li>Minden pár egyedi azonosítót kap, és <strong>pontosan egyszer</strong> lehet rá szavazni; régi kérések visszajátszásával sem lehet több szavazatot leadni.</li>
+                            <li>Szavazás előtt a modellek <strong>neve nem kerül a böngészőbe</strong>, és a képek címe sem árulkodik (a kép tartalmából képzett kódot használunk).</li>
+                            <li>Minimális nézési idő, napi szavazatlimit ({{ help_cfg.daily_vote_limit }}), és korlát arra, hogy percenként hány új párt lehet kérni.</li>
+                            <li>Egyszerre legfeljebb {{ help_cfg.max_open_battles }} kiadott pár lehet nyitva, és egy pár {{ (help_cfg.battle_ttl_seconds / 60) | int }} perc után lejár.</li>
+                        </ul>
+                    </section>
+
+                    <section id="help-adatok" class="help-section">
+                        <h3>Milyen adatokat tárolunk?</h3>
+                        <ul>
+                            <li><strong>Bejelentkezéskor:</strong> a bejelentkezés módja (Google/GitHub), a fiók azonosítója, a neved és az e-mail címed, valamint az első és utolsó belépés ideje. Jelszót nem kezelünk.</li>
+                            <li><strong>Szavazatonként:</strong> a prompt, a két modell, melyik volt balra, az eredmény, az időpont és a fiókod azonosítója (ebből készül a saját toplistád).</li>
+                            <li><strong>Sütik és böngészőtár:</strong> egy munkamenet-süti a bejelentkezéshez és a biztonsághoz; a böngésződ megjegyzi a választott témát és a Leaderboard oszlopait. Hirdetési vagy követő sütit nem használunk.</li>
+                            <li>Az IP-címedet nem tároljuk az adatbázisban: a kéréskorláthoz csak átmenetileg, a memóriában használjuk. A tárhelyszolgáltató szervernaplói (mint minden weboldalnál) tartalmazhatják.</li>
+                        </ul>
+                    </section>
+
+                    <section id="help-gyik" class="help-section">
+                        <h3>Gyakori kérdések</h3>
+                        <details class="help-faq"><summary>A „Mindkettő rossz” gombra kattintottam, mégis az egyik modell pontot kapott. Miért?</summary>
+                            <p>Mert döntetlennek számít, és a döntetlen a két modell pontszámát közelebb hozza egymáshoz: a gyengébbnek tartott kap egy kicsit, az erősebb veszít egy kicsit. Részletek: <a href="#/help/dontetlen">Döntetlen és „Mindkettő rossz”</a>.</p></details>
+                        <details class="help-faq"><summary>Miért 1–17 egy modell helyezéssávja?</summary>
+                            <p>Mert még kevés meccse van, és/vagy sok modell pontszáma közel van egymáshoz, így a valódi helye még nem biztos. Lásd: <a href="#/help/helyezes">Helyezés és helyezéssáv</a>.</p></details>
+                        <details class="help-faq"><summary>A szavazásom után a modell 1913 → 1915 lett, de az ELO fejlődés grafikonon más szám van. Melyik az igazi?</summary>
+                            <p>A Battle-ben és a Leaderboardon a pontszám (Bradley-Terry) látszik, a grafikonon az online ELO. Mindkettő „igazi”, csak másképp számolnak; a rangsor a pontszám alapján készül. Lásd: <a href="#/help/elo">Online ELO – miben más?</a></p></details>
+                        <details class="help-faq"><summary>Miért kapott egy modell 15 pontot, egy másik csak 2-t ugyanazért a győzelemért?</summary>
+                            <p>A kevés szavazatos modellek pontszáma érzékenyebb: egy új vélemény náluk többet számít. Az is számít, mennyire volt meglepő az eredmény – egy gyenge modell győzelme egy erős ellen többet mozdít.</p></details>
+                        <details class="help-faq"><summary>Miért látom ugyanazt a modellt gyakran?</summary>
+                            <p>Valószínűleg új modell, vagy a helyezése még bizonytalan – az ilyenek a <a href="#/help/parositas">párosításban</a> előnyt kapnak, hogy gyorsan kiderüljön, hol a helyük.</p></details>
+                        <details class="help-faq"><summary>Miért csökkent egy modell pontszáma, pedig nem kapott ki?</summary>
+                            <p>A pontszámok egymáshoz viszonyítva, együtt számolódnak. Ha például azok a modellek, amelyeket korábban legyőzött, sokat kikapnak, akkor a győzelmei is kevesebbet érnek – és a pontszáma kicsit csökken.</p></details>
+                        <details class="help-faq"><summary>Miért nem egyezik a győzelmi arány sorrendje a pontszáméval?</summary>
+                            <p>Mert a győzelmi arány nem veszi figyelembe, kik ellen játszott a modell. 70% gyenge ellenfelek ellen kevesebbet ér, mint 60% a legjobbak ellen – a pontszám ezt figyelembe veszi.</p></details>
+                        <details class="help-faq"><summary>Miért kell bejelentkezni a szavazáshoz?</summary>
+                            <p>Hogy egy ember ne tudjon korlátlanul szavazni, és hogy a saját toplistádat ki tudjuk számolni. Nézelődni bejelentkezés nélkül is lehet.</p></details>
+                        <details class="help-faq"><summary>„Túl gyors szavazás” üzenetet kaptam. Mit tegyek?</summary>
+                            <p>Semmi gond: egy pár megjelenése után rövid ideig nem lehet szavazni. Várj egy pillanatot, a gombok maguktól újra aktívak lesznek.</p></details>
+                    </section>
+
+                    <section id="help-szoszedet" class="help-section">
+                        <h3>Szószedet</h3>
+                        <dl class="help-dl">
+                            <dt>Prompt</dt><dd>A szöveges utasítás, amelyből a modell a képet készítette. Egy összecsapásban mindkét kép ugyanarra a promptra készült.</dd>
+                            <dt>Battle (összecsapás)</dt><dd>Egy pár kép, amelyre szavazni lehet.</dd>
+                            <dt>Bradley-Terry modell</dt><dd>Statisztikai módszer, amely páros összehasonlításokból (A vagy B jobb) számol erősséget minden szereplőnek.</dd>
+                            <dt>ELO</dt><dd>A sakkból ismert pontrendszer; minden meccs után pontokat ad át a győztesnek.</dd>
+                            <dt>Konfidenciaintervallum (CI)</dt><dd>Az a sáv, amelyben egy becsült érték valódi értéke adott (itt 95%) valószínűséggel van.</dd>
+                            <dt>Bootstrap</dt><dd>Az adatok ismételt, véletlenszerű újrahúzása, amellyel megbecsülhető egy eredmény bizonytalansága.</dd>
+                            <dt>Eloszlás</dt><dd>Az, hogy egy érték milyen gyakran veszi fel a lehetséges értékeit – itt: a bootstrap körökben kapott pontszámok megoszlása.</dd>
+                            <dt>Helyezéssáv</dt><dd>A statisztikailag lehetséges legjobb és legrosszabb helyezés.</dd>
+                            <dt>Pareto élvonal</dt><dd>Azok a lehetőségek, amelyeknél nincs olyan alternatíva, ami egyszerre jobb és olcsóbb.</dd>
+                            <dt>Open Source</dt><dd>Letölthető, saját gépen is futtatható modell.</dd>
+                            <dt>Befagyasztott modell</dt><dd>A rangsor legalján lévő modell, amely átmenetileg nem kerül be a Battle-be (a rangsorban továbbra is látszik).</dd>
+                        </dl>
+                    </section>
+                </div>
+            </div>
+        </div>
+

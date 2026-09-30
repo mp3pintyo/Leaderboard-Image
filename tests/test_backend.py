@@ -23,6 +23,7 @@ def clean_state(monkeypatch):
     monkeypatch.setattr(arena, 'ip_rate_limiter', arena.SlidingWindowRateLimiter(10000, 60))
     with arena.app.app_context():
         arena.reset_votes()
+    arena.reset_ranking_cache()
     yield
 
 
@@ -233,7 +234,7 @@ def test_leaderboard_has_ranking_fields():
     token = login(client)
     for _ in range(3):
         vote(client, token, new_battle(client)['battle_id'], 'a')
-    arena._ranking_cache['data'] = None
+    arena.reset_ranking_cache()
     rows = client.get('/api/leaderboard').json
     played = [r for r in rows if r['matches'] > 0]
     assert played and all(r['ci_lower'] <= r['score'] <= r['ci_upper'] for r in played)
@@ -261,7 +262,7 @@ def test_stats_matrix_and_history_endpoints():
     token = login(client)
     for choice in ('a', 'a', 'b', 'tie', 'both_bad'):
         vote(client, token, new_battle(client)['battle_id'], choice)
-    arena._ranking_cache['data'] = None
+    arena.reset_ranking_cache()
     stats = client.get('/api/leaderboard/stats').json
     assert stats['total_votes'] == 5 and stats['ties'] == 1 and stats['both_bad'] == 1
     assert stats['position_bias']['votes'] == 3
@@ -331,9 +332,36 @@ def test_leaderboard_position_is_sequential():
     token = login(client)
     for _ in range(4):
         vote(client, token, new_battle(client)['battle_id'], 'a')
-    arena._ranking_cache['data'] = None
+    arena.reset_ranking_cache()
     rows = client.get('/api/leaderboard').json
     positions = [r['position'] for r in rows if r['matches'] > 0]
     assert positions == list(range(1, len(positions) + 1))
     assert all(r['position'] is None for r in rows if r['matches'] == 0)
     assert all(r['rank'] <= r['position'] <= r['rank_worst'] for r in rows if r['matches'] > 0)
+
+
+def test_vote_returns_leaderboard_score_change_matching_leaderboard():
+    client = arena.app.test_client()
+    token = login(client)
+    for _ in range(3):
+        vote(client, token, new_battle(client)['battle_id'], 'a')
+    client.get('/api/leaderboard')  # a bootstrap CI gyorsítótár feltöltése
+    data = vote(client, token, new_battle(client)['battle_id'], 'a').json
+    a, b = data['model_a'], data['model_b']
+    assert a['score_after'] > a['score_before'] and b['score_after'] < b['score_before']
+    assert a['score_delta'] == round(a['score_after'] - a['score_before'], 1)
+    # A Leaderboard azonnal a friss pontszámot mutatja (a CI gyorsítótárazott lehet)
+    rows = {r['id']: r for r in client.get('/api/leaderboard').json}
+    assert abs(rows[a['id']]['score'] - a['score_after']) < 0.11
+    assert rows[a['id']]['ci_lower'] <= rows[a['id']]['score'] <= rows[a['id']]['ci_upper']
+
+
+def test_tie_score_change_moves_towards_each_other():
+    client = arena.app.test_client()
+    token = login(client)
+    first = vote(client, token, new_battle(client)['battle_id'], 'a').json
+    # Újabb battle ugyanezzel a párral nem garantált, ezért csak az előjelet ellenőrizzük egy döntetlennél
+    data = vote(client, token, new_battle(client)['battle_id'], 'tie').json
+    for side in ('model_a', 'model_b'):
+        assert 'score_before' in data[side] and 'score_after' in data[side]
+    assert first['model_a']['score_delta'] > 0

@@ -77,12 +77,23 @@ function resetReveal() {
         slot.name.textContent = index === 0 ? 'Modell A' : 'Modell B';
         slot.delta.hidden = true;
         slot.delta.textContent = '';
+        slot.delta.removeAttribute('title');
     });
+}
+
+function formatScore(value, digits = 0) {
+    return Number(value).toLocaleString('hu-HU', { minimumFractionDigits: digits, maximumFractionDigits: digits });
 }
 
 function formatDelta(delta) {
     if (!delta) return '±0';
-    return `${delta > 0 ? '+' : '−'}${Math.abs(delta).toFixed(1)}`;
+    return `${delta > 0 ? '+' : '−'}${formatScore(Math.abs(delta), 1)}`;
+}
+
+/** „1913 → 1915”; ha kerekítve azonos lenne, egy tizedessel mutatjuk, hogy látszódjon az elmozdulás. */
+function formatScoreChange(before, after) {
+    const digits = Math.round(before) === Math.round(after) && before !== after ? 1 : 0;
+    return `${formatScore(before, digits)} → ${formatScore(after, digits)}`;
 }
 
 function revealModels(result, choice) {
@@ -96,9 +107,13 @@ function revealModels(result, choice) {
         else if (choice === 'tie') slot.root.classList.add('is-tie');
         else if (choice === 'both_bad') slot.root.classList.add('is-bad');
 
-        if (typeof model.elo_delta === 'number') {
-            slot.delta.textContent = `${formatDelta(model.elo_delta)} ELO`;
-            slot.delta.className = `elo-delta ${model.elo_delta >= 0 ? 'text-bg-success' : 'text-bg-danger'}`;
+        // A Leaderboard (Bradley-Terry) pontszám változása – ugyanaz a szám, ami a rangsorban látszik
+        if (typeof model.score_delta === 'number') {
+            const tone = model.score_delta > 0.05 ? 'text-bg-success' : model.score_delta < -0.05 ? 'text-bg-danger' : 'text-bg-secondary';
+            slot.delta.textContent = formatScoreChange(model.score_before, model.score_after);
+            slot.delta.className = `elo-delta ${tone}`;
+            slot.delta.title = `Leaderboard-pontszám: ${formatScoreChange(model.score_before, model.score_after)} (${formatDelta(model.score_delta)}). Részletek: Súgó → Mi történik a szavazatod után?`;
+            slot.delta.setAttribute('aria-label', `Pontszám ${formatScore(model.score_before)}-ról ${formatScore(model.score_after)}-ra változott`);
             slot.delta.hidden = false;
         }
     });

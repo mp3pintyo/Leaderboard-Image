@@ -8,6 +8,7 @@ import { updateLoginLinks } from './auth.js';
 import { showToast } from './toast.js';
 import { initTheme } from './theme.js';
 import { initLightbox, bindLightbox } from './lightbox.js';
+import { initHelp, showHelpSection } from './help.js';
 
 // Nézetek és címük; az útvonal formája: #/<nézet>[/<alnézet>][?paraméterek]
 const MODES = {
@@ -16,6 +17,7 @@ const MODES = {
     leaderboard: 'Leaderboard',
     'elo-history': 'ELO fejlődés',
     compare: 'Összehasonlítás',
+    help: 'Súgó',
 };
 const DEFAULT_MODE = 'battle';
 const SITE_TITLE = 'AI Képgenerátor Aréna';
@@ -86,6 +88,9 @@ function handleRoute() {
     case 'compare':
         applyCompareRoute(route.params);
         break;
+    case 'help':
+        showHelpSection(route.sub); // a görgetést is ez intézi
+        return;
     default:
         break;
     }
@@ -100,6 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initLeaderboardMode();
     initEloHistoryMode();
     initCompareMode();
+    initHelp();
 
     // Nagyítható képek: a battle-ben a felirat szavazás előtt nem árulja el a modellt
     bindLightbox(document.querySelectorAll('#battle-mode .arena-image'), getBattleCaption);

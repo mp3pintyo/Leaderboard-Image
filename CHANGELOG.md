@@ -2,6 +2,34 @@
 
 Minden jelentős változás ebben a fájlban szerepel. / All notable changes are documented in this file.
 
+## [1.6.0] – 2026-09-30
+
+### 🇭🇺 Magyar
+
+**Súgó menüpont**
+- Új **Súgó** oldal (`#/help`) tartalomjegyzékkel és 22 fejezettel, közérthetően: szavazás és billentyűk, döntetlen és „mindkettő rossz”, a pontszám (Bradley-Terry) és a pontkülönbség → nyerési esély táblázat, mi történik a szavazat után, online ELO vs. pontszám, **95%-os konfidenciaintervallum**, a **bootstrap eloszlás** (szemléltető ábrával), helyezés és helyezéssáv, „Előzetes” jelvény, a táblázat oszlopai, párosítás, párharc-mátrix, minőség–ár térkép, saját toplista, oldaltorzítás, a többi nézet, tisztességes szavazás, adatkezelés, gyakori kérdések és szószedet.
+- Élő statisztika a Súgóban: összes / döntő szavazat, döntetlenek, „mindkettő rossz”, szavazók, a bal oldali kép nyerési aránya értelmezéssel.
+- A fejezetek linkelhetők (pl. `#/help/ci`), a tartalomjegyzék görgetés közben kiemeli az aktuális fejezetet; a számok (limitek, küszöbök) közvetlenül a beállításokból jönnek, így nem avulnak el.
+- A Leaderboard aljáról a módszertan panel átkerült a Súgóba; helyette „Hogyan számoljuk?” linkek mutatnak a megfelelő fejezetre. A Battle alatt is van Súgó link.
+
+**Szavazás után a Leaderboard-pontszám változása látszik**
+- A Battle-ben szavazás után a korábbi „+11 ELO” helyett a **Leaderboard-pontszám** változása jelenik meg, pl. `1913 → 1915` – ugyanaz a szám, ami a rangsorban látszik. Az online ELO csak az ELO fejlődés grafikonon, az opcionális „Online ELO” oszlopban és az Összehasonlítás oldalon szerepel.
+- A pontszám (Bradley-Terry pontbecslés) mostantól **minden szavazat után azonnal** újraszámolódik (~15 ms); a lassabb bootstrap konfidenciaintervallum legfeljebb 30 másodpercig gyorsítótárazott, és mindig tartalmazza a friss pontszámot.
+- A `/api/vote` válaszában új mezők: `score_before`, `score_after`, `score_delta`.
+
+### 🇬🇧 English
+
+**Help menu**
+- New **Help** page (`#/help`, in Hungarian) with a table of contents and 22 sections in plain language: voting and shortcuts, ties and "both bad", the score (Bradley-Terry) with a score difference → win probability table, what happens after a vote, online ELO vs. score, the **95% confidence interval**, the **bootstrap distribution** (with an illustration), rank and rank range, the "Preliminary" badge, table columns, pairing, head-to-head matrix, quality–price map, personal leaderboard, position bias, other views, fair voting, data handling, FAQ and glossary.
+- Live statistics on the help page: total / decisive votes, ties, "both bad", voters, and the left image's win rate with interpretation.
+- Sections are linkable (e.g. `#/help/ci`), the table of contents highlights the current section while scrolling; numbers (limits, thresholds) come straight from the configuration so they never go stale.
+- The methodology panel moved from the bottom of the leaderboard to the help page; "How is it calculated?" links point to the right section. There is also a help link below the Battle buttons.
+
+**After voting, the leaderboard score change is shown**
+- In Battle, the previous "+11 ELO" is replaced by the **leaderboard score** change, e.g. `1913 → 1915` – the same number shown in the ranking. Online ELO now only appears on the ELO history chart, the optional "Online ELO" column and the Compare page.
+- The score (Bradley-Terry point estimate) is now recomputed **immediately after every vote** (~15 ms); the slower bootstrap confidence interval is cached for up to 30 seconds and always contains the fresh score.
+- New fields in the `/api/vote` response: `score_before`, `score_after`, `score_delta`.
+
 ## [1.5.0] – 2026-09-30
 
 ### 🇭🇺 Magyar

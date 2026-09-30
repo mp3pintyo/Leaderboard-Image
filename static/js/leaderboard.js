@@ -27,8 +27,6 @@ const hidePreliminaryToggle = document.getElementById('leaderboard-hide-prelimin
 const personalInfo = document.getElementById('personal-leaderboard-info');
 const countLabel = document.getElementById('leaderboard-count');
 const summaryLabel = document.getElementById('leaderboard-summary');
-const methodDetails = document.getElementById('leaderboard-method');
-const statsGrid = document.getElementById('leaderboard-stats');
 const matrixContainer = document.getElementById('matrix-container');
 const matrixMetricRadios = document.querySelectorAll('input[name="matrix-metric"]');
 const matrixTopSelect = document.getElementById('matrix-top');
@@ -371,37 +369,7 @@ async function loadStats() {
         const stats = await requestJson('/api/leaderboard/stats');
         const updated = new Date(stats.method.computed_at).toLocaleString('hu-HU', { dateStyle: 'medium', timeStyle: 'short' });
         summaryLabel.textContent = `Bradley-Terry rangsor 95%-os konfidenciaintervallummal · ${formatNumber(stats.total_votes)} szavazat · frissítve: ${updated}`;
-        document.querySelectorAll('[data-stat]').forEach((el) => {
-            const value = stats.method[el.dataset.stat];
-            if (value !== undefined) el.textContent = value;
-        });
         window.APP_CONFIG.preliminary_threshold = stats.method.preliminary_threshold;
-
-        const bias = stats.position_bias;
-        const items = [
-            ['Összes szavazat', formatNumber(stats.total_votes)],
-            ['Döntetlen', formatNumber(stats.ties)],
-            ['Mindkettő rossz', formatNumber(stats.both_bad)],
-            ['Bejelentkezett szavazók', formatNumber(stats.voters)],
-            ['Bal oldal nyerési aránya', bias.left_win_rate === null
-                ? 'még nincs adat'
-                : `${formatNumber(bias.left_win_rate, 1)}% (95% CI: ${formatNumber(bias.ci_lower, 1)}–${formatNumber(bias.ci_upper, 1)}%, n = ${formatNumber(bias.votes)})`],
-        ];
-        statsGrid.replaceChildren(...items.map(([label, value]) => {
-            const item = document.createElement('div');
-            item.className = 'leaderboard-stat';
-            const dt = document.createElement('span');
-            dt.className = 'leaderboard-stat-label';
-            dt.textContent = label;
-            const dd = document.createElement('strong');
-            dd.textContent = value;
-            item.append(dt, dd);
-            return item;
-        }));
-        const note = document.createElement('p');
-        note.className = 'leaderboard-stat-note';
-        note.textContent = 'Az oldaltorzítás mérése: ha a bal oldali kép 50%-nál szignifikánsan többször nyer, a felhasználók a pozíció alapján is döntenek. A párosítás minden battle-nél véletlenszerűen osztja el az oldalakat.';
-        statsGrid.appendChild(note);
     } catch (error) {
         statsLoaded = false;
         console.warn('Stats load failed:', error);
@@ -848,9 +816,5 @@ export function initLeaderboardMode() {
     matrixTopSelect.addEventListener('change', () => {
         state.matrixTop = Number(matrixTopSelect.value);
         loadMatrixData();
-    });
-
-    methodDetails.addEventListener('toggle', () => {
-        if (methodDetails.open && !statsLoaded) loadStats();
     });
 }

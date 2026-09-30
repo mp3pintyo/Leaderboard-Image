@@ -53,6 +53,9 @@
                         <a class="nav-link" href="#/compare" data-mode="compare">Összehasonlítás</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="#/help" data-mode="help">Súgó</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="https://github.com/mp3pintyo/Leaderboard-Image" target="_blank" rel="noopener noreferrer">GitHub</a>
                     </li>
                 </ul>
@@ -189,6 +192,7 @@
                 <div class="battle-meta">
                     <button id="skip-btn" class="btn btn-outline-secondary btn-sm battle-skip" disabled><kbd>S</kbd> Kihagyás / új pár</button>
                     <span id="battle-vote-counter" class="text-body-secondary small"></span>
+                    <a class="small" href="#/help/szavazas">Súgó</a>
                     <span class="battle-shortcuts text-body-secondary small d-none d-md-inline">Billentyűk: <kbd>1</kbd>/<kbd>←</kbd> A · <kbd>2</kbd>/<kbd>→</kbd> B · <kbd>0</kbd> döntetlen · <kbd>X</kbd> mindkettő rossz · <kbd>S</kbd> kihagyás</span>
                 </div>
             </div>
@@ -273,6 +277,7 @@
                 <span class="leaderboard-eyebrow">TOPLISTÁK</span>
                 <h2>Leaderboard</h2>
                 <p id="leaderboard-summary">Bradley-Terry rangsor 95%-os konfidenciaintervallummal.</p>
+                <p class="small mb-0"><a href="#/help/pontszam">Hogyan számoljuk? →</a></p>
             </div>
 
             <div class="leaderboard-view-grid" role="tablist" aria-label="Leaderboard nézetek">
@@ -421,24 +426,10 @@
                     <button id="refresh-leaderboard-btn" class="btn btn-outline-primary btn-sm">Leaderboard frissítése</button>
                 </div>
 
-                <details class="leaderboard-method mt-4" id="leaderboard-method">
-                    <summary>Hogyan számoljuk? – módszertan és statisztika</summary>
-                    <div class="leaderboard-method-body">
-                        <p>
-                            A rangsor a <strong>Bradley-Terry modellt</strong> használja (mint az LMArena és az Artificial Analysis):
-                            az összes szavazatra egyszerre illesztett maximum likelihood becslés, ELO-skálán (1500 = átlagos).
-                            A korábbi online ELO-val szemben az eredmény nem függ a szavazatok sorrendjétől.
-                        </p>
-                        <ul>
-                            <li><strong>95% CI:</strong> a szavazatok <span data-stat="bootstrap_rounds">100</span>-szoros bootstrap újramintavételezéséből. Ha két modell intervalluma átfed, a sorrendjük nem biztos.</li>
-                            <li><strong>Helyezés (#):</strong> a modell sorszáma a pontszám szerinti listában. A szám fölé húzott egérrel (vagy a CI oszlopnál) látszik a <strong>helyezéssáv</strong> (pl. 2–5): a legjobb lehetséges helyezés = 1 + azon modellek száma, amelyek statisztikailag biztosan jobbak; a legrosszabb = azon modellek száma, amelyek intervalluma átfed vagy jobb. A pontozott aláhúzás jelzi, ha a helyezés bizonytalan.</li>
-                            <li><strong>Célzott párosítás:</strong> az Arena Battle gyakrabban hozza elő azokat a párokat, amelyek eredménye a legtöbbet mond a rangsorról (közeli pontszám, széles intervallum), így a bizonytalan helyezések gyorsabban tisztázódnak.</li>
-                            <li><strong>Előzetes:</strong> <span data-stat="preliminary_threshold">30</span> meccs alatt a pontszám még bizonytalan.</li>
-                            <li><strong>Döntetlen és „mindkettő rossz”:</strong> fél győzelemnek számít mindkét modellnek.</li>
-                        </ul>
-                        <div class="leaderboard-stats-grid" id="leaderboard-stats"></div>
-                    </div>
-                </details>
+                <p class="leaderboard-help-link mt-4 mb-0">
+                    <span aria-hidden="true">ⓘ</span> Mit jelent a pontszám, a 95% CI vagy a helyezéssáv?
+                    <a href="#/help/pontszam">Részletes magyarázat a Súgóban →</a>
+                </p>
             </section>
 
             <section id="leaderboard-quality-price-panel" class="leaderboard-panel" role="tabpanel"
@@ -548,6 +539,7 @@
             <div id="compare-result" aria-live="polite"></div>
         </div>
 
+{% include 'help.html' %}
         <!-- ELO History Mode -->
         <div id="elo-history-mode" class="arena-mode" style="display: none;">
             <h2 class="text-center mb-2">Modellek ELO fejlődése</h2>

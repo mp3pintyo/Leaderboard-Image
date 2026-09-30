@@ -747,3 +747,324 @@ body {
         transition-duration: 0.01ms !important;
     }
 }
+
+/* --- Súgó --- */
+#help-mode {
+    padding-bottom: 4rem;
+}
+
+.help-layout {
+    display: grid;
+    grid-template-columns: minmax(200px, 250px) minmax(0, 1fr);
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.help-toc {
+    position: sticky;
+    top: calc(var(--nav-height) + 1rem);
+    max-height: calc(100vh - var(--nav-height) - 2rem);
+    overflow-y: auto;
+    padding: 1rem;
+    border: 1px solid var(--arena-border);
+    border-radius: 1rem;
+    background: var(--arena-surface);
+    font-size: 0.88rem;
+}
+
+.help-toc-title {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.76rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--arena-muted);
+}
+
+.help-toc ol {
+    margin: 0;
+    padding-left: 1.4rem;
+}
+
+.help-toc li {
+    margin: 0.15rem 0;
+}
+
+.help-toc a {
+    color: var(--arena-text);
+    text-decoration: none;
+}
+
+.help-toc a:hover,
+.help-toc a.active {
+    color: var(--bs-primary);
+    text-decoration: underline;
+}
+
+.help-toc a.active {
+    font-weight: 700;
+}
+
+.help-content {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr); /* a széles táblázatok ne tolják ki az oszlopot */
+    gap: 1rem;
+    min-width: 0;
+}
+
+.help-section {
+    padding: clamp(1rem, 2.5vw, 1.6rem);
+    border: 1px solid var(--arena-border);
+    border-radius: 1rem;
+    background: var(--arena-surface);
+    box-shadow: var(--arena-shadow-sm);
+    scroll-margin-top: calc(var(--nav-height) + 1rem);
+    line-height: 1.6;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.help-section:focus {
+    outline: none;
+}
+
+.help-section h3 {
+    margin-bottom: 0.9rem;
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.help-section h4 {
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.help-section ul,
+.help-section ol {
+    padding-left: 1.3rem;
+}
+
+.help-section li {
+    margin-bottom: 0.35rem;
+}
+
+.help-steps {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin: 1rem 0;
+}
+
+.help-step {
+    display: flex;
+    gap: 0.7rem;
+    padding: 0.8rem;
+    border-radius: 0.8rem;
+    background: var(--arena-surface-muted);
+}
+
+.help-step-num {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background: var(--arena-accent);
+    color: var(--arena-accent-contrast);
+    font-weight: 800;
+}
+
+.help-callout {
+    margin: 1rem 0;
+    padding: 0.9rem 1.1rem;
+    border-left: 4px solid var(--bs-primary);
+    border-radius: 0.5rem;
+    background: var(--arena-surface-muted);
+}
+
+.help-callout-warning {
+    border-left-color: var(--bs-warning);
+}
+
+.help-table {
+    --bs-table-bg: transparent;
+    font-size: 0.92rem;
+}
+
+.help-table-compact {
+    width: auto;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+}
+
+.help-table-compact th[scope="row"] {
+    text-align: left;
+    white-space: nowrap;
+}
+
+.help-demo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1rem;
+    border-radius: 0.6rem;
+    background: var(--arena-surface-muted);
+}
+
+.help-compare {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.help-compare-col {
+    padding: 0.9rem 1rem 0.3rem;
+    border: 1px solid var(--arena-border);
+    border-radius: 0.8rem;
+    background: var(--arena-surface-muted);
+}
+
+.help-ci-demo {
+    display: grid;
+    gap: 0.6rem;
+    margin: 1rem 0;
+    padding: 0.9rem 1rem;
+    border-radius: 0.6rem;
+    background: var(--arena-surface-muted);
+    --ci-color: var(--bs-primary);
+}
+
+.help-ci-row {
+    display: grid;
+    grid-template-columns: 11rem minmax(0, 1fr) 9rem;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.88rem;
+}
+
+.help-ci-bar {
+    height: 8px;
+    margin: 0;
+}
+
+.help-ci-text {
+    font-variant-numeric: tabular-nums;
+    color: var(--arena-muted);
+}
+
+.help-figure {
+    margin: 1rem 0;
+    text-align: center;
+}
+
+.help-histogram {
+    width: min(100%, 520px);
+    height: auto;
+    color: var(--arena-text);
+}
+
+.help-histogram .hist-bar { fill: var(--bs-primary); }
+.help-histogram .hist-bar-tail { fill: var(--bs-secondary-color); opacity: 0.45; }
+.help-histogram .hist-line { stroke: var(--bs-danger); stroke-width: 2; stroke-dasharray: 5 4; }
+.help-histogram .hist-axis { stroke: var(--arena-border-strong); stroke-width: 1.5; }
+.help-histogram .hist-text { fill: currentColor; font-size: 11px; }
+.help-histogram .hist-text-strong { font-weight: 700; }
+
+.help-figure figcaption {
+    margin-top: 0.4rem;
+    font-size: 0.85rem;
+    color: var(--arena-muted);
+}
+
+.help-dl {
+    display: grid;
+    grid-template-columns: minmax(8rem, 13rem) 1fr;
+    gap: 0.55rem 1rem;
+    margin: 0 0 0.75rem;
+}
+
+.help-dl dt {
+    font-weight: 700;
+}
+
+.help-dl dd {
+    margin: 0;
+}
+
+.help-swatch {
+    display: inline-block;
+    width: 0.9rem;
+    height: 0.9rem;
+    border-radius: 0.2rem;
+    vertical-align: -0.1rem;
+}
+
+.help-swatch-good { background: rgba(25, 135, 84, 0.6); }
+.help-swatch-bad { background: rgba(220, 53, 69, 0.6); }
+
+.help-faq {
+    margin-bottom: 0.5rem;
+    border: 1px solid var(--arena-border);
+    border-radius: 0.6rem;
+    background: var(--arena-surface-muted);
+}
+
+.help-faq summary {
+    padding: 0.7rem 1rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.help-faq p {
+    margin: 0;
+    padding: 0 1rem 0.8rem;
+}
+
+.leaderboard-help-link {
+    color: var(--arena-muted);
+    font-size: 0.9rem;
+}
+
+@media (max-width: 991.98px) {
+    .help-layout {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .help-toc {
+        position: static;
+        max-height: none;
+    }
+
+    .help-toc ol {
+        columns: 2;
+        column-gap: 2rem;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .help-steps,
+    .help-compare {
+        grid-template-columns: 1fr;
+    }
+
+    .help-toc ol {
+        columns: 1;
+    }
+
+    .help-ci-row {
+        grid-template-columns: 1fr;
+        gap: 0.25rem;
+    }
+
+    .help-dl {
+        grid-template-columns: 1fr;
+        gap: 0.15rem;
+    }
+
+    .help-dl dd {
+        margin-bottom: 0.5rem;
+    }
+}

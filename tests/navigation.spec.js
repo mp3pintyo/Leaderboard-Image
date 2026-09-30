@@ -47,3 +47,24 @@ test('Security headers are sent', async ({ request }) => {
     expect(csp).toContain("frame-ancestors 'none'");
     expect(response.headers()['x-content-type-options']).toBe('nosniff');
 });
+
+test('Help page: menu item, section deep link, live stats, no horizontal overflow', async ({ page, isMobile }) => {
+    await page.goto('/');
+    if (isMobile) await page.locator('.navbar-toggler').click();
+    await page.locator('#navbarNav').getByRole('link', { name: 'Súgó', exact: true }).click();
+    await expect(page.locator('#help-mode')).toBeVisible();
+    await expect(page).toHaveTitle(/Súgó/);
+    await expect(page.locator('#help-stats .leaderboard-stat').first()).toBeVisible();
+
+    await page.goto('/#/help/ci');
+    await expect(page.locator('#help-ci')).toBeInViewport();
+    await expect(page.locator('.help-toc a[data-help-link="ci"]')).toHaveClass(/active/);
+
+    // A leaderboard linkje a súgó megfelelő fejezetére visz
+    await page.goto('/#/leaderboard');
+    await page.getByRole('link', { name: 'Részletes magyarázat a Súgóban →' }).click();
+    await expect(page.locator('#help-pontszam')).toBeInViewport();
+
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    expect(overflow).toBeLessThanOrEqual(1);
+});
