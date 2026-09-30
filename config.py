@@ -1420,11 +1420,24 @@ REVEAL_DELAY_MS = 2000  # Szavazás után a modellek neveinek megjelenítési id
 FROZEN_BOTTOM_COUNT = 0  # Hány modellt fagyasszunk be az aljáról (0 = kikapcsolva)
 
 # Új modellek boost beállítások (Arena Battle)
-# Ha egy modellnek kevesebb meccse van, mint NEW_MODEL_BOOST_THRESHOLD, akkor
-# NEW_MODEL_BOOST_WEIGHT-szer nagyobb eséllyel jelenik meg az egyik battle-slotban.
-# A másik slot teljesen véletlenszerű marad. 50 meccs felett visszaáll a normál random.
+# A párosítás a kevés meccset látott modellpárokat részesíti előnyben (1 / (1 + meccsek)).
+# Ha egy pár valamelyik modelljének kevesebb meccse van, mint NEW_MODEL_BOOST_THRESHOLD,
+# a pár súlya NEW_MODEL_BOOST_WEIGHT-szeresére nő.
 NEW_MODEL_BOOST_THRESHOLD = 50  # Ennyi meccs alatt aktív a boost
-NEW_MODEL_BOOST_WEIGHT = 20       # Hányszoros esély az átlagos modellhez képest
+NEW_MODEL_BOOST_WEIGHT = 20       # Hányszoros esély az átlagos párhoz képest
+
+# Szavazat-integritás beállítások
+BATTLE_TTL_SECONDS = 60 * 60        # Ennyi ideig szavazható egy kiadott battle
+MAX_OPEN_BATTLES = 3                # Egy sessionhöz egyszerre ennyi nyitott battle tartozhat (előtöltéshez)
+MIN_VOTE_DELAY_MS = 1200            # Legalább ennyi időnek kell eltelnie a battle kiadása és a szavazat között
+DAILY_VOTE_LIMIT = 500              # Egy felhasználó naponta (UTC) legfeljebb ennyi szavazatot adhat le
+BATTLE_RATE_LIMIT_PER_MINUTE = 60   # Ennyi új battle kérhető percenként egy felhasználótól / IP-címről
+
+# Rangsorolás (Bradley-Terry) beállítások
+BT_BOOTSTRAP_ROUNDS = 100           # Bootstrap újramintavételezések száma a konfidenciaintervallumhoz
+BT_PRIOR_GAMES = 1.0                # Virtuális döntetlen egy átlagos (1500-as) ellenféllel – stabilizálja a kevés adatú modelleket
+PRELIMINARY_MATCH_THRESHOLD = 30    # Ennyi meccs alatt a modell "Előzetes" jelölést kap
+PERSONAL_LEADERBOARD_MIN_VOTES = 30 # Ennyi saját szavazat után nyílik meg a saját toplista
 
 # Authentication beállítások
 DEFAULT_SECRET_KEY = 'dev-secret-key-change-in-production'

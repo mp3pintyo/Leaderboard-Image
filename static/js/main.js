@@ -3,6 +3,9 @@ import { initSideBySideMode, adjustImageHeight as adjustSbsHeight } from './side
 import { initLeaderboardMode, loadLeaderboardData } from './leaderboard.js';
 import { initEloHistoryMode, loadEloHistoryData } from './eloHistory.js';
 import { initCompareMode, loadCompareData } from './compare.js';
+import { APP_CONFIG } from './config.js';
+import { updateLoginLinks } from './auth.js';
+import { showToast } from './toast.js';
 
 // DOM elemek
 const modes = ['battle', 'side-by-side', 'leaderboard', 'elo-history', 'compare'];
@@ -75,6 +78,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+
+    updateLoginLinks();
+    if (APP_CONFIG.login_error) {
+        showToast('A bejelentkezés nem sikerült vagy megszakadt. Próbáld újra!', 'warning');
+    }
 
     // Kezdeti mód beállítása
     showMode('battle');

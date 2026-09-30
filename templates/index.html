@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Képgenerátor Aréna</title>    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/battle.css') }}">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
@@ -56,7 +57,7 @@
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end">
                             {% if 'google' in auth_providers %}
-                            <li><a class="dropdown-item" href="/auth/login/google">
+                            <li><a class="dropdown-item" data-login-provider="google" href="/auth/login/google">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="me-2" viewBox="0 0 16 16">
                                     <path d="M15.545 6.558a9.42 9.42 0 0 1 .139 1.626c0 2.434-.87 4.492-2.384 5.885h.002C11.978 15.292 10.158 16 8 16A8 8 0 1 1 8 0a7.689 7.689 0 0 1 5.352 2.082l-2.284 2.284A4.347 4.347 0 0 0 8 3.166c-2.087 0-3.86 1.408-4.492 3.304a4.792 4.792 0 0 0 0 3.063h.003c.635 1.893 2.405 3.301 4.492 3.301 1.078 0 2.004-.276 2.722-.764h-.003a3.702 3.702 0 0 0 1.599-2.431H8v-3.08h7.545z"/>
                                 </svg>
@@ -64,7 +65,7 @@
                             </a></li>
                             {% endif %}
                             {% if 'github' in auth_providers %}
-                            <li><a class="dropdown-item" href="/auth/login/github">
+                            <li><a class="dropdown-item" data-login-provider="github" href="/auth/login/github">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="me-2" viewBox="0 0 16 16">
                                     <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
                                 </svg>
@@ -76,7 +77,7 @@
                             {% endif %}
                             {% if dev_mode %}
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item text-warning" href="/auth/dev-login">
+                            <li><a class="dropdown-item text-warning" data-login-provider="dev" data-login-path="dev-login" href="/auth/dev-login">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="me-2" viewBox="0 0 16 16">
                                     <path d="M5.854 4.854a.5.5 0 1 0-.708-.708l-3.5 3.5a.5.5 0 0 0 0 .708l3.5 3.5a.5.5 0 0 0 .708-.708L2.707 8l3.147-3.146zm4.292 0a.5.5 0 0 1 .708-.708l3.5 3.5a.5.5 0 0 1 0 .708l-3.5 3.5a.5.5 0 0 1-.708-.708L13.293 8l-3.147-3.146z"/>
                                 </svg>
@@ -91,62 +92,75 @@
         </div>
     </nav>
 
-    <div id="loading-indicator" class="text-center" style="display: none;">
-        <div class="spinner-border" role="status">
-            <span class="visually-hidden">Loading...</span>
-        </div>
-    </div>
+    <div id="loading-indicator" class="loading-bar" role="progressbar" aria-label="Betöltés"></div>
 
     <!-- Arena Battle Mode -->
-    <div id="battle-mode" class="container-fluid h-100 arena-mode">
-        <div class="d-flex flex-column" style="height: calc(100vh - 70px);">
-                <!-- Header Section -->
-                <div class="flex-shrink-0">
-                    <div id="battle-prompt-popup" class="prompt-full-popup mx-2"></div>
-                    <p class="text-center mb-2 prompt-truncated" id="battle-prompt" title="Kattints a teljes prompthoz">Prompt betöltése...</p>
-                </div>
+    <div id="battle-mode" class="container-fluid arena-mode">
+        <div class="battle-layout">
+            <div class="battle-header">
+                <div id="battle-prompt-popup" class="prompt-full-popup mx-2"></div>
+                <p class="text-center mb-2 prompt-truncated" id="battle-prompt" role="button" tabindex="0"
+                    aria-expanded="false" aria-controls="battle-prompt-popup" title="Kattints a teljes prompthoz">Prompt betöltése...</p>
+            </div>
 
-                <!-- Images Section -->
-                <div class="row flex-grow-1 align-items-center justify-content-center overflow-hidden w-100 mx-0">
-                    <div class="col-12 col-md-5 h-100 d-flex flex-column">
-                        <h4 id="battle-model1-name" class="text-center flex-shrink-0">Modell A</h4>
-                        <div id="battle-image1-wrapper" class="flex-grow-1 d-flex align-items-center justify-content-center" style="min-height: 0;">
-                            <img id="battle-image1" src="" alt="Modell A képe" class="img-fluid rounded arena-image" style="max-height: 100%; max-width: 100%; object-fit: contain;">
-                        </div>
+            <div class="battle-images">
+                <figure id="battle-slot-a" class="battle-slot">
+                    <figcaption class="battle-slot-label">
+                        <span class="battle-side-badge" aria-hidden="true">A</span>
+                        <span id="battle-model1-name" class="battle-model-name">Modell A</span>
+                        <span id="battle-delta-a" class="elo-delta" hidden></span>
+                    </figcaption>
+                    <div class="battle-image-frame">
+                        <img id="battle-image1" src="" alt="Az A oldali modell képe" class="arena-image" decoding="async">
                     </div>
-                    <div class="col-12 col-md-5 h-100 d-flex flex-column">
-                        <h4 id="battle-model2-name" class="text-center flex-shrink-0">Modell B</h4>
-                        <div id="battle-image2-wrapper" class="flex-grow-1 d-flex align-items-center justify-content-center" style="min-height: 0;">
-                            <img id="battle-image2" src="" alt="Modell B képe" class="img-fluid rounded arena-image" style="max-height: 100%; max-width: 100%; object-fit: contain;">
-                        </div>
+                </figure>
+                <figure id="battle-slot-b" class="battle-slot">
+                    <figcaption class="battle-slot-label">
+                        <span class="battle-side-badge" aria-hidden="true">B</span>
+                        <span id="battle-model2-name" class="battle-model-name">Modell B</span>
+                        <span id="battle-delta-b" class="elo-delta" hidden></span>
+                    </figcaption>
+                    <div class="battle-image-frame">
+                        <img id="battle-image2" src="" alt="A B oldali modell képe" class="arena-image" decoding="async">
                     </div>
-                </div>
+                </figure>
+            </div>
 
-                <!-- Buttons Section -->
-                <div class="flex-shrink-0 mt-2 pb-2">
-                    <div id="login-required-message" class="alert alert-warning text-center mb-2 py-2" style="display: none;">
-                        <strong>Szavazáshoz bejelentkezés szükséges!</strong>
-                        <span class="ms-2">Kattints a jobb felső sarokban a Bejelentkezés gombra.</span>
-                    </div>
-                    <div class="row justify-content-center mb-1 mb-md-2 w-100 mx-0">
-                        <div class="col-6 col-md-5 text-center">
-                            <button id="vote-btn1" class="btn btn-success w-100 battle-btn">Ez tetszik jobban (A)</button>
-                        </div>
-                        <div class="col-6 col-md-5 text-center">
-                            <button id="vote-btn2" class="btn btn-success w-100 battle-btn">Ez tetszik jobban (B)</button>
-                        </div>
-                    </div>
-                    <div class="row justify-content-center w-100 mx-0">
-                        <div class="col-6 col-md-5 text-center">
-                            <button id="tie-btn" class="btn btn-secondary w-100 battle-btn">Döntetlen / Egyik sem tetszik</button>
-                        </div>
-                        <div class="col-6 col-md-5 text-center">
-                            <button id="skip-btn" class="btn btn-warning w-100 battle-btn">Következő prompt (kihagyás)</button>
-                        </div>
-                    </div>
+            <div class="battle-controls">
+                <div id="login-required-message" class="alert alert-warning text-center mb-2 py-2" hidden>
+                    <strong>Szavazáshoz jelentkezz be:</strong>
+                    {% for provider in auth_providers %}
+                    <a class="btn btn-sm btn-dark ms-2" data-login-provider="{{ provider }}" href="/auth/login/{{ provider }}">{{ 'Google' if provider == 'google' else 'GitHub' }}</a>
+                    {% endfor %}
+                    {% if dev_mode %}
+                    <a class="btn btn-sm btn-outline-dark ms-2" data-login-provider="dev" data-login-path="dev-login" href="/auth/dev-login">Dev Login</a>
+                    {% endif %}
+                    {% if not auth_providers and not dev_mode %}
+                    <span class="ms-2">Jelenleg nincs beállított bejelentkezési mód.</span>
+                    {% endif %}
+                </div>
+                <div class="battle-vote-grid" role="group" aria-label="Szavazás">
+                    <button id="vote-btn1" class="btn btn-success battle-btn battle-btn-a" disabled>
+                        <kbd>1</kbd> <span>A a jobb</span>
+                    </button>
+                    <button id="tie-btn" class="btn btn-outline-secondary battle-btn" disabled>
+                        <kbd>0</kbd> <span>Döntetlen</span>
+                    </button>
+                    <button id="both-bad-btn" class="btn btn-outline-danger battle-btn" disabled>
+                        <kbd>X</kbd> <span>Mindkettő rossz</span>
+                    </button>
+                    <button id="vote-btn2" class="btn btn-success battle-btn battle-btn-b" disabled>
+                        <span>B a jobb</span> <kbd>2</kbd>
+                    </button>
+                </div>
+                <div class="battle-meta">
+                    <button id="skip-btn" class="btn btn-outline-secondary btn-sm battle-skip" disabled><kbd>S</kbd> Kihagyás / új pár</button>
+                    <span id="battle-vote-counter" class="text-body-secondary small"></span>
+                    <span class="battle-shortcuts text-body-secondary small d-none d-md-inline">Billentyűk: <kbd>1</kbd>/<kbd>←</kbd> A · <kbd>2</kbd>/<kbd>→</kbd> B · <kbd>0</kbd> döntetlen · <kbd>X</kbd> mindkettő rossz · <kbd>S</kbd> kihagyás</span>
                 </div>
             </div>
         </div>
+    </div>
 
     <!-- Side-by-Side Mode -->
     <div id="side-by-side-mode" class="container-fluid arena-mode flex-column" style="display: none;">
@@ -193,7 +207,7 @@
                 <div class="col-md-10">
                     <div id="sbs-prompt-wrapper" class="text-center">
                         <div id="sbs-prompt-popup" class="prompt-full-popup"></div>
-                        <p id="sbs-prompt" class="fst-italic mb-0 prompt-truncated" title="Kattints a teljes prompthoz">Válassz modelleket és kattints a Betöltés gombra...</p>
+                        <p id="sbs-prompt" class="fst-italic mb-0 prompt-truncated" role="button" tabindex="0" aria-expanded="false" aria-controls="sbs-prompt-popup" title="Kattints a teljes prompthoz">Válassz modelleket és kattints a Betöltés gombra...</p>
                     </div>
                 </div>
             </div>
@@ -429,20 +443,17 @@
 
     </div>
 
-    <script>
-        window.AUTH_USER = {{ user | tojson | safe if user else 'null' }};
-        window.AUTH_PROVIDERS = {{ auth_providers | tojson | safe }};
-        window.MODELS_DATA = JSON.parse('{{ models | tojson | safe }}');
-        window.REVEAL_DELAY_MS = {{ reveal_delay_ms }};
-        window.CSRF_TOKEN = {{ csrf_token | tojson | safe }};
-    </script>
+    <script type="application/json" id="app-config">{{ {
+        'user': user,
+        'auth_providers': auth_providers,
+        'models': models,
+        'reveal_delay_ms': reveal_delay_ms,
+        'csrf_token': csrf_token,
+        'login_error': login_error,
+    } | tojson }}</script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js" crossorigin="anonymous"></script>
-    <script type="module">
-        // A késleltetési időt data attribútumból olvassuk ki - EZ MÁR GLOBÁLISAN MEGOLDOTT fentebb window.REVEAL_DELAY_MS-sel
-        // document.documentElement.dataset.revealDelay = {{ reveal_delay_ms }};
-    </script>
     <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>

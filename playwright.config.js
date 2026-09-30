@@ -20,7 +20,9 @@ export default defineConfig({
         timeout: 30_000,
         env: {
             FLASK_APP: 'app.py',
-            SECRET_KEY: 'local-playwright-qa-secret'
+            SECRET_KEY: 'local-playwright-qa-secret',
+            // Külön, ideiglenes adatbázis: a tesztek nem módosítják a helyi votes.db-t
+            DATABASE_PATH: path.join(os.tmpdir(), 'leaderboard-image-e2e.db')
         }
     },
     projects: [

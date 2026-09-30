@@ -308,24 +308,6 @@ body {
     box-shadow: 0 3px 10px rgba(0,0,0,0.12);
 }
 
-/* Arena Battle módban is JS kezeli a magasságot */
-#battle-mode .arena-image {
-    width: auto;
-    max-width: 100%;
-    /* max-height: 100%;  Handled inline now */
-    min-height: 0 !important; /* Felülírjuk a globális min-height-et */
-    object-fit: contain;
-}
-
-/* Címek egységesítése az igazítás miatt */
-#battle-mode h4 {
-    min-height: 1.5em;
-    margin-bottom: 0.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
 /* Tömörebb elrendezés a side-by-side módban, hogy több hely maradjon a képeknek */
 #side-by-side-mode {
     overflow: hidden;
@@ -380,71 +362,6 @@ body {
     #side-by-side-mode .arena-image {
         min-height: 0;
         max-height: none !important;
-    }
-}
-
-/* Opcionális: Betöltés animáció a képek helyén */
-/* .arena-image[src=""] { */
-    /* background: #e9ecef url('loading.gif') center center no-repeat; */
-/* } */
-
-#loading-indicator {
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
-
-/* --- Mobile nézet: Arena Battle --- */
-@media (max-width: 767.98px) {
-    /* Képek egymás alatt: a sor legyen flex-column, mindkét col 50% magasság */
-    #battle-mode .row.flex-grow-1 {
-        flex-direction: column !important;
-        align-items: stretch !important;
-    }
-
-    #battle-mode .row.flex-grow-1 > div {
-        flex: 0 0 50% !important;
-        max-width: 100% !important;
-        width: 100% !important;
-        height: 50% !important;
-        padding-left: 2px !important;
-        padding-right: 2px !important;
-    }
-
-    /* Minimális padding a képeken belül */
-    #battle-mode .arena-image {
-        min-height: 0 !important;
-        border: none !important;
-    }
-
-    /* Kisebb fejlécek */
-    #battle-mode h4 {
-        font-size: 0.85rem;
-        margin-bottom: 0.1rem !important;
-        min-height: auto;
-    }
-
-    /* Kompaktabb prompt */
-    #battle-mode .prompt-truncated {
-        font-size: 0.75rem;
-        padding: 0.2rem 0.4rem;
-        margin-bottom: 0.2rem !important;
-    }
-
-    /* Kisebb gombok, egymás mellett (col-6 már be van állítva) */
-    #battle-mode .battle-btn {
-        font-size: 0.72rem;
-        padding: 0.25rem 0.3rem;
-        line-height: 1.2;
-    }
-
-    /* Kompaktabb gomb szekció */
-    #battle-mode .flex-shrink-0.mt-2 {
-        margin-top: 0.15rem !important;
-        padding-bottom: 0.15rem !important;
-    }
-
-    #battle-mode .mb-1 {
-        margin-bottom: 0.15rem !important;
     }
 }
 

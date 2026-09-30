@@ -1,222 +1,263 @@
-// filepath: d:\AI\Leaderboard-Image\static\js\battle.js
-import { fetchData } from './api.js';
+import { requestJson } from './api.js';
 import { getRevealDelayMs } from './config.js';
-import { isLoggedIn } from './auth.js';
+import { isLoggedIn, showLoginPrompt } from './auth.js';
 import { preloadImages } from './imageLoading.js';
+import { showToast } from './toast.js';
 
 // DOM elemek
 const battleModeDiv = document.getElementById('battle-mode');
 const battlePrompt = document.getElementById('battle-prompt');
 const battlePromptPopup = document.getElementById('battle-prompt-popup');
-const battleModel1Name = document.getElementById('battle-model1-name');
-const battleImage1 = document.getElementById('battle-image1');
-const battleImage1Wrapper = document.getElementById('battle-image1-wrapper');
-const voteBtn1 = document.getElementById('vote-btn1');
-const battleModel2Name = document.getElementById('battle-model2-name');
-const battleImage2 = document.getElementById('battle-image2');
-const battleImage2Wrapper = document.getElementById('battle-image2-wrapper');
-const voteBtn2 = document.getElementById('vote-btn2');
-const tieBtn = document.getElementById('tie-btn');
+const slots = {
+    a: {
+        root: document.getElementById('battle-slot-a'),
+        name: document.getElementById('battle-model1-name'),
+        delta: document.getElementById('battle-delta-a'),
+        image: document.getElementById('battle-image1'),
+    },
+    b: {
+        root: document.getElementById('battle-slot-b'),
+        name: document.getElementById('battle-model2-name'),
+        delta: document.getElementById('battle-delta-b'),
+        image: document.getElementById('battle-image2'),
+    },
+};
+const voteButtons = {
+    a: document.getElementById('vote-btn1'),
+    b: document.getElementById('vote-btn2'),
+    tie: document.getElementById('tie-btn'),
+    both_bad: document.getElementById('both-bad-btn'),
+};
 const skipBtn = document.getElementById('skip-btn');
+const voteCounter = document.getElementById('battle-vote-counter');
 
 // Állapot
-let currentBattleData = null;
+let current = null;        // { battle, receivedAt }
+let prefetched = null;     // Promise<{ battle, receivedAt }> – a következő pár, már előtöltött képekkel
+let busy = false;
+let enableTimer = null;
+let dailyLimitReached = false;
 
-// Segédfüggvények
-function resetModelNameStyles() {
-    battleModel1Name.classList.remove('text-success');
-    battleModel2Name.classList.remove('text-success');
-    battleModel1Name.style.fontWeight = 'normal';
-    battleModel2Name.style.fontWeight = 'normal';
-}
-function disableVoting(disabled) {
-    voteBtn1.disabled = disabled;
-    voteBtn2.disabled = disabled;
-    tieBtn.disabled = disabled;
-    skipBtn.disabled = disabled;
-}
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-// Helper function to dynamically adjust image max-height
-function adjustImageHeight() {
-    // No-op: Layout is now handled by CSS Flexbox
-    return;
+async function fetchBattle() {
+    const battle = await requestJson('/api/battle_data');
+    const receivedAt = performance.now();
+    await preloadImages([battle.image_a, battle.image_b]);
+    return { battle, receivedAt };
 }
 
-// Add resize listener
-// window.addEventListener('resize', adjustImageHeight);
+/** A következő pár letöltése és képeinek dekódolása, amíg az eredményt mutatjuk. */
+function startPrefetch() {
+    if (!prefetched) {
+        prefetched = fetchBattle();
+        prefetched.catch(() => {}); // A hibát a felhasználáskor kezeljük
+    }
+}
+
+function takeNextBattle() {
+    const pending = prefetched || fetchBattle();
+    prefetched = null;
+    return pending;
+}
+
+function setVotingEnabled(enabled) {
+    Object.values(voteButtons).forEach((button) => { button.disabled = !enabled; });
+}
+
+function disableAll() {
+    clearTimeout(enableTimer);
+    setVotingEnabled(false);
+    skipBtn.disabled = true;
+}
+
+function resetReveal() {
+    Object.values(slots).forEach((slot, index) => {
+        slot.root.classList.remove('is-winner', 'is-loser', 'is-tie', 'is-bad', 'is-revealed');
+        slot.name.textContent = index === 0 ? 'Modell A' : 'Modell B';
+        slot.delta.hidden = true;
+        slot.delta.textContent = '';
+    });
+}
+
+function formatDelta(delta) {
+    if (!delta) return '±0';
+    return `${delta > 0 ? '+' : '−'}${Math.abs(delta).toFixed(1)}`;
+}
+
+function revealModels(result, choice) {
+    ['a', 'b'].forEach((side) => {
+        const slot = slots[side];
+        const model = result[`model_${side}`];
+        slot.root.classList.add('is-revealed');
+        slot.name.textContent = model.display;
+        if (choice === side) slot.root.classList.add('is-winner');
+        else if (choice === 'a' || choice === 'b') slot.root.classList.add('is-loser');
+        else if (choice === 'tie') slot.root.classList.add('is-tie');
+        else if (choice === 'both_bad') slot.root.classList.add('is-bad');
+
+        if (typeof model.elo_delta === 'number') {
+            slot.delta.textContent = `${formatDelta(model.elo_delta)} ELO`;
+            slot.delta.className = `elo-delta ${model.elo_delta >= 0 ? 'text-bg-success' : 'text-bg-danger'}`;
+            slot.delta.hidden = false;
+        }
+    });
+}
+
+function updateVoteCounter(result) {
+    if (!voteCounter || typeof result.votes_today !== 'number') return;
+    voteCounter.textContent = `Mai szavazataid: ${result.votes_today} / ${result.daily_limit}`;
+    dailyLimitReached = result.votes_today >= result.daily_limit;
+}
+
+function scheduleVotingEnable() {
+    clearTimeout(enableTimer);
+    if (!current || !isLoggedIn() || dailyLimitReached) return;
+    const { battle, receivedAt } = current;
+    const remaining = Math.max(0, battle.vote_delay_ms - (performance.now() - receivedAt)) + 50;
+    enableTimer = setTimeout(() => {
+        if (!busy) setVotingEnabled(true);
+    }, remaining);
+}
+
+function showBattle(next) {
+    current = next;
+    const { battle } = next;
+    const fullPromptText = `Prompt: "${battle.prompt_text}" (ID: ${battle.prompt_id})`;
+    battlePrompt.textContent = fullPromptText;
+    battlePromptPopup.textContent = fullPromptText;
+    setPromptOpen(false);
+    resetReveal();
+    // A képek már le vannak töltve és dekódolva, így nincs üres/villogó képterület
+    slots.a.image.src = battle.image_a;
+    slots.b.image.src = battle.image_b;
+    skipBtn.disabled = false;
+    if (isLoggedIn()) {
+        scheduleVotingEnable();
+    } else {
+        showLoginPrompt();
+    }
+}
 
 export async function loadBattleData() {
-    battlePrompt.textContent = "Új prompt betöltése...";
-    resetModelNameStyles();
-    battleModel1Name.textContent = "Modell A";
-    battleModel2Name.textContent = "Modell B";
-    disableVoting(true);
-    const data = await fetchData('/api/battle_data');
-    if (data) {
-        try {
-            await preloadImages([data.model1.image_url, data.model2.image_url]);
-        } catch (error) {
-            console.error('Battle image preload failed:', error);
-            battlePrompt.textContent = "Hiba a képek betöltése közben.";
-            if (currentBattleData) {
-                // The server has already issued a different battle, so the
-                // previously visible pair must not be votable. Browsing on to
-                // another pair is still safe.
-                voteBtn1.disabled = true;
-                voteBtn2.disabled = true;
-                tieBtn.disabled = false;
-                skipBtn.disabled = false;
-            }
-            return;
-        }
-
-        currentBattleData = data;
-        const fullPromptText = `Prompt: "${data.prompt_text}" (ID: ${data.prompt_id})`;
-        battlePrompt.textContent = fullPromptText;
-        battlePromptPopup.textContent = fullPromptText;
-        battlePromptPopup.style.display = 'none';
-        battlePrompt.classList.remove('prompt-open');
-        // A modellek valódi neveit itt már nem állítjuk be, csak a szavazás után.
-        // Swap only after both resources are downloaded and decoded. Until
-        // then the previous round stays visible, so even a cache lookup cannot
-        // produce a blank/flickering image area.
-        battleImage1.src = data.model1.image_url;
-        battleImage2.src = data.model2.image_url;
-        if (isLoggedIn()) {
-            disableVoting(false);
-        } else {
-            // Only disable vote buttons, keep tie and skip for browsing
-            voteBtn1.disabled = true;
-            voteBtn2.disabled = true;
-            tieBtn.disabled = false;
-            skipBtn.disabled = false;
-            const loginMsg = document.getElementById('login-required-message');
-            if (loginMsg) loginMsg.style.display = 'block';
-        }
-        
-        // Adjust height after images are set
-        // setTimeout(adjustImageHeight, 0);
-    } else {
-        battlePrompt.textContent = "Hiba a prompt betöltése közben.";
+    if (busy) return;
+    busy = true;
+    disableAll();
+    if (!current) battlePrompt.textContent = 'Új prompt betöltése...';
+    try {
+        showBattle(await takeNextBattle());
+    } catch (error) {
+        console.error('Battle load failed:', error);
+        current = null;
+        showToast(error.message || 'Hiba a battle betöltése közben.', 'danger');
+        battlePrompt.textContent = 'Hiba a betöltés közben. Kattints a Kihagyás gombra az újrapróbáláshoz.';
+        skipBtn.disabled = false;
+    } finally {
+        busy = false;
     }
 }
 
-async function handleVote(winnerId, loserId) {
-    if (!currentBattleData || !isLoggedIn()) return;
-    disableVoting(true);
-    const voteData = {
-        prompt_id: currentBattleData.prompt_id,
-        winner: winnerId,
-        loser: loserId
-    };
-    const result = await fetchData('/api/vote', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(voteData)
-    });
-    if (result && result.success) {
-        const m1 = currentBattleData.model1;
-        const m2 = currentBattleData.model2;
-        battleModel1Name.textContent = m1.provider ? `${m1.provider}: ${m1.name}` : m1.name;
-        battleModel2Name.textContent = m2.provider ? `${m2.provider}: ${m2.name}` : m2.name;
-        if (winnerId === currentBattleData.model1.id) {
-            battleModel1Name.classList.add('text-success');
-            battleModel1Name.style.fontWeight = 'bold';
-        } else if (winnerId === currentBattleData.model2.id) {
-            battleModel2Name.classList.add('text-success');
-            battleModel2Name.style.fontWeight = 'bold';
-        }
-        setTimeout(() => {
-            loadBattleData();
-        }, getRevealDelayMs());
-    } else {
-        disableVoting(false);
+async function handleChoice(choice) {
+    if (!current || busy) return;
+    if (!isLoggedIn()) {
+        showLoginPrompt();
+        return;
     }
+    busy = true;
+    disableAll();
+    startPrefetch();
+    const battleId = current.battle.battle_id;
+    try {
+        const result = await requestJson('/api/vote', { method: 'POST', json: { battle_id: battleId, choice } });
+        revealModels(result, choice);
+        updateVoteCounter(result);
+        await wait(getRevealDelayMs());
+    } catch (error) {
+        if (error.code === 'too_fast') {
+            // A pár még érvényes: csak várni kell egy kicsit
+            showToast(error.message, 'warning');
+            busy = false;
+            skipBtn.disabled = false;
+            scheduleVotingEnable();
+            return;
+        }
+        if (error.code === 'daily_limit') dailyLimitReached = true;
+        if (error.status === 401) showLoginPrompt();
+        showToast(error.message, error.status >= 500 ? 'danger' : 'warning');
+    }
+    busy = false;
+    loadBattleData();
+}
+
+async function handleSkip() {
+    if (busy) return;
+    if (!current) {
+        loadBattleData();
+        return;
+    }
+    busy = true;
+    disableAll();
+    startPrefetch();
+    try {
+        const result = await requestJson('/api/battle/skip', { method: 'POST', json: { battle_id: current.battle.battle_id } });
+        revealModels(result, null);
+        await wait(Math.min(getRevealDelayMs(), 1200));
+    } catch (error) {
+        // Lejárt vagy már lezárt pár: egyszerűen jöhet a következő
+        console.warn('Skip failed:', error);
+    }
+    busy = false;
+    loadBattleData();
+}
+
+function setPromptOpen(open) {
+    battlePromptPopup.style.display = open ? 'block' : 'none';
+    battlePrompt.classList.toggle('prompt-open', open);
+    battlePrompt.setAttribute('aria-expanded', String(open));
+}
+
+function isBattleVisible() {
+    return battleModeDiv.offsetParent !== null;
 }
 
 export function initBattleMode() {
-    voteBtn1.addEventListener('click', () => {
-        if (currentBattleData) {
-            handleVote(currentBattleData.model1.id, currentBattleData.model2.id);
-        }
-    });
-    voteBtn2.addEventListener('click', () => {
-        if (currentBattleData) {
-            handleVote(currentBattleData.model2.id, currentBattleData.model1.id);
-        }
-    });
-    tieBtn.addEventListener('click', () => {
-        if (currentBattleData) {
-            const m1t = currentBattleData.model1;
-            const m2t = currentBattleData.model2;
-            battleModel1Name.textContent = m1t.provider ? `${m1t.provider}: ${m1t.name}` : m1t.name;
-            battleModel2Name.textContent = m2t.provider ? `${m2t.provider}: ${m2t.name}` : m2t.name;
-            setTimeout(() => {
-                loadBattleData();
-            }, getRevealDelayMs());
-        } else {
-            loadBattleData();
-        }
-    });
-    skipBtn.addEventListener('click', () => {
-        if (currentBattleData) {
-            const m1s = currentBattleData.model1;
-            const m2s = currentBattleData.model2;
-            battleModel1Name.textContent = m1s.provider ? `${m1s.provider}: ${m1s.name}` : m1s.name;
-            battleModel2Name.textContent = m2s.provider ? `${m2s.provider}: ${m2s.name}` : m2s.name;
-            setTimeout(() => {
-                loadBattleData();
-            }, getRevealDelayMs());
-        } else {
-            loadBattleData();
+    voteButtons.a.addEventListener('click', () => handleChoice('a'));
+    voteButtons.b.addEventListener('click', () => handleChoice('b'));
+    voteButtons.tie.addEventListener('click', () => handleChoice('tie'));
+    voteButtons.both_bad.addEventListener('click', () => handleChoice('both_bad'));
+    skipBtn.addEventListener('click', handleSkip);
+
+    // Prompt kinyitása/becsukása kattintásra vagy Enter/Space billentyűre
+    const togglePrompt = () => setPromptOpen(battlePromptPopup.style.display === 'none');
+    battlePrompt.addEventListener('click', togglePrompt);
+    battlePrompt.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            togglePrompt();
         }
     });
 
-    // Prompt kinyitása/becsukása kattintásra
-    battlePrompt.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const isOpen = battlePromptPopup.style.display !== 'none';
-        battlePromptPopup.style.display = isOpen ? 'none' : 'block';
-        battlePrompt.classList.toggle('prompt-open', !isOpen);
-    });
+    const keyMap = {
+        '1': 'a', 'ArrowLeft': 'a',
+        '2': 'b', 'ArrowRight': 'b',
+        '0': 'tie', 't': 'tie', 'T': 'tie',
+        'x': 'both_bad', 'X': 'both_bad',
+    };
 
     document.addEventListener('keydown', (event) => {
-        // Prevent shortcuts if user is typing in an input, textarea, or contentEditable element
-        const targetTagName = event.target.tagName;
-        if (targetTagName === 'INPUT' || targetTagName === 'TEXTAREA' || event.target.isContentEditable) {
+        if (event.ctrlKey || event.metaKey || event.altKey || event.defaultPrevented) return;
+        const target = event.target;
+        if (['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName) || target.isContentEditable) return;
+        if (!isBattleVisible() || document.body.classList.contains('modal-open')) return;
+
+        if (event.key === 's' || event.key === 'S') {
+            if (!skipBtn.disabled) skipBtn.click();
             return;
         }
-
-        // Check if the battle mode UI is currently visible and active
-        // and if voting is currently allowed (buttons are not disabled)
-        // battleModeDiv.offsetParent will be null if the element or its parents are display:none
-        if (battleModeDiv.offsetParent === null || !currentBattleData) {
-            return;
-        }
-
-        switch (event.key) {
-            case '1':
-                if (!voteBtn1.disabled) voteBtn1.click();
-                break;
-            case '2':
-                if (!voteBtn2.disabled) voteBtn2.click();
-                break;
-            case '0':
-                if (!tieBtn.disabled) tieBtn.click();
-                break;
+        const choice = keyMap[event.key];
+        if (choice && !voteButtons[choice].disabled) {
+            event.preventDefault();
+            voteButtons[choice].click();
         }
     });
-
-    // Add resize listener
-    window.addEventListener('resize', adjustImageHeight);
-    
-    // Initial adjustment
-    // adjustImageHeight();
-}
-
-// Ensure adjustImageHeight is called when the module loads (if DOM is ready)
-if (document.readyState === 'loading') {
-    // document.addEventListener('DOMContentLoaded', adjustImageHeight);
-} else {
-    // adjustImageHeight();
 }

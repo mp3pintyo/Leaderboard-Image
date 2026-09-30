@@ -34,7 +34,7 @@ def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if 'user' not in session:
-            return jsonify({"error": "Bejelentkezés szükséges a szavazáshoz."}), 401
+            return jsonify({"error": "Bejelentkezés szükséges a szavazáshoz.", "code": "login_required"}), 401
         return f(*args, **kwargs)
     return decorated_function
 
@@ -75,7 +75,7 @@ def csrf_protect(f):
 
         if not expected_token or not submitted_token or not hmac.compare_digest(expected_token, str(submitted_token)):
             if request.path.startswith('/api/'):
-                return jsonify({"error": "Érvénytelen vagy hiányzó biztonsági token."}), 403
+                return jsonify({"error": "Érvénytelen vagy hiányzó biztonsági token. Frissítsd az oldalt.", "code": "csrf"}), 403
             abort(403)
 
         return f(*args, **kwargs)

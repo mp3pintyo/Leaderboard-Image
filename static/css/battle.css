@@ -1,0 +1,263 @@
+/* --- Betöltésjelző: vékony, fix sáv az oldal tetején (nem tolja el a tartalmat) --- */
+.loading-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    z-index: 1100;
+    pointer-events: none;
+    opacity: 0;
+    background: linear-gradient(90deg, transparent, var(--bs-primary, #0d6efd), transparent);
+    background-size: 50% 100%;
+    background-repeat: no-repeat;
+    transition: opacity 0.2s;
+}
+
+.loading-bar.active {
+    opacity: 1;
+    animation: loading-bar-slide 1.1s linear infinite;
+}
+
+@keyframes loading-bar-slide {
+    from { background-position: -50% 0; }
+    to { background-position: 150% 0; }
+}
+
+/* --- Arena Battle elrendezés --- */
+.battle-layout {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - var(--nav-height, 56px));
+    height: calc(100dvh - var(--nav-height, 56px));
+    padding-top: 0.5rem;
+}
+
+.battle-header,
+.battle-controls {
+    flex-shrink: 0;
+}
+
+.battle-images {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    max-width: 1600px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.battle-slot {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    margin: 0;
+}
+
+.battle-slot-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 2rem;
+    margin-bottom: 0.35rem;
+    font-weight: 600;
+}
+
+.battle-side-badge {
+    display: inline-grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 50%;
+    background: var(--bs-secondary-bg, #e9ecef);
+    font-size: 0.8rem;
+    font-weight: 800;
+}
+
+.battle-model-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: color 0.2s;
+}
+
+.elo-delta {
+    display: inline-block;
+    flex-shrink: 0;
+    padding: 0.1rem 0.45rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    animation: elo-pop 0.35s ease-out;
+}
+
+@keyframes elo-pop {
+    from { transform: scale(0.6); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.battle-image-frame {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#battle-mode .arena-image {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    min-height: 0;
+    margin: 0 auto;
+    object-fit: contain;
+    border: 0;
+    border-radius: 0.5rem;
+    transition: opacity 0.25s, box-shadow 0.25s, filter 0.25s;
+}
+
+/* Az első betöltésig csillogó helykitöltő */
+#battle-mode .arena-image[src=""] {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(100deg, var(--bs-secondary-bg, #e9ecef) 40%, var(--bs-tertiary-bg, #f8f9fa) 50%, var(--bs-secondary-bg, #e9ecef) 60%);
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.4s linear infinite;
+}
+
+@keyframes skeleton-shimmer {
+    from { background-position: 100% 0; }
+    to { background-position: -100% 0; }
+}
+
+/* Eredmény: keret a képen, jel az oldaljelvényben (✓ győztes, = döntetlen, ✕ mindkettő rossz) */
+.battle-slot.is-winner .arena-image { box-shadow: 0 0 0 4px var(--bs-success, #198754); }
+.battle-slot.is-loser .arena-image { opacity: 0.55; filter: grayscale(0.4); }
+.battle-slot.is-tie .arena-image { box-shadow: 0 0 0 4px var(--bs-secondary, #6c757d); }
+.battle-slot.is-bad .arena-image { box-shadow: 0 0 0 4px var(--bs-danger, #dc3545); opacity: 0.7; }
+.battle-slot.is-winner .battle-model-name { color: var(--bs-success-text-emphasis, #198754); }
+
+.battle-slot.is-winner .battle-side-badge,
+.battle-slot.is-tie .battle-side-badge,
+.battle-slot.is-bad .battle-side-badge {
+    color: #fff;
+    font-size: 0;
+    animation: elo-pop 0.35s ease-out;
+}
+.battle-slot.is-winner .battle-side-badge { background: var(--bs-success, #198754); }
+.battle-slot.is-tie .battle-side-badge { background: var(--bs-secondary, #6c757d); }
+.battle-slot.is-bad .battle-side-badge { background: var(--bs-danger, #dc3545); }
+.battle-slot.is-winner .battle-side-badge::before { content: '✓'; font-size: 0.95rem; }
+.battle-slot.is-tie .battle-side-badge::before { content: '='; font-size: 0.95rem; }
+.battle-slot.is-bad .battle-side-badge::before { content: '✕'; font-size: 0.95rem; }
+
+.battle-controls {
+    max-width: 1100px;
+    width: 100%;
+    margin: 0.5rem auto 0;
+    padding-bottom: 0.5rem;
+}
+
+.battle-vote-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1.4fr;
+    gap: 0.5rem;
+}
+
+.battle-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    font-weight: 600;
+}
+
+.battle-btn kbd,
+.battle-skip kbd {
+    background: rgba(0, 0, 0, 0.18);
+    color: inherit;
+    font-size: 0.72rem;
+    padding: 0.1rem 0.35rem;
+}
+
+.battle-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem 1rem;
+    margin-top: 0.45rem;
+}
+
+.battle-shortcuts kbd {
+    font-size: 0.7rem;
+    padding: 0.05rem 0.3rem;
+}
+
+@media (max-width: 767.98px) {
+    .battle-layout {
+        padding-top: 0.25rem;
+    }
+
+    .battle-images {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(2, minmax(0, 1fr));
+        gap: 0.35rem;
+    }
+
+    .battle-slot-label {
+        min-height: 1.4rem;
+        margin-bottom: 0.1rem;
+        font-size: 0.8rem;
+    }
+
+    .battle-side-badge {
+        width: 1.3rem;
+        height: 1.3rem;
+    }
+
+    #battle-mode .prompt-truncated {
+        font-size: 0.75rem;
+        padding: 0.2rem 0.4rem;
+        margin-bottom: 0.2rem !important;
+    }
+
+    .battle-vote-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.3rem;
+    }
+
+    .battle-vote-grid #vote-btn1 { order: 1; }
+    .battle-vote-grid #vote-btn2 { order: 2; }
+    .battle-vote-grid #tie-btn { order: 3; }
+    .battle-vote-grid #both-bad-btn { order: 4; }
+
+    .battle-btn {
+        font-size: 0.78rem;
+        padding: 0.3rem 0.35rem;
+    }
+
+    .battle-btn kbd {
+        display: none;
+    }
+
+    .battle-meta {
+        margin-top: 0.25rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .loading-bar.active,
+    #battle-mode .arena-image[src=""],
+    .elo-delta,
+    .battle-side-badge {
+        animation: none !important;
+    }
+}

@@ -4,15 +4,17 @@ import path from 'node:path';
 
 test('Side-by-Side shows every selected image on mobile and desktop', async ({ page, isMobile }) => {
     const image = index => `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800"><rect width="800" height="800" fill="${['red', 'green', 'blue'][index]}"/></svg>`)}`;
-    await page.route('**/api/side_by_side_data?*', route => route.fulfill({
-        json: {
+    await page.route('**/api/side_by_side_data?*', route => {
+        const params = new URL(route.request().url()).searchParams;
+        const json = {
             prompt_id: 'test-prompt',
             prompt_text: 'Mobil képek ellenőrzése',
             model1: { name: 'Modell 1', image_url: image(0) },
-            model2: { name: 'Modell 2', image_url: image(1) },
-            model3: { name: 'Modell 3', image_url: image(2) }
-        }
-    }));
+            model2: { name: 'Modell 2', image_url: image(1) }
+        };
+        if (params.get('model3')) json.model3 = { name: 'Modell 3', image_url: image(2) };
+        return route.fulfill({ json });
+    });
 
     await page.goto('/');
     if (isMobile) await page.locator('.navbar-toggler').click();

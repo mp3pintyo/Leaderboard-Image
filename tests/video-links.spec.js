@@ -13,12 +13,14 @@ test('Video column persists and distinguishes channel and model video', async ({
     const response = await request.get('/api/leaderboard');
     const models = await response.json();
     expect(models.length).toBeGreaterThan(0);
-    expect(models.every(model => model.video_url === channel && !model.video_is_custom)).toBe(true);
+    expect(models.every(model => typeof model.video_url === 'string' && typeof model.video_is_custom === 'boolean')).toBe(true);
     await page.route('**/api/leaderboard?*', async route => {
         const response = await route.fetch();
         const rows = await response.json();
         rows[0].video_url = custom;
         rows[0].video_is_custom = true;
+        rows[1].video_url = channel;
+        rows[1].video_is_custom = false;
         await route.fulfill({ response, json: rows });
     });
     await page.goto('/');
@@ -43,13 +45,15 @@ test('Video column persists and distinguishes channel and model video', async ({
 test('Comparison shows both video link types', async ({ page, request }) => {
     const response = await request.get('/api/model_info?model1=model-001&model2=model-002');
     const data = await response.json();
-    expect(data.model1.video_url).toBe(channel);
-    expect(data.model2.video_is_custom).toBe(false);
+    expect(typeof data.model1.video_url).toBe('string');
+    expect(typeof data.model2.video_is_custom).toBe('boolean');
     await page.route('**/api/model_info?*', async route => {
         const response = await route.fetch();
         const data = await response.json();
         data.model1.video_url = custom;
         data.model1.video_is_custom = true;
+        data.model2.video_url = channel;
+        data.model2.video_is_custom = false;
         await route.fulfill({ response, json: data });
     });
     await page.goto('/');

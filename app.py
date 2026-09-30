@@ -1,16 +1,47 @@
 import os
+import re
+import json
 import random
+import secrets
 import sqlite3
 import sys
 import glob
+import logging
 import datetime
+import threading
+import time
+from collections import deque
 from flask import Flask, render_template, jsonify, request, send_from_directory, abort, redirect, url_for, session
 from werkzeug.middleware.proxy_fix import ProxyFix
-from database import close_db, get_db, init_db, get_prompt_ids, update_elo
-from config import (DATA_DIR, ALLOWED_EXTENSIONS, DEFAULT_ELO, MODELS, DEFAULT_VIDEO_URL, REVEAL_DELAY_MS, FROZEN_BOTTOM_COUNT,
-                     NEW_MODEL_BOOST_THRESHOLD, NEW_MODEL_BOOST_WEIGHT,
-                     DEFAULT_SECRET_KEY, SECRET_KEY, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET)
+from database import (close_db, get_db, init_db, get_prompt_ids, update_elo, immediate_transaction, utc_now_iso,
+                      utc_now_naive, utc_iso_from_datetime, to_iso_utc, OUTCOME_WIN, OUTCOME_TIE, OUTCOME_BOTH_BAD, DRAW_OUTCOMES)
+from config import (DATA_DIR, ALLOWED_EXTENSIONS, DEFAULT_ELO, K_FACTOR, MODELS, DEFAULT_VIDEO_URL, REVEAL_DELAY_MS,
+                    FROZEN_BOTTOM_COUNT, NEW_MODEL_BOOST_THRESHOLD, NEW_MODEL_BOOST_WEIGHT,
+                    BATTLE_TTL_SECONDS, MAX_OPEN_BATTLES, MIN_VOTE_DELAY_MS, DAILY_VOTE_LIMIT,
+                    BATTLE_RATE_LIMIT_PER_MINUTE,
+                    DEFAULT_SECRET_KEY, SECRET_KEY, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET)
 from auth import csrf_protect, get_csrf_token, oauth, init_oauth, login_required, get_current_user, save_user
+
+if not logging.getLogger().handlers:
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(name)s: %(message)s')
+logger = logging.getLogger('arena')
+
+
+def model_display(model):
+    """A megjelenítendő név: "Szolgáltató: Modell"."""
+    return f"{model.get('provider')}: {model['name']}" if model.get('provider') else model['name']
+
+
+def model_public(model_id):
+    """Egy modell nyilvános azonosító adatai (szavazás után felfedhető)."""
+    model = MODELS[model_id]
+    return {
+        'id': model_id,
+        'name': model['name'],
+        'provider': model.get('provider') or '',
+        'display': model_display(model),
+    }
+
 
 def get_model_video(model):
     url = (model.get('video_url') or DEFAULT_VIDEO_URL).strip() or DEFAULT_VIDEO_URL
@@ -30,7 +61,8 @@ IMAGE_CACHE_MAX_AGE_SECONDS = 7 * 24 * 60 * 60
 
 # Check if DATA_MODE is set for remote image loading
 DATA_MODE = os.environ.get('DATA_MODE')
-BATTLE_SESSION_KEY = 'active_battle'
+SESSION_ID_KEY = 'sid'
+LOGIN_NEXT_KEY = 'login_next'
 ALLOW_INSECURE_DEV_SECRET = __name__ == '__main__'
 
 if SECRET_KEY == DEFAULT_SECRET_KEY and not ALLOW_INSECURE_DEV_SECRET:
@@ -46,31 +78,41 @@ app.config['GOOGLE_CLIENT_SECRET'] = GOOGLE_CLIENT_SECRET
 app.config['GITHUB_CLIENT_ID'] = GITHUB_CLIENT_ID
 app.config['GITHUB_CLIENT_SECRET'] = GITHUB_CLIENT_SECRET
 
-# Trust proxy headers for HTTPS behind reverse proxy (Render.com)
+# Trust proxy headers for HTTPS and the client IP behind reverse proxy (Render.com)
 if DATA_MODE:
-    app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
 
 app.teardown_appcontext(close_db)
 
 # Initialize OAuth providers
 init_oauth(app)
 
+
+@app.after_request
+def set_security_headers(response):
+    response.headers.setdefault('X-Content-Type-Options', 'nosniff')
+    response.headers.setdefault('X-Frame-Options', 'DENY')
+    response.headers.setdefault('Referrer-Policy', 'strict-origin-when-cross-origin')
+    response.headers.setdefault('Permissions-Policy', 'camera=(), microphone=(), geolocation=()')
+    if request.path.startswith('/api/'):
+        response.headers.setdefault('Cache-Control', 'no-store')
+    return response
+
+
 @app.route('/static/js/<path:filename>')
 def serve_js(filename):
     """Serve JavaScript files with proper MIME type for ES modules."""
     return send_from_directory('static/js', filename, mimetype='application/javascript')
-
-# Statikus fájlok kiszolgálása a node_modules mappából
-# @app.route('/node_modules/<path:filename>')
-# def serve_node_modules(filename):
-#     node_modules_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'node_modules')
-#     return send_from_directory(node_modules_dir, filename)
 
 # Adatbázis inicializálása indításkor (ha szükséges)
 with app.app_context():
     init_db()
 
 AVAILABLE_PROMPTS = [] # Gyorsítótárazzuk a prompt ID-kat
+_prompt_text_cache = {}
+_prompt_model_files_cache = {}
+_battle_pairs_cache = None
+
 
 def get_price_per_1000_images(min_price_per_image):
     """A konfigurált minimum API-árat alakítja USD / 1000 képre."""
@@ -81,46 +123,33 @@ def get_price_per_1000_images(min_price_per_image):
     return round(float(min_price_per_image) * 1000, 4)
 
 def update_available_prompts():
-    """Frissíti az elérhető prompt ID-k listáját."""
-    global AVAILABLE_PROMPTS
+    """Frissíti az elérhető prompt ID-k listáját és üríti a hozzájuk tartozó gyorsítótárakat."""
+    global AVAILABLE_PROMPTS, _battle_pairs_cache
     AVAILABLE_PROMPTS = get_prompt_ids()
+    _prompt_text_cache.clear()
+    _prompt_model_files_cache.clear()
+    _battle_pairs_cache = None
     if not AVAILABLE_PROMPTS:
-        print("Warning: No valid prompts found in data directory!")
+        logger.warning("No valid prompts found in data directory!")
 
-def update_frozen_models():
+def update_frozen_models(db=None):
     """Befagyasztja a leaderboard alsó FROZEN_BOTTOM_COUNT modelljét.
-    
+
     A befagyasztott modellek nem vesznek részt az Arena Battle-ben,
     de továbbra is láthatók a Side-by-Side módban és a Leaderboard-on.
     """
     try:
-        db = get_db()
-        
-        if not FROZEN_BOTTOM_COUNT or FROZEN_BOTTOM_COUNT <= 0:
-            print("Frozen models feature is disabled (FROZEN_BOTTOM_COUNT = 0). Unfreezing all models.")
-            with db:
-                db.execute("UPDATE model_elo SET frozen = 0")
-                db.commit()
-            return
-
-        # Modellek lekérdezése ELO szerint növekvő sorrendben (legrosszabbak elöl)
-        rows = db.execute("SELECT model, elo FROM model_elo ORDER BY elo ASC").fetchall()
-        models_ordered = [r['model'] for r in rows]
-        
-        # Az alsó N modell befagyasztása
-        bottom_n = models_ordered[:FROZEN_BOTTOM_COUNT]
-        
+        db = db or get_db()
         with db:
-            # Először minden modellt feloldunk
             db.execute("UPDATE model_elo SET frozen = 0")
-            # Majd befagyasztjuk az alsó N-et
-            for m in bottom_n:
-                db.execute("UPDATE model_elo SET frozen = 1 WHERE model = ?", (m,))
-            db.commit()
-        
-        print(f"Frozen {len(bottom_n)} models at the bottom of the leaderboard: {bottom_n}")
-    except sqlite3.Error as e:
-        print(f"Error updating frozen models: {e}")
+            if not FROZEN_BOTTOM_COUNT or FROZEN_BOTTOM_COUNT <= 0:
+                return
+            # Modellek lekérdezése ELO szerint növekvő sorrendben (legrosszabbak elöl)
+            rows = db.execute("SELECT model FROM model_elo ORDER BY elo ASC LIMIT ?", (FROZEN_BOTTOM_COUNT,)).fetchall()
+            db.executemany("UPDATE model_elo SET frozen = 1 WHERE model = ?", [(r['model'],) for r in rows])
+        logger.info("Frozen %d models at the bottom of the leaderboard.", len(rows))
+    except sqlite3.Error:
+        logger.exception("Error updating frozen models")
 
 # Befagyasztott modellek frissítése indításkor (a függvény definíciója után)
 with app.app_context():
@@ -135,49 +164,62 @@ def load_manifest():
     if _manifest_cache is None:
         manifest_path = os.path.join(app.config['DATA_DIR'], 'manifest.json')
         if os.path.exists(manifest_path):
-            import json
             with open(manifest_path, 'r', encoding='utf-8') as f:
                 _manifest_cache = json.load(f)
-            print(f"Manifest loaded: {len(_manifest_cache)} prompts.")
+            logger.info("Manifest loaded: %d prompts.", len(_manifest_cache))
         else:
-            print("Warning: manifest.json not found! Run generate_manifest.py locally and commit it.")
+            logger.warning("manifest.json not found! Run generate_manifest.py locally and commit it.")
             _manifest_cache = {}
     return _manifest_cache
 
 
-# Új segédfüggvény a fájlok megtalálásához, ami nem veszi figyelembe a kiterjesztést
+def _manifest_filename(entry):
+    """A manifest bejegyzés lehet egyszerű fájlnév vagy {"file": ..., "key": ...} objektum."""
+    if isinstance(entry, dict):
+        return entry.get('file')
+    return entry
+
+
 def find_model_file(prompt_id, model_base_name):
     """
     Megkeresi a megfelelő modell fájlt a megadott mappában, a kiterjesztéstől függetlenül.
     DATA_MODE esetén a manifest.json-ból olvassa ki a fájlnevet (nincs helyi kép).
-    
+
     :param prompt_id: A prompt mappájának azonosítója
     :param model_base_name: A modell fájl alapneve kiterjesztés nélkül
     :return: A teljes fájlnév kiterjesztéssel, vagy None ha nem található
     """
     if DATA_MODE:
         manifest = load_manifest()
-        return manifest.get(prompt_id, {}).get(model_base_name)
+        return _manifest_filename(manifest.get(prompt_id, {}).get(model_base_name))
 
     directory = os.path.join(app.config['DATA_DIR'], prompt_id)
-    
+
     # Megnézzük az összes lehetséges kiterjesztéssel, hogy létezik-e a fájl
     for ext in ALLOWED_EXTENSIONS:
         potential_file = f"{model_base_name}{ext}"
         if os.path.exists(os.path.join(directory, potential_file)):
             return potential_file
-    
+
     # Ha nem találtuk meg a pontos egyezést, próbáljuk meg fájlmintával
-    pattern = os.path.join(directory, f"{model_base_name}.*")
-    matching_files = glob.glob(pattern)
-    
-    # Szűrjük az eredményt csak az engedélyezett kiterjesztésekre
-    for file in matching_files:
-        file_ext = os.path.splitext(file)[1].lower()
-        if file_ext in ALLOWED_EXTENSIONS:
+    for file in glob.glob(os.path.join(directory, f"{glob.escape(model_base_name)}.*")):
+        if os.path.splitext(file)[1].lower() in ALLOWED_EXTENSIONS:
             return os.path.basename(file)
-    
+
     return None
+
+
+def get_prompt_model_files(prompt_id):
+    """{model_id: fájlnév} azoknak a modelleknek, amelyeknek van képe az adott prompthoz (gyorsítótárazva)."""
+    files = _prompt_model_files_cache.get(prompt_id)
+    if files is None:
+        files = {}
+        for model_id, model in MODELS.items():
+            filename = find_model_file(prompt_id, model['filename'])
+            if filename:
+                files[model_id] = filename
+        _prompt_model_files_cache[prompt_id] = files
+    return files
 
 
 def get_image_url(prompt_id, filename):
@@ -187,128 +229,170 @@ def get_image_url(prompt_id, filename):
     """
     if DATA_MODE:
         return f"{DATA_MODE}/{prompt_id}/{filename}"
-    else:
-        return f"/images/{prompt_id}/{filename}"
+    return f"/images/{prompt_id}/{filename}"
 
 
-def store_active_battle(prompt_id, model1_id, model2_id):
-    """Store the currently issued battle in the session for vote validation."""
-    session[BATTLE_SESSION_KEY] = {
-        'prompt_id': prompt_id,
-        'models': sorted((model1_id, model2_id)),
-    }
+def get_model_image_url(prompt_id, model_id):
+    filename = get_prompt_model_files(prompt_id).get(model_id)
+    return get_image_url(prompt_id, filename) if filename else None
 
 
-def consume_active_battle():
-    """Read and clear the currently issued battle from the session."""
-    battle = session.pop(BATTLE_SESSION_KEY, None)
-    if not isinstance(battle, dict):
+def read_prompt_text(prompt_id):
+    """A prompt szövege (gyorsítótárazva). None, ha nem olvasható."""
+    if prompt_id in _prompt_text_cache:
+        return _prompt_text_cache[prompt_id]
+    prompt_path = os.path.join(app.config['DATA_DIR'], prompt_id, 'prompt.txt')
+    try:
+        with open(prompt_path, 'r', encoding='utf-8') as f:
+            text = f.read().strip()
+    except OSError:
+        logger.exception("Error reading prompt file for prompt_id=%s", prompt_id)
         return None
+    _prompt_text_cache[prompt_id] = text
+    return text
 
-    prompt_id = battle.get('prompt_id')
-    models = battle.get('models')
-    if not prompt_id or not isinstance(models, list) or len(models) != 2:
-        return None
 
-    return {
-        'prompt_id': prompt_id,
-        'models': sorted(models),
-    }
+class SlidingWindowRateLimiter:
+    """Egyszerű, folyamaton belüli csúszóablakos korlátozó (egy Gunicorn workerrel pontos)."""
+
+    def __init__(self, limit, window_seconds):
+        self.limit = limit
+        self.window = window_seconds
+        self._hits = {}
+        self._lock = threading.Lock()
+
+    def allow(self, key):
+        now = time.monotonic()
+        with self._lock:
+            hits = self._hits.setdefault(key, deque())
+            while hits and now - hits[0] > self.window:
+                hits.popleft()
+            if len(hits) >= self.limit:
+                return False
+            hits.append(now)
+            if len(self._hits) > 10000:
+                # Régi kulcsok takarítása, hogy a memória ne nőjön korlátlanul
+                for stale in [k for k, v in self._hits.items() if not v or now - v[-1] > self.window]:
+                    del self._hits[stale]
+            return True
+
+
+battle_rate_limiter = SlidingWindowRateLimiter(BATTLE_RATE_LIMIT_PER_MINUTE, 60)
+# Proxy mögött több felhasználó is osztozhat egy IP-címen, ezért ez csak laza külső korlát
+ip_rate_limiter = SlidingWindowRateLimiter(BATTLE_RATE_LIMIT_PER_MINUTE * 10, 60)
+
+
+def get_session_key():
+    """Véletlen, sessionhöz kötött azonosító: a battle-ök ehhez a sessionhöz tartoznak."""
+    sid = session.get(SESSION_ID_KEY)
+    if not sid:
+        sid = secrets.token_urlsafe(18)
+        session[SESSION_ID_KEY] = sid
+    return sid
+
+
+def rate_limit_key():
+    user = get_current_user()
+    if user:
+        return f"user:{user['id']}"
+    return f"sid:{get_session_key()}"
+
+
+def battle_request_allowed():
+    return (ip_rate_limiter.allow(f"ip:{request.remote_addr}")
+            and battle_rate_limiter.allow(rate_limit_key()))
+
+
+def api_error(message, status, code=None):
+    body = {"error": message}
+    if code:
+        body["code"] = code
+    return jsonify(body), status
 
 
 @app.before_request
 def before_first_request_func():
-    # Első kérés előtt (vagy fejlesztéskor minden kérés előtt, ha `debug=True`)
-    # frissítjük a prompt listát, hogy az új mappák megjelenjenek újraindítás nélkül.
-    # Éles környezetben ezt ritkábban is lehet futtatni.
-    if app.debug: # Csak debug módban frissítsen minden kérésnél
-       update_available_prompts()
-    elif not AVAILABLE_PROMPTS: # Vagy ha még üres a lista
-       update_available_prompts()
+    # Debug módban minden kérésnél frissítjük a prompt listát, hogy az új mappák
+    # újraindítás nélkül megjelenjenek. Élesben csak az első kérésnél töltjük be.
+    if app.debug or not AVAILABLE_PROMPTS:
+        update_available_prompts()
 
 # Szavazatok resetelésére szolgáló függvény
 def reset_votes():
     """Törli az összes szavazatot és visszaállítja az ELO pontszámokat az alapértelmezettre."""
     try:
         db = get_db()
+        now = utc_now_iso()
         with db:
-            # Szavazatok törlése
             db.execute('DELETE FROM votes')
-            
-            # ELO történeti adatok törlése
+            db.execute('DELETE FROM battles')
             db.execute('DELETE FROM elo_history')
-            
-            # ELO pontszámok visszaállítása az alapértelmezettre és frozen flag törlése
-            db.execute('UPDATE model_elo SET elo = ?, frozen = 0', (DEFAULT_ELO,))
-            
+            db.execute('UPDATE model_elo SET elo = ?, frozen = 0, last_updated = ?', (DEFAULT_ELO, now))
             # Kezdeti ELO értékek rögzítése a historikus táblában is
-            current_timestamp = datetime.datetime.now()
-            for model in MODELS.keys():
-                db.execute('INSERT INTO elo_history (model, elo, timestamp) VALUES (?, ?, ?)', 
-                          (model, DEFAULT_ELO, current_timestamp))
-            
-            db.commit()
-        print("Sikeres adatbázis resetelés! Az összes szavazat és ELO előzmény törölve, ELO pontszámok visszaállítva.")
+            db.executemany('INSERT INTO elo_history (model, elo, timestamp) VALUES (?, ?, ?)',
+                           [(model, DEFAULT_ELO, now) for model in MODELS.keys()])
+        logger.info("Database reset: all votes and ELO history deleted.")
         return True
-    except sqlite3.Error as e:
-        print(f"Adatbázis hiba a resetelés közben: {e}")
-        return False
-    except Exception as e:
-        print(f"Hiba a resetelés közben: {e}")
+    except sqlite3.Error:
+        logger.exception("Database error during reset")
         return False
 
 
 @app.route('/')
 def index():
     """Főoldal megjelenítése."""
-    # A modellek listáját névvel és szolgáltatóval adjuk át a template-nek
-    # display mező tartalmazza a megjelenítendő szöveget: "provider: name".
+    # A modellek listáját névvel és szolgáltatóval adjuk át a template-nek.
     # Rendezés display alapján, így a dropdownok is ABC-s listát mutatnak.
     models_for_template = sorted(
-        (
-            {
-                'id': model_id,
-                'name': model['name'],
-                'provider': model.get('provider') or '',
-                'display': f"{model.get('provider')}: {model['name']}" if model.get('provider') else model['name'],
-            }
-            for model_id, model in MODELS.items()
-        ),
+        ({**model_public(model_id), 'open_source': bool(model.get('open_source'))} for model_id, model in MODELS.items()),
         key=lambda m: m['display'].lower()
     )
-    
-    # Auth state for template
+
     user = get_current_user()
-    user_info = None
-    if user:
-        user_info = {'name': user['name'], 'provider': user['provider']}
-    
+    user_info = {'name': user['name'], 'provider': user['provider']} if user else None
+
     auth_providers = []
     if app.config.get('GOOGLE_CLIENT_ID'):
         auth_providers.append('google')
     if app.config.get('GITHUB_CLIENT_ID'):
         auth_providers.append('github')
-    
+
     return render_template('index.html', models=models_for_template, reveal_delay_ms=REVEAL_DELAY_MS,
-                         user=user_info, auth_providers=auth_providers, csrf_token=get_csrf_token(),
-                         dev_mode=app.debug)
+                           user=user_info, auth_providers=auth_providers, csrf_token=get_csrf_token(),
+                           dev_mode=app.debug, login_error=request.args.get('login_error') == '1')
 
 
 # --- Auth Endpoints ---
+
+_SAFE_NEXT_RE = re.compile(r'^#/[\w\-/?=&.%,~]*$')
+
+
+def _remember_login_next():
+    next_route = request.args.get('next', '')
+    if _SAFE_NEXT_RE.match(next_route):
+        session[LOGIN_NEXT_KEY] = next_route
+    else:
+        session.pop(LOGIN_NEXT_KEY, None)
+
+
+def _finish_login(user_id, name, provider):
+    next_route = session.get(LOGIN_NEXT_KEY) or ''
+    session.clear()
+    session['user'] = {'id': user_id, 'name': name, 'provider': provider}
+    get_csrf_token()
+    return redirect(url_for('index') + (next_route if _SAFE_NEXT_RE.match(next_route) else ''))
+
 
 @app.route('/auth/dev-login')
 def auth_dev_login():
     """Fejlesztői bejelentkezés - CSAK debug módban érhető el."""
     if not app.debug:
         abort(404)
+    _remember_login_next()
     db = get_db()
     with db:
         user_id = save_user(db, 'dev', 'dev-user', 'dev@localhost', 'Dev User')
-        db.commit()
-    session.clear()
-    session['user'] = {'id': user_id, 'name': 'Dev User', 'provider': 'dev'}
-    get_csrf_token()
-    return redirect(url_for('index'))
+    return _finish_login(user_id, 'Dev User', 'dev')
 
 
 @app.route('/auth/login/<provider>')
@@ -319,8 +403,36 @@ def auth_login(provider):
     client = oauth.create_client(provider)
     if client is None:
         abort(404)
+    _remember_login_next()
     redirect_uri = url_for('auth_callback', provider=provider, _external=True)
     return client.authorize_redirect(redirect_uri)
+
+
+def _fetch_oauth_user(provider, client):
+    token = client.authorize_access_token()
+    if provider == 'google':
+        userinfo = token.get('userinfo') or client.userinfo()
+        return {
+            'provider': 'google',
+            'provider_id': userinfo['sub'],
+            'email': userinfo.get('email', ''),
+            'name': userinfo.get('name') or userinfo.get('email') or 'Google User',
+        }
+
+    github_user = client.get('user').json()
+    email = github_user.get('email') or ''
+    if not email:
+        emails = client.get('user/emails').json()
+        if isinstance(emails, list):
+            primary = next((e for e in emails if e.get('primary') and e.get('verified')), None)
+            if primary:
+                email = primary['email']
+    return {
+        'provider': 'github',
+        'provider_id': str(github_user['id']),
+        'email': email,
+        'name': github_user.get('name') or github_user.get('login') or 'GitHub User',
+    }
 
 
 @app.route('/auth/callback/<provider>')
@@ -331,53 +443,19 @@ def auth_callback(provider):
     client = oauth.create_client(provider)
     if client is None:
         abort(404)
-    
-    token = client.authorize_access_token()
-    
-    if provider == 'google':
-        userinfo = token.get('userinfo')
-        if not userinfo:
-            userinfo = client.userinfo()
-        user_data = {
-            'provider': 'google',
-            'provider_id': userinfo['sub'],
-            'email': userinfo.get('email', ''),
-            'name': userinfo.get('name', userinfo.get('email', 'Google User'))
-        }
-    elif provider == 'github':
-        resp = client.get('user')
-        github_user = resp.json()
-        email = github_user.get('email', '')
-        if not email:
-            resp_emails = client.get('user/emails')
-            emails = resp_emails.json()
-            primary_email = next((e for e in emails if e.get('primary')), None)
-            if primary_email:
-                email = primary_email['email']
-        user_data = {
-            'provider': 'github',
-            'provider_id': str(github_user['id']),
-            'email': email,
-            'name': github_user.get('name') or github_user.get('login', 'GitHub User')
-        }
-    
-    # Save user to database
+
+    try:
+        user_data = _fetch_oauth_user(provider, client)
+    except Exception:
+        # Megszakított bejelentkezés, lejárt state, hálózati hiba: ne 500-as oldal legyen
+        logger.warning("OAuth login failed for provider=%s", provider, exc_info=True)
+        return redirect(url_for('index', login_error=1))
+
     db = get_db()
     with db:
         user_id = save_user(db, user_data['provider'], user_data['provider_id'],
-                           user_data['email'], user_data['name'])
-        db.commit()
-    
-    # Store in session
-    session.clear()
-    session['user'] = {
-        'id': user_id,
-        'name': user_data['name'],
-        'provider': user_data['provider']
-    }
-    get_csrf_token()
-    
-    return redirect(url_for('index'))
+                            user_data['email'], user_data['name'])
+    return _finish_login(user_id, user_data['name'], user_data['provider'])
 
 
 @app.route('/auth/logout', methods=['POST'])
@@ -393,208 +471,326 @@ def auth_status():
     """Visszaadja a bejelentkezési állapotot."""
     user = get_current_user()
     if user:
-        return jsonify({
-            'logged_in': True,
-            'user': {
-                'name': user['name'],
-                'provider': user['provider']
-            }
-        })
+        return jsonify({'logged_in': True, 'user': {'name': user['name'], 'provider': user['provider']}})
     return jsonify({'logged_in': False})
 
 
-# Módosítás: Engedélyezzük a .jpeg kiterjesztést is
 @app.route('/images/<prompt_id>/<filename>')
 def serve_image(prompt_id, filename):
     """Képfájlok kiszolgálása a data mappából."""
     # Biztonsági ellenőrzés: csak az engedélyezett kiterjesztéseket engedélyezzük
-    if not any(filename.endswith(ext) for ext in ALLOWED_EXTENSIONS):
-        print(f"Access denied for filename: {filename}")
+    if os.path.splitext(filename)[1].lower() not in ALLOWED_EXTENSIONS:
         abort(404)
-
-    # Ellenőrizzük, hogy a prompt_id létezik-e
     if prompt_id not in AVAILABLE_PROMPTS:
-        print(f"Access denied for prompt_id: {prompt_id}")
         abort(404)
 
     directory = os.path.join(app.config['DATA_DIR'], prompt_id)
     # `send_from_directory` biztonságosabb, mint kézzel összerakni az útvonalat
-    try:
-        response = send_from_directory(
-            directory,
-            filename,
-            conditional=True,
-            max_age=IMAGE_CACHE_MAX_AGE_SECONDS,
-        )
-        response.headers['Cache-Control'] = (
-            f'public, max-age={IMAGE_CACHE_MAX_AGE_SECONDS}, '
-            'stale-while-revalidate=86400'
-        )
-        return response
-    except FileNotFoundError:
-        print(f"Image not found: {directory}/{filename}")
-        abort(404)
+    response = send_from_directory(directory, filename, conditional=True, max_age=IMAGE_CACHE_MAX_AGE_SECONDS)
+    response.headers['Cache-Control'] = (
+        f'public, max-age={IMAGE_CACHE_MAX_AGE_SECONDS}, stale-while-revalidate=86400'
+    )
+    return response
 
 
-# --- API Endpoints ---
+# --- Arena Battle ---
+
+def _battle_candidate_pairs():
+    """Az összes olyan modellpár, amelynek legalább egy közös promptja van: {(a, b): [prompt_id, ...]}"""
+    global _battle_pairs_cache
+    if _battle_pairs_cache is None:
+        prompts_by_model = {}
+        for prompt_id in AVAILABLE_PROMPTS:
+            for model_id in get_prompt_model_files(prompt_id):
+                prompts_by_model.setdefault(model_id, set()).add(prompt_id)
+        model_ids = sorted(prompts_by_model)
+        pairs = {}
+        for i, a in enumerate(model_ids):
+            for b in model_ids[i + 1:]:
+                shared = prompts_by_model[a] & prompts_by_model[b]
+                if shared:
+                    pairs[(a, b)] = sorted(shared)
+        _battle_pairs_cache = pairs
+    return _battle_pairs_cache
 
 
-# Módosítás: Arena Battle mód - ne jelenítse meg a modellek nevét szavazás előtt
+def get_pair_and_match_counts(db):
+    """(párok meccsszáma {(a, b): n} rendezett kulccsal, modellenkénti meccsszám)"""
+    pair_counts, match_counts = {}, {}
+    for row in db.execute('SELECT winner, loser, COUNT(*) AS n FROM votes GROUP BY winner, loser'):
+        a, b = sorted((row['winner'], row['loser']))
+        pair_counts[(a, b)] = pair_counts.get((a, b), 0) + row['n']
+        match_counts[a] = match_counts.get(a, 0) + row['n']
+        match_counts[b] = match_counts.get(b, 0) + row['n']
+    return pair_counts, match_counts
+
+
+def choose_battle(db):
+    """Kiválaszt egy modellpárt és egy közös promptot.
+
+    A párok súlya 1 / (1 + eddigi meccsek), így a ritkán látott párosítások gyakrabban kerülnek elő
+    (és ezzel az új modellek is). A kevés meccses modelleket tartalmazó párok extra boostot kapnak.
+    """
+    pairs = _battle_candidate_pairs()
+    frozen = {r['model'] for r in db.execute('SELECT model FROM model_elo WHERE COALESCE(frozen, 0) = 1')}
+    eligible = [(pair, prompts) for pair, prompts in pairs.items()
+                if pair[0] in MODELS and pair[1] in MODELS and pair[0] not in frozen and pair[1] not in frozen]
+    if not eligible:
+        # Ha a befagyasztás miatt nincs pár, használjuk az összeset
+        eligible = [(pair, prompts) for pair, prompts in pairs.items() if pair[0] in MODELS and pair[1] in MODELS]
+    if not eligible:
+        return None
+
+    pair_counts, match_counts = get_pair_and_match_counts(db)
+    weights = []
+    for (a, b), _prompts in eligible:
+        weight = 1.0 / (1 + pair_counts.get((a, b), 0))
+        if min(match_counts.get(a, 0), match_counts.get(b, 0)) < NEW_MODEL_BOOST_THRESHOLD:
+            weight *= NEW_MODEL_BOOST_WEIGHT
+        weights.append(weight)
+
+    (a, b), prompts = random.choices(eligible, weights=weights, k=1)[0]
+    # Véletlenszerű oldal-elosztás, hogy ne legyen oldalbias
+    if random.random() < 0.5:
+        a, b = b, a
+    return random.choice(prompts), a, b
+
+
+def _expire_extra_battles(db, session_key, now):
+    db.execute(
+        '''UPDATE battles SET resolved_at = ?, outcome = 'expired'
+           WHERE session_key = ? AND resolved_at IS NULL AND id NOT IN (
+               SELECT id FROM battles WHERE session_key = ? AND resolved_at IS NULL
+               ORDER BY issued_at DESC LIMIT ?)''',
+        (now, session_key, session_key, MAX_OPEN_BATTLES)
+    )
+
+
+def _cleanup_old_battles(db):
+    cutoff = utc_iso_from_datetime(utc_now_naive() - datetime.timedelta(days=7))
+    db.execute('DELETE FROM battles WHERE issued_at < ?', (cutoff,))
+
+
 @app.route('/api/battle_data')
 def get_battle_data():
-    """Adatokat ad vissza az Arena Battle módhoz."""    
+    """Új vak battle kiadása. A modellek kiléte csak szavazás/kihagyás után derül ki."""
     if not AVAILABLE_PROMPTS:
-        return jsonify({"error": "No prompts available"}), 500
+        return api_error("Nincs elérhető prompt.", 500)
+    if not battle_request_allowed():
+        return api_error("Túl sok kérés. Várj egy kicsit, mielőtt új párt kérsz.", 429, 'rate_limited')
 
-    prompt_id = random.choice(AVAILABLE_PROMPTS)
-    prompt_path = os.path.join(app.config['DATA_DIR'], prompt_id, 'prompt.txt')
-
-    try:
-        with open(prompt_path, 'r', encoding='utf-8') as f:
-            prompt_text = f.read().strip()
-    except FileNotFoundError:
-        app.logger.warning("Prompt file not found for battle prompt_id=%s", prompt_id)
-        return jsonify({"error": "Prompt file not found"}), 500
-    except Exception as e:
-        app.logger.exception("Error reading battle prompt file for prompt_id=%s", prompt_id)
-        return jsonify({"error": "Error reading prompt file"}), 500
-    
-    # Válassz két KÜLÖNBÖZŐ modellt véletlenszerűen (befagyasztott modellek kizárásával)
     db = get_db()
-    non_frozen_rows = db.execute("SELECT model FROM model_elo WHERE COALESCE(frozen, 0) = 0").fetchall()
-    non_frozen_models = [r['model'] for r in non_frozen_rows]
-    
-    # Ha nincs elég nem befagyasztott modell, használjuk az összeset
-    if len(non_frozen_models) < 2:
-        model_ids = list(MODELS.keys())
-    else:
-        # Csak azokat a modelleket használjuk, amik a MODELS-ben is szerepelnek
-        model_ids = [m for m in non_frozen_models if m in MODELS]
-    
-    if len(model_ids) < 2:
-        return jsonify({"error": "Not enough models defined for battle"}), 500
+    choice = choose_battle(db)
+    if not choice:
+        return api_error("Nincs elég modell a battle-höz.", 500)
+    prompt_id, model_a, model_b = choice
 
-    # Új modellek boost: a 50 meccs alatti modellek nagyobb eséllyel jelennek meg
-    # az egyik battle-slotban. A másik slot teljesen véletlenszerű marad.
-    match_counts_rows = db.execute(
-        'SELECT model, COUNT(*) as cnt FROM '
-        '(SELECT winner as model FROM votes UNION ALL SELECT loser as model FROM votes) '
-        'GROUP BY model'
-    ).fetchall()
-    match_counts = {r['model']: r['cnt'] for r in match_counts_rows}
+    prompt_text = read_prompt_text(prompt_id)
+    image_a = get_model_image_url(prompt_id, model_a)
+    image_b = get_model_image_url(prompt_id, model_b)
+    if prompt_text is None or not image_a or not image_b:
+        return api_error("A battle adatai nem tölthetők be.", 500)
 
-    weights = [
-        NEW_MODEL_BOOST_WEIGHT if match_counts.get(m, 0) < NEW_MODEL_BOOST_THRESHOLD else 1
-        for m in model_ids
-    ]
-    # Súlyozott pick az egyik slothoz, uniform random a másikhoz
-    featured_id = random.choices(model_ids, weights=weights, k=1)[0]
-    remaining_ids = [m for m in model_ids if m != featured_id]
-    other_id = random.choice(remaining_ids)
-    # Véletlenszerűen osszuk el a két slot között, hogy ne legyen oldalbias
-    if random.random() < 0.5:
-        model1_id, model2_id = featured_id, other_id
-    else:
-        model1_id, model2_id = other_id, featured_id
+    user = get_current_user()
+    session_key = get_session_key()
+    battle_id = secrets.token_urlsafe(16)
+    now = utc_now_iso()
+    with db:
+        db.execute(
+            '''INSERT INTO battles (id, session_key, user_id, prompt_id, model_a, model_b, issued_at)
+               VALUES (?, ?, ?, ?, ?, ?, ?)''',
+            (battle_id, session_key, user['id'] if user else None, prompt_id, model_a, model_b, now)
+        )
+        _expire_extra_battles(db, session_key, now)
+        if random.random() < 0.02:
+            _cleanup_old_battles(db)
 
-    model1_file = find_model_file(prompt_id, MODELS[model1_id]['filename'])
-    model2_file = find_model_file(prompt_id, MODELS[model2_id]['filename'])
-    if not model1_file:
-        return jsonify({"error": f"Image for model {model1_id} not found in prompt {prompt_id}"}), 500
-    if not model2_file:
-        return jsonify({"error": f"Image for model {model2_id} not found in prompt {prompt_id}"}), 500
-
-    data = {
+    return jsonify({
+        "battle_id": battle_id,
         "prompt_id": prompt_id,
         "prompt_text": prompt_text,
-        "model1": {
-            "id": model1_id,
-            "name": MODELS[model1_id]['name'],
-            "provider": MODELS[model1_id].get('provider', ''),
-            "image_url": get_image_url(prompt_id, model1_file)
-        },
-        "model2": {
-            "id": model2_id,
-            "name": MODELS[model2_id]['name'],
-            "provider": MODELS[model2_id].get('provider', ''),
-            "image_url": get_image_url(prompt_id, model2_file)
-        },
-        "reveal_models": False
-    }
-    store_active_battle(prompt_id, model1_id, model2_id)
-    return jsonify(data)
+        "image_a": image_a,
+        "image_b": image_b,
+        "vote_delay_ms": MIN_VOTE_DELAY_MS,
+    })
+
+
+class BattleError(Exception):
+    def __init__(self, message, status, code='battle_closed'):
+        super().__init__(message)
+        self.message = message
+        self.status = status
+        self.code = code
+
+
+def _parse_iso(value):
+    return datetime.datetime.fromisoformat(to_iso_utc(value).rstrip('Z'))
+
+
+def _load_open_battle(db, battle_id):
+    """Az aktuális sessionhöz tartozó, még nem lezárt és le nem járt battle."""
+    if not isinstance(battle_id, str) or not battle_id:
+        raise BattleError("Hiányzó battle azonosító.", 400, 'bad_request')
+    battle = db.execute('SELECT * FROM battles WHERE id = ?', (battle_id,)).fetchone()
+    if not battle or battle['session_key'] != session.get(SESSION_ID_KEY):
+        raise BattleError("Ismeretlen battle. Tölts be új párt.", 409)
+    if battle['resolved_at']:
+        raise BattleError("Erre a párra már szavaztál, vagy lejárt.", 409)
+    age = utc_now_naive() - _parse_iso(battle['issued_at'])
+    if age.total_seconds() > BATTLE_TTL_SECONDS:
+        raise BattleError("A battle lejárt. Tölts be új párt.", 409)
+    return battle, age
+
+
+def _votes_today(db, user_id):
+    today = utc_now_naive().strftime('%Y-%m-%d')
+    return db.execute('SELECT COUNT(*) FROM votes WHERE user_id = ? AND voted_at >= ?',
+                      (user_id, today)).fetchone()[0]
+
+
+def _resolve_battle(db, battle_id, outcome):
+    cur = db.execute('UPDATE battles SET resolved_at = ?, outcome = ? WHERE id = ? AND resolved_at IS NULL',
+                     (utc_now_iso(), outcome, battle_id))
+    if cur.rowcount != 1:
+        raise BattleError("Erre a párra már szavaztál.", 409)
+
+
+VOTE_CHOICES = {'a', 'b', OUTCOME_TIE, OUTCOME_BOTH_BAD}
+
+
+@app.route('/api/vote', methods=['POST'])
+@login_required
+@csrf_protect
+def record_vote():
+    """Szavazat rögzítése egy kiadott battle-re: 'a', 'b', 'tie' vagy 'both_bad'."""
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+        return api_error("Érvénytelen kérésformátum.", 400)
+    choice = data.get('choice')
+    if choice not in VOTE_CHOICES:
+        return api_error("Érvénytelen szavazat.", 400)
+
+    user = get_current_user()
+    db = get_db()
+    try:
+        with immediate_transaction(db):
+            battle, age = _load_open_battle(db, data.get('battle_id'))
+            if age.total_seconds() * 1000 < MIN_VOTE_DELAY_MS:
+                raise BattleError("Túl gyors szavazás. Nézd meg a képeket, mielőtt döntesz.", 429, 'too_fast')
+            votes_today = _votes_today(db, user['id'])
+            if votes_today >= DAILY_VOTE_LIMIT:
+                raise BattleError(f"Elérted a napi {DAILY_VOTE_LIMIT} szavazatos limitet. Holnap folytathatod!", 429, 'daily_limit')
+
+            model_a, model_b = battle['model_a'], battle['model_b']
+            if choice == 'a':
+                winner, loser, outcome, score_a = model_a, model_b, OUTCOME_WIN, 1.0
+            elif choice == 'b':
+                winner, loser, outcome, score_a = model_b, model_a, OUTCOME_WIN, 0.0
+            else:
+                # Döntetlennél winner = bal, loser = jobb oldali modell; az outcome jelzi a döntetlent
+                winner, loser, outcome, score_a = model_a, model_b, choice, 0.5
+
+            _resolve_battle(db, battle['id'], choice)
+            db.execute(
+                '''INSERT INTO votes (prompt_id, winner, loser, user_id, voted_at, outcome, left_model, battle_id)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?)''',
+                (battle['prompt_id'], winner, loser, user['id'], utc_now_iso(), outcome, model_a, battle['id'])
+            )
+            elo_changes = update_elo(db, model_a, model_b, score_a)
+    except BattleError as e:
+        return api_error(e.message, e.status, e.code)
+    except sqlite3.Error:
+        logger.exception("Database error while recording vote")
+        return api_error("Adatbázis hiba a szavazat mentésekor.", 500)
+
+    if FROZEN_BOTTOM_COUNT and FROZEN_BOTTOM_COUNT > 0:
+        update_frozen_models(db)
+
+    def reveal(model_id):
+        old, new = elo_changes[model_id]
+        return {**model_public(model_id), "elo_before": round(old, 1), "elo_after": round(new, 1),
+                "elo_delta": round(new - old, 1)}
+
+    return jsonify({
+        "success": True,
+        "choice": choice,
+        "model_a": reveal(model_a),
+        "model_b": reveal(model_b),
+        "votes_today": votes_today + 1,
+        "daily_limit": DAILY_VOTE_LIMIT,
+    })
+
+
+@app.route('/api/battle/skip', methods=['POST'])
+@csrf_protect
+def skip_battle():
+    """Battle kihagyása: a pár lezárul (többé nem szavazható), a modellek kiléte felfedhető."""
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+        return api_error("Érvénytelen kérésformátum.", 400)
+    db = get_db()
+    try:
+        with immediate_transaction(db):
+            battle, _age = _load_open_battle(db, data.get('battle_id'))
+            _resolve_battle(db, battle['id'], 'skip')
+    except BattleError as e:
+        return api_error(e.message, e.status, e.code)
+    return jsonify({"success": True, "model_a": model_public(battle['model_a']),
+                    "model_b": model_public(battle['model_b'])})
+
+
+# --- Side-by-Side ---
 
 @app.route('/api/side_by_side_data')
 def get_side_by_side_data():
-    """Adatokat ad vissza az Arena Side-by-Side módhoz."""
-    model1_id = request.args.get('model1')
-    model2_id = request.args.get('model2')
-    model3_id = request.args.get('model3')  # Optional third model
-    previous_prompt_id = request.args.get('previous_prompt_id', None)
+    """Adatok a Side-by-Side módhoz: 2-3 modell képe ugyanarra a promptra.
 
-    if not model1_id or not model2_id:
-        return jsonify({"error": "Both model1 and model2 parameters are required"}), 400
-    if model1_id not in MODELS or model2_id not in MODELS:
-        return jsonify({"error": "Invalid model key provided"}), 400
-    if model3_id and model3_id not in MODELS:
-        return jsonify({"error": "Invalid model3 key provided"}), 400
+    Paraméterek: model1, model2, [model3], és opcionálisan
+    prompt_id (konkrét prompt), after (a következő prompt ezután) vagy previous_prompt_id (véletlen, de ne ez).
+    Csak olyan promptot választ, amelyhez minden kiválasztott modellnek van képe.
+    """
+    model_ids = [request.args.get('model1'), request.args.get('model2')]
+    if request.args.get('model3'):
+        model_ids.append(request.args.get('model3'))
+
+    if not model_ids[0] or not model_ids[1]:
+        return api_error("Legalább két modellt ki kell választani.", 400)
+    if any(m not in MODELS for m in model_ids):
+        return api_error("Ismeretlen modell.", 400)
+    if len(set(model_ids)) != len(model_ids):
+        return api_error("Különböző modelleket válassz.", 400)
     if not AVAILABLE_PROMPTS:
-        return jsonify({"error": "No prompts available"}), 500
+        return api_error("Nincs elérhető prompt.", 500)
 
-    if len(AVAILABLE_PROMPTS) == 1:
-        prompt_id = AVAILABLE_PROMPTS[0]
+    candidates = [p for p in AVAILABLE_PROMPTS
+                  if all(m in get_prompt_model_files(p) for m in model_ids)]
+    if not candidates:
+        return api_error("Ehhez a modellkombinációhoz nincs közös prompt.", 404)
+
+    requested = request.args.get('prompt_id')
+    after = request.args.get('after')
+    previous = request.args.get('previous_prompt_id')
+    if requested:
+        if requested not in candidates:
+            return api_error("Ehhez a prompthoz nincs meg minden kiválasztott modell képe.", 404)
+        prompt_id = requested
+    elif after:
+        later = [p for p in candidates if p > after]
+        prompt_id = later[0] if later else candidates[0]
     else:
-        available_prompts = [p for p in AVAILABLE_PROMPTS if p != previous_prompt_id]
-        if not available_prompts:
-            available_prompts = AVAILABLE_PROMPTS
-        prompt_id = random.choice(available_prompts)
+        pool = [p for p in candidates if p != previous] or candidates
+        prompt_id = random.choice(pool)
 
-    prompt_path = os.path.join(app.config['DATA_DIR'], prompt_id, 'prompt.txt')
-    try:
-        with open(prompt_path, 'r', encoding='utf-8') as f:
-            prompt_text = f.read().strip()
-    except FileNotFoundError:
-        app.logger.warning("Prompt file not found for side-by-side prompt_id=%s", prompt_id)
-        return jsonify({"error": "Prompt file not found"}), 500
-    except Exception as e:
-        app.logger.exception("Error reading side-by-side prompt file for prompt_id=%s", prompt_id)
-        return jsonify({"error": "Error reading prompt file"}), 500
-    model1_file = find_model_file(prompt_id, MODELS[model1_id]['filename'])
-    model2_file = find_model_file(prompt_id, MODELS[model2_id]['filename'])
-    if not model1_file:
-        return jsonify({"error": f"Image for model {model1_id} not found in prompt {prompt_id}"}), 500
-    if not model2_file:
-        return jsonify({"error": f"Image for model {model2_id} not found in prompt {prompt_id}"}), 500
+    prompt_text = read_prompt_text(prompt_id)
+    if prompt_text is None:
+        return api_error("A prompt nem olvasható.", 500)
 
-    data = {
-        "prompt_id": prompt_id,
-        "prompt_text": prompt_text,
-        "model1": {
-            "id": model1_id,
-            "name": MODELS[model1_id]['name'],
-            "image_url": get_image_url(prompt_id, model1_file)
-        },
-        "model2": {
-            "id": model2_id,
-            "name": MODELS[model2_id]['name'],
-            "image_url": get_image_url(prompt_id, model2_file)
-        }
-    }
-    
-    # Add third model if requested
-    if model3_id:
-        model3_file = find_model_file(prompt_id, MODELS[model3_id]['filename'])
-        if not model3_file:
-            return jsonify({"error": f"Image for model {model3_id} not found in prompt {prompt_id}"}), 500
-        data["model3"] = {
-            "id": model3_id,
-            "name": MODELS[model3_id]['name'],
-            "image_url": get_image_url(prompt_id, model3_file)
-        }
-    
+    data = {"prompt_id": prompt_id, "prompt_text": prompt_text, "prompt_ids": candidates}
+    for index, model_id in enumerate(model_ids, start=1):
+        data[f"model{index}"] = {**model_public(model_id), "image_url": get_model_image_url(prompt_id, model_id)}
     return jsonify(data)
 
-# Új API végpont a kép URL lekéréséhez modellváltáskor
+
 @app.route('/api/get_image')
 def get_image_for_model():
     """Visszaadja egy adott modell képének URL-jét egy adott prompt ID-hoz."""
@@ -602,128 +798,94 @@ def get_image_for_model():
     prompt_id = request.args.get('prompt_id')
 
     if not model_id or not prompt_id:
-        return jsonify({"error": "Both model and prompt_id parameters are required"}), 400
+        return api_error("A model és a prompt_id paraméter kötelező.", 400)
     if model_id not in MODELS:
-        return jsonify({"error": f"Invalid model key provided: {model_id}"}), 400
+        return api_error("Ismeretlen modell.", 400)
     if prompt_id not in AVAILABLE_PROMPTS:
-        update_available_prompts()
-        if prompt_id not in AVAILABLE_PROMPTS:
-            return jsonify({"error": f"Invalid or unavailable prompt_id: {prompt_id}"}), 400
-    model_filename_base = MODELS[model_id].get('filename')
-    if not model_filename_base:
-        return jsonify({"error": f"Filename configuration missing for model: {model_id}"}), 500
-    image_file = find_model_file(prompt_id, model_filename_base)
-    if not image_file:
-        print(f"Image file not found for model '{model_id}' (base: '{model_filename_base}') in prompt '{prompt_id}'")
-        return jsonify({"error": f"Image for model {model_id} not found in prompt {prompt_id}"}), 404
-    image_url = get_image_url(prompt_id, image_file)
+        return api_error("Ismeretlen prompt.", 400)
+    image_url = get_model_image_url(prompt_id, model_id)
+    if not image_url:
+        return api_error("Ehhez a prompthoz nincs kép ettől a modelltől.", 404)
     return jsonify({"image_url": image_url})
 
 
-@app.route('/api/vote', methods=['POST'])
-@login_required
-@csrf_protect
-def record_vote():
-    """Szavazat rögzítése az adatbázisban."""
-    data = request.get_json(silent=True)
-    if not isinstance(data, dict):
-        return jsonify({"error": "Érvénytelen kérésformátum"}), 400
+# --- Statisztikák ---
 
-    prompt_id = data.get('prompt_id')
-    winner = data.get('winner')
-    loser = data.get('loser')
+def get_model_stats(db, user_id=None):
+    """Modellenként: győzelmek, vereségek, döntetlenek és összes meccs."""
+    where, params = ('WHERE user_id = ?', (user_id, user_id)) if user_id is not None else ('', ())
+    rows = db.execute(f'''
+        SELECT model, SUM(w) AS wins, SUM(l) AS losses, SUM(t) AS ties FROM (
+            SELECT winner AS model, (outcome = 'win') AS w, 0 AS l, (outcome != 'win') AS t FROM votes {where}
+            UNION ALL
+            SELECT loser AS model, 0 AS w, (outcome = 'win') AS l, (outcome != 'win') AS t FROM votes {where}
+        ) GROUP BY model
+    ''', params).fetchall()
+    stats = {}
+    for row in rows:
+        wins, losses, ties = row['wins'] or 0, row['losses'] or 0, row['ties'] or 0
+        stats[row['model']] = {'wins': wins, 'losses': losses, 'ties': ties, 'matches': wins + losses + ties}
+    return stats
 
-    if not all([prompt_id, winner, loser]):
-        return jsonify({"error": "Missing data for vote"}), 400
-    if winner == loser:
-        return jsonify({"error": "A győztes és a vesztes nem lehet ugyanaz a modell"}), 400
-    if winner not in MODELS or loser not in MODELS:
-        return jsonify({"error": "Invalid model id in vote"}), 400
-    if prompt_id not in AVAILABLE_PROMPTS:
-        return jsonify({"error": "Invalid prompt_id in vote"}), 400
 
-    active_battle = consume_active_battle()
-    if not active_battle:
-        return jsonify({"error": "Nincs érvényes aktív battle ehhez a szavazathoz"}), 409
-    if active_battle['prompt_id'] != prompt_id or active_battle['models'] != sorted((winner, loser)):
-        return jsonify({"error": "A szavazat nem egyezik a legutóbb kiosztott battle-lel"}), 409
+def win_rate(stats):
+    """Győzelmi arány %-ban; a döntetlen fél győzelemnek számít."""
+    if not stats or not stats['matches']:
+        return 0.0
+    return round((stats['wins'] + 0.5 * stats['ties']) / stats['matches'] * 100, 2)
 
-    try:
-        user = get_current_user()
-        db = get_db()
-        with db:
-            db.execute(
-                'INSERT INTO votes (prompt_id, winner, loser, user_id) VALUES (?, ?, ?, ?)',
-                (prompt_id, winner, loser, user['id'])
-            )
-            winner_new_elo, loser_new_elo = update_elo(db, winner, loser)
-            db.commit()
-        return jsonify({
-            "success": True,
-            "message": f"Vote recorded for {winner} against {loser}",
-            "winner_new_elo": round(winner_new_elo, 1),
-            "loser_new_elo": round(loser_new_elo, 1)
-        })
-    except sqlite3.Error as e:
-        print(f"Database error: {e}")
-        return jsonify({"error": "Database error while recording vote"}), 500
-    except Exception as e:
-        print(f"Error recording vote: {e}")
-        return jsonify({"error": "An unexpected error occurred"}), 500
+
+def filter_model_type(model, model_type):
+    is_open_source = bool(model.get('open_source'))
+    return not ((model_type == 'open-source' and not is_open_source) or
+                (model_type == 'closed-source' and is_open_source))
+
+
+def build_leaderboard_row(model_id, stats, elo, frozen=False):
+    model = MODELS[model_id]
+    stats = stats or {'wins': 0, 'losses': 0, 'ties': 0, 'matches': 0}
+    return {
+        **model_public(model_id),
+        **get_model_video(model),
+        "release_date": model.get('release_date') or '',
+        "max_resolution": model.get('max_resolution') or '',
+        "pricing": model.get('pricing') or '',
+        "price_per_1000": get_price_per_1000_images(model.get('min_api_price_per_image')),
+        "wins": stats['wins'],
+        "losses": stats['losses'],
+        "ties": stats['ties'],
+        "matches": stats['matches'],
+        "win_rate": win_rate(stats),
+        "elo": round(elo, 1),
+        "open_source": bool(model.get('open_source')),
+        "frozen": frozen,
+    }
+
 
 @app.route('/api/leaderboard')
 def get_leaderboard():
-    """Leaderboard adatok lekérdezése és kiszámítása."""    
+    """Leaderboard adatok lekérdezése és kiszámítása."""
     try:
         model_type = request.args.get('model_type', 'all')
         db = get_db()
-        wins_cursor = db.execute('''SELECT winner, COUNT(*) as win_count FROM votes GROUP BY winner''')
-        wins = {row['winner']: row['win_count'] for row in wins_cursor.fetchall()}
-        total_matches_cursor = db.execute('''SELECT model, COUNT(*) as match_count FROM (
-                SELECT winner as model FROM votes
-                UNION ALL
-                SELECT loser as model FROM votes
-            )
-            GROUP BY model''')
-        total_matches = {row['model']: row['match_count'] for row in total_matches_cursor.fetchall()}
-        elo_cursor = db.execute('SELECT model, elo, COALESCE(frozen, 0) as frozen FROM model_elo')
-        elo_data = {row['model']: {'elo': row['elo'], 'frozen': bool(row['frozen'])} for row in elo_cursor.fetchall()}
+        stats = get_model_stats(db)
+        elo_data = {row['model']: row for row in db.execute('SELECT model, elo, COALESCE(frozen, 0) AS frozen FROM model_elo')}
 
         leaderboard = []
         for model_id, model in MODELS.items():
-            is_open_source = model['open_source']
-            if (model_type == 'open-source' and not is_open_source) or \
-               (model_type == 'closed-source' and is_open_source):
+            if not filter_model_type(model, model_type):
                 continue
-            model_wins = wins.get(model_id, 0)
-            model_matches = total_matches.get(model_id, 0)
-            win_rate = (model_wins / model_matches * 100) if model_matches > 0 else 0
-            model_elo_data = elo_data.get(model_id, {'elo': DEFAULT_ELO, 'frozen': False})
-            leaderboard.append({
-                "id": model_id,
-                "name": model['name'],
-                **get_model_video(model),
-                "display": f"{model.get('provider')}: {model['name']}" if model.get('provider') else model['name'],
-                "provider": model.get('provider') or '',
-                "release_date": model.get('release_date') or '',
-                "max_resolution": model.get('max_resolution') or '',
-                "pricing": model.get('pricing') or '',
-                "price_per_1000": get_price_per_1000_images(model.get('min_api_price_per_image')),
-                "wins": model_wins,
-                "matches": model_matches,
-                "win_rate": round(win_rate, 2),
-                "elo": round(model_elo_data['elo'], 1),
-                "open_source": is_open_source,
-                "frozen": model_elo_data['frozen']
-            })
+            elo_row = elo_data.get(model_id)
+            leaderboard.append(build_leaderboard_row(
+                model_id, stats.get(model_id),
+                elo_row['elo'] if elo_row else DEFAULT_ELO,
+                bool(elo_row['frozen']) if elo_row else False,
+            ))
         leaderboard.sort(key=lambda x: x['elo'], reverse=True)
         return jsonify(leaderboard)
-    except sqlite3.Error as e:
-        print(f"Database error: {e}")
-        return jsonify({"error": "Database error while fetching leaderboard"}), 500
-    except Exception as e:
-        print(f"Error fetching leaderboard: {e}")
-        return jsonify({"error": "An unexpected error occurred"}), 500
+    except sqlite3.Error:
+        logger.exception("Database error while fetching leaderboard")
+        return api_error("Adatbázis hiba a leaderboard lekérésekor.", 500)
 
 
 @app.route('/api/leaderboard/mine')
@@ -732,188 +894,59 @@ def get_personal_leaderboard():
     """Saját toplista: ELO kiszámítása csak a bejelentkezett felhasználó szavazatai alapján."""
     try:
         user = get_current_user()
-        user_id = user['id']
         db = get_db()
-
-        # Csak a felhasználó saját szavazatai
-        rows = db.execute(
-            'SELECT winner, loser FROM votes WHERE user_id = ? ORDER BY id ASC',
-            (user_id,)
-        ).fetchall()
-
         model_type = request.args.get('model_type', 'all')
-
-        if not rows:
-            # Nincs még szavazat: visszaadjuk az összes modellt DEFAULT_ELO-val
-            leaderboard = [
-                {
-                    "id": model_id,
-                    "name": model['name'],
-                    **get_model_video(model),
-                    "wins": 0, "matches": 0, "win_rate": 0.0,
-                    "elo": DEFAULT_ELO,
-                    "open_source": model['open_source'],
-                    "frozen": False
-                }
-                for model_id, model in MODELS.items()
-                if not ((model_type == 'open-source' and not model['open_source']) or
-                        (model_type == 'closed-source' and model['open_source']))
-            ]
-            leaderboard.sort(key=lambda x: x['elo'], reverse=True)
-            return jsonify({"leaderboard": leaderboard, "vote_count": 0})
+        rows = db.execute('SELECT winner, loser, outcome FROM votes WHERE user_id = ? ORDER BY id ASC',
+                          (user['id'],)).fetchall()
 
         # ELO számítás nulláról, csak saját szavazatokból
-        from config import K_FACTOR
         personal_elo = {m: DEFAULT_ELO for m in MODELS}
-        wins = {m: 0 for m in MODELS}
-        matches = {m: 0 for m in MODELS}
-
         for row in rows:
             winner, loser = row['winner'], row['loser']
             if winner not in personal_elo or loser not in personal_elo:
                 continue
-            w_elo = personal_elo[winner]
-            l_elo = personal_elo[loser]
+            score = 1.0 if row['outcome'] == OUTCOME_WIN else 0.5
+            w_elo, l_elo = personal_elo[winner], personal_elo[loser]
             expected_w = 1 / (1 + 10 ** ((l_elo - w_elo) / 400))
-            expected_l = 1 - expected_w
-            personal_elo[winner] = w_elo + K_FACTOR * (1 - expected_w)
-            personal_elo[loser]  = l_elo + K_FACTOR * (0 - expected_l)
-            wins[winner] += 1
-            matches[winner] += 1
-            matches[loser]  += 1
+            personal_elo[winner] = w_elo + K_FACTOR * (score - expected_w)
+            personal_elo[loser] = l_elo + K_FACTOR * ((1 - score) - (1 - expected_w))
 
-        model_type = request.args.get('model_type', 'all')
-        leaderboard = []
-        for model_id, model in MODELS.items():
-            is_open_source = model['open_source']
-            if (model_type == 'open-source' and not is_open_source) or \
-               (model_type == 'closed-source' and is_open_source):
-                continue
-            m = matches[model_id]
-            w = wins[model_id]
-            leaderboard.append({
-                "id": model_id,
-                "name": model['name'],
-                **get_model_video(model),
-                "display": f"{model.get('provider')}: {model['name']}" if model.get('provider') else model['name'],
-                "provider": model.get('provider') or '',
-                "release_date": model.get('release_date') or '',
-                "max_resolution": model.get('max_resolution') or '',
-                "pricing": model.get('pricing') or '',
-                "wins": w,
-                "matches": m,
-                "win_rate": round(w / m * 100, 2) if m > 0 else 0.0,
-                "elo": round(personal_elo[model_id], 1),
-                "open_source": is_open_source,
-                "frozen": False
-            })
+        stats = get_model_stats(db, user_id=user['id'])
+        leaderboard = [
+            build_leaderboard_row(model_id, stats.get(model_id), personal_elo[model_id])
+            for model_id, model in MODELS.items() if filter_model_type(model, model_type)
+        ]
         leaderboard.sort(key=lambda x: x['elo'], reverse=True)
         return jsonify({"leaderboard": leaderboard, "vote_count": len(rows)})
-    except sqlite3.Error as e:
-        print(f"Database error (personal leaderboard): {e}")
-        return jsonify({"error": "Database error"}), 500
-    except Exception as e:
-        print(f"Error (personal leaderboard): {e}")
-        return jsonify({"error": "An unexpected error occurred"}), 500
+    except sqlite3.Error:
+        logger.exception("Database error (personal leaderboard)")
+        return api_error("Adatbázis hiba.", 500)
 
-
-@app.route('/api/elo_history')
-def get_elo_history():
-    """Lekérdezi az ELO értékek időbeli változását a grafikonhoz."""
-    try:
-        db = get_db()
-        cursor = db.execute("""
-            SELECT model, elo, timestamp 
-            FROM elo_history 
-            ORDER BY timestamp ASC
-        """)
-        history_data = cursor.fetchall()
-        
-        # Adatok átalakítása a grafikonhoz megfelelő formátumba
-        # { "Modell Neve": [{x: timestamp, y: elo}, ...], ... }
-        chart_data_for_frontend = {}
-        for row in history_data:
-            model_id = row['model']
-            
-            # Biztosítjuk, hogy a model_id létezik a MODELS konfigurációban
-            if model_id not in MODELS:
-                print(f"Figyelem: a(z) {model_id} model_id az elo_history táblából nem található a MODELS konfigurációban. Kihagyva.")
-                continue
-
-            model_name = MODELS[model_id]['name'] # Modell nevének lekérése
-
-            if model_name not in chart_data_for_frontend:
-                chart_data_for_frontend[model_name] = []
-            
-            chart_data_for_frontend[model_name].append({
-                'x': row['timestamp'], # A timestamp string formátumban van, amit a JS new Date() kezel
-                'y': round(row['elo'], 1)
-            })
-            
-        return jsonify(chart_data_for_frontend)
-    except sqlite3.Error as e:
-        print(f"Database error fetching ELO history: {e}")
-        return jsonify({"error": "Database error while fetching ELO history"}), 500
-    except Exception as e:
-        print(f"Error fetching ELO history: {e}")
-        return jsonify({"error": "An unexpected error occurred"}), 500
 
 @app.route('/api/elo_history_with_current_elo')
 def get_elo_history_with_current_elo():
     """Lekérdezi az ELO értékek időbeli változását és az aktuális ELO pontszámokat."""
     try:
         db = get_db()
-        
-        # ELO History
-        history_cursor = db.execute("""
-            SELECT model, elo, timestamp 
-            FROM elo_history 
-            ORDER BY timestamp ASC
-        """)
-        history_data_rows = history_cursor.fetchall()
-        
-        chart_data_for_frontend = {}
-        for row in history_data_rows:
-            model_id = row['model']
-            if model_id not in MODELS:
-                print(f"Figyelem: a(z) {model_id} model_id az elo_history táblából nem található a MODELS konfigurációban. Kihagyva.")
+        chart_data = {}
+        for row in db.execute('SELECT model, elo, timestamp FROM elo_history ORDER BY timestamp ASC, id ASC'):
+            if row['model'] not in MODELS:
                 continue
-            model_name = MODELS[model_id]['name']
-            if model_name not in chart_data_for_frontend:
-                chart_data_for_frontend[model_name] = []
-            chart_data_for_frontend[model_name].append({
-                'x': row['timestamp'],
-                'y': round(row['elo'], 1)
-            })
+            name = model_display(MODELS[row['model']])
+            chart_data.setdefault(name, []).append({'x': to_iso_utc(row['timestamp']), 'y': round(row['elo'], 1)})
 
-        # Current ELOs
-        elo_cursor = db.execute('SELECT model, elo FROM model_elo')
-        current_elos_raw = {row['model']: row['elo'] for row in elo_cursor.fetchall()}
-        
-        current_elos_for_frontend = {}
-        for model_id, elo_score in current_elos_raw.items():
-            if model_id in MODELS: # Ensure model_id is valid
-                 current_elos_for_frontend[MODELS[model_id]['name']] = round(elo_score, 1)
-            else:
-                print(f"Figyelem: a(z) {model_id} model_id az model_elo táblából nem található a MODELS konfigurációban (current ELOs). Kihagyva.")
-
-
-        return jsonify({
-            "history": chart_data_for_frontend,
-            "current_elos": current_elos_for_frontend
-        })
-    except sqlite3.Error as e:
-        print(f"Database error fetching ELO history with current ELOs: {e}")
-        return jsonify({"error": "Database error while fetching ELO history with current ELOs"}), 500
-    except Exception as e:
-        print(f"Error fetching ELO history with current ELOs: {e}")
-        return jsonify({"error": "An unexpected error occurred"}), 500
+        current_elos = {
+            model_display(MODELS[row['model']]): round(row['elo'], 1)
+            for row in db.execute('SELECT model, elo FROM model_elo') if row['model'] in MODELS
+        }
+        return jsonify({"history": chart_data, "current_elos": current_elos})
+    except sqlite3.Error:
+        logger.exception("Database error fetching ELO history")
+        return api_error("Adatbázis hiba az ELO előzmények lekérésekor.", 500)
 
 @app.route('/api/prompt_ids')
 def get_prompt_ids_api():
     """Visszaadja az összes prompt ID-t (sorrendben)."""
-    if not AVAILABLE_PROMPTS:
-        update_available_prompts()
     return jsonify({"prompt_ids": AVAILABLE_PROMPTS})
 
 @app.route('/api/prompt_text')
@@ -921,15 +954,11 @@ def get_prompt_text_api():
     """Visszaadja a prompt szövegét egy adott prompt_id-hoz."""
     prompt_id = request.args.get('prompt_id')
     if not prompt_id or prompt_id not in AVAILABLE_PROMPTS:
-        return jsonify({"error": "Invalid or missing prompt_id"}), 400
-    prompt_path = os.path.join(app.config['DATA_DIR'], prompt_id, 'prompt.txt')
-    try:
-        with open(prompt_path, 'r', encoding='utf-8') as f:
-            prompt_text = f.read().strip()
-        return jsonify({"prompt_text": prompt_text})
-    except Exception as e:
-        app.logger.exception("Error reading prompt text for prompt_id=%s", prompt_id)
-        return jsonify({"error": "Error reading prompt"}), 500
+        return api_error("Ismeretlen vagy hiányzó prompt_id.", 400)
+    prompt_text = read_prompt_text(prompt_id)
+    if prompt_text is None:
+        return api_error("A prompt nem olvasható.", 500)
+    return jsonify({"prompt_text": prompt_text})
 
 
 @app.route('/api/model_info')
@@ -939,18 +968,14 @@ def get_model_info():
     model2_id = request.args.get('model2')
 
     if not model1_id:
-        return jsonify({"error": "model1 parameter is required"}), 400
-    if model1_id not in MODELS:
-        return jsonify({"error": f"Invalid model1 key: {model1_id}"}), 400
-    if model2_id and model2_id not in MODELS:
-        return jsonify({"error": f"Invalid model2 key: {model2_id}"}), 400
+        return api_error("A model1 paraméter kötelező.", 400)
+    if model1_id not in MODELS or (model2_id and model2_id not in MODELS):
+        return api_error("Ismeretlen modell.", 400)
 
     def build_model_info(model_id):
         m = MODELS[model_id]
         return {
-            "id": model_id,
-            "name": m['name'],
-            "provider": m.get('provider', 'Unknown'),
+            **model_public(model_id),
             "open_source": m['open_source'],
             "release_date": m.get('release_date'),
             "type": m.get('type', 'image-generation'),
@@ -971,125 +996,83 @@ def get_model_info():
 
 @app.route('/api/compare_stats')
 def get_compare_stats():
-    """Visszaadja két modell összehasonlító statisztikáit: prompt-szintű szavazatok és head-to-head eredmények."""
+    """Két modell összehasonlító statisztikái: globális, egymás elleni és prompt-szintű eredmények."""
     model1_id = request.args.get('model1')
     model2_id = request.args.get('model2')
 
     if not model1_id or not model2_id:
-        return jsonify({"error": "Both model1 and model2 parameters are required"}), 400
+        return api_error("Mindkét modellt ki kell választani.", 400)
     if model1_id not in MODELS or model2_id not in MODELS:
-        return jsonify({"error": "Invalid model key provided"}), 400
+        return api_error("Ismeretlen modell.", 400)
 
     try:
         db = get_db()
+        elos = {row['model']: row['elo'] for row in db.execute(
+            'SELECT model, elo FROM model_elo WHERE model IN (?, ?)', (model1_id, model2_id))}
+        stats = get_model_stats(db)
 
-        # Aktuális ELO értékek
-        elo1_row = db.execute('SELECT elo FROM model_elo WHERE model = ?', (model1_id,)).fetchone()
-        elo2_row = db.execute('SELECT elo FROM model_elo WHERE model = ?', (model2_id,)).fetchone()
-        elo1 = round(elo1_row['elo'], 1) if elo1_row else DEFAULT_ELO
-        elo2 = round(elo2_row['elo'], 1) if elo2_row else DEFAULT_ELO
+        # Egymás elleni eredmények
+        h2h = db.execute('''
+            SELECT SUM(outcome = 'win' AND winner = ?) AS m1, SUM(outcome = 'win' AND winner = ?) AS m2,
+                   SUM(outcome != 'win') AS ties
+            FROM votes WHERE (winner = ? AND loser = ?) OR (winner = ? AND loser = ?)
+        ''', (model1_id, model2_id, model1_id, model2_id, model2_id, model1_id)).fetchone()
+        h2h_1, h2h_2, h2h_ties = h2h['m1'] or 0, h2h['m2'] or 0, h2h['ties'] or 0
 
-        # Globális győzelmek és meccsek
-        def get_model_global_stats(model_id):
-            wins = db.execute('SELECT COUNT(*) as c FROM votes WHERE winner = ?', (model_id,)).fetchone()['c']
-            total = db.execute(
-                'SELECT COUNT(*) as c FROM votes WHERE winner = ? OR loser = ?',
-                (model_id, model_id)
-            ).fetchone()['c']
-            return {"wins": wins, "matches": total, "win_rate": round(wins / total * 100, 2) if total > 0 else 0}
+        # Prompt-szintű statisztikák egyetlen lekérdezéssel modellenként
+        def per_prompt(model_id):
+            rows = db.execute('''
+                SELECT prompt_id,
+                       SUM(outcome = 'win' AND winner = ?) AS wins,
+                       SUM(outcome != 'win') AS ties,
+                       COUNT(*) AS matches
+                FROM votes WHERE winner = ? OR loser = ? GROUP BY prompt_id
+            ''', (model_id, model_id, model_id)).fetchall()
+            return {r['prompt_id']: {'wins': r['wins'] or 0, 'ties': r['ties'] or 0, 'losses': 0,
+                                     'matches': r['matches']} for r in rows}
 
-        model1_global = get_model_global_stats(model1_id)
-        model2_global = get_model_global_stats(model2_id)
+        m1_prompts, m2_prompts = per_prompt(model1_id), per_prompt(model2_id)
+        empty = {'wins': 0, 'ties': 0, 'losses': 0, 'matches': 0}
 
-        # Head-to-head statisztikák (egymás ellen)
-        h2h_1_wins = db.execute(
-            'SELECT COUNT(*) as c FROM votes WHERE winner = ? AND loser = ?',
-            (model1_id, model2_id)
-        ).fetchone()['c']
-        h2h_2_wins = db.execute(
-            'SELECT COUNT(*) as c FROM votes WHERE winner = ? AND loser = ?',
-            (model2_id, model1_id)
-        ).fetchone()['c']
-        h2h_total = h2h_1_wins + h2h_2_wins
+        def prompt_entry(s):
+            return {"wins": s['wins'], "ties": s['ties'], "matches": s['matches'], "win_rate": round(win_rate(s), 1)}
 
-        # Prompt-szintű statisztikák: minden promptra mennyi szavazat esett az adott modellre és hányszor nyert
         prompt_stats = []
-        if AVAILABLE_PROMPTS:
-            for prompt_id in sorted(AVAILABLE_PROMPTS):
-                # Prompt text
-                prompt_path = os.path.join(app.config['DATA_DIR'], prompt_id, 'prompt.txt')
-                try:
-                    with open(prompt_path, 'r', encoding='utf-8') as f:
-                        prompt_text = f.read().strip()
-                except Exception:
-                    prompt_text = prompt_id
+        for prompt_id in AVAILABLE_PROMPTS:
+            prompt_text = read_prompt_text(prompt_id) or prompt_id
+            prompt_stats.append({
+                "prompt_id": prompt_id,
+                "prompt_text": prompt_text[:100] + ('...' if len(prompt_text) > 100 else ''),
+                "model1": prompt_entry(m1_prompts.get(prompt_id, empty)),
+                "model2": prompt_entry(m2_prompts.get(prompt_id, empty)),
+            })
 
-                # Model 1 statisztikák ennél a promptnál
-                m1_wins = db.execute(
-                    'SELECT COUNT(*) as c FROM votes WHERE prompt_id = ? AND winner = ?',
-                    (prompt_id, model1_id)
-                ).fetchone()['c']
-                m1_total = db.execute(
-                    'SELECT COUNT(*) as c FROM votes WHERE prompt_id = ? AND (winner = ? OR loser = ?)',
-                    (prompt_id, model1_id, model1_id)
-                ).fetchone()['c']
-
-                # Model 2 statisztikák ennél a promptnál
-                m2_wins = db.execute(
-                    'SELECT COUNT(*) as c FROM votes WHERE prompt_id = ? AND winner = ?',
-                    (prompt_id, model2_id)
-                ).fetchone()['c']
-                m2_total = db.execute(
-                    'SELECT COUNT(*) as c FROM votes WHERE prompt_id = ? AND (winner = ? OR loser = ?)',
-                    (prompt_id, model2_id, model2_id)
-                ).fetchone()['c']
-
-                prompt_stats.append({
-                    "prompt_id": prompt_id,
-                    "prompt_text": prompt_text[:100] + ('...' if len(prompt_text) > 100 else ''),
-                    "model1": {"wins": m1_wins, "matches": m1_total, "win_rate": round(m1_wins / m1_total * 100, 1) if m1_total > 0 else 0},
-                    "model2": {"wins": m2_wins, "matches": m2_total, "win_rate": round(m2_wins / m2_total * 100, 1) if m2_total > 0 else 0},
-                })
+        def global_entry(model_id):
+            s = stats.get(model_id, empty)
+            return {**model_public(model_id), "elo": round(elos.get(model_id, DEFAULT_ELO), 1),
+                    "wins": s['wins'], "ties": s['ties'], "matches": s['matches'], "win_rate": win_rate(s)}
 
         return jsonify({
-            "model1": {
-                "id": model1_id,
-                "name": MODELS[model1_id]['name'],
-                "elo": elo1,
-                **model1_global
-            },
-            "model2": {
-                "id": model2_id,
-                "name": MODELS[model2_id]['name'],
-                "elo": elo2,
-                **model2_global
-            },
-            "head_to_head": {
-                "model1_wins": h2h_1_wins,
-                "model2_wins": h2h_2_wins,
-                "total": h2h_total,
-            },
+            "model1": global_entry(model1_id),
+            "model2": global_entry(model2_id),
+            "head_to_head": {"model1_wins": h2h_1, "model2_wins": h2h_2, "ties": h2h_ties,
+                             "total": h2h_1 + h2h_2 + h2h_ties},
             "prompt_stats": prompt_stats,
         })
-    except sqlite3.Error as e:
-        print(f"Database error: {e}")
-        return jsonify({"error": "Database error while fetching compare stats"}), 500
-    except Exception as e:
-        print(f"Error fetching compare stats: {e}")
-        return jsonify({"error": "An unexpected error occurred"}), 500
+    except sqlite3.Error:
+        logger.exception("Database error while fetching compare stats")
+        return api_error("Adatbázis hiba az összehasonlítás lekérésekor.", 500)
 
 
 if __name__ == '__main__':
     # Parancssori argumentumok kezelése
     if len(sys.argv) > 1 and sys.argv[1] == 'reset-votes':
-        if reset_votes():
-            print("A szavazatok sikeresen törölve!")
-            sys.exit(0)
-        else:
-            print("Hiba történt a szavazatok törlése közben!")
-            sys.exit(1)
-    
+        with app.app_context():
+            ok = reset_votes()
+        print("A szavazatok sikeresen törölve!" if ok else "Hiba történt a szavazatok törlése közben!")
+        sys.exit(0 if ok else 1)
+
     # Indítás előtt frissítjük a prompt listát
     update_available_prompts()
-    # Debug mód fejlesztéshez, élesben False és használj pl. Gunicornt/Waitress-t
+    # Debug mód fejlesztéshez, élesben Gunicorn fut (gunicorn.conf.py)
     app.run(debug=True, host='0.0.0.0')
