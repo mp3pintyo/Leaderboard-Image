@@ -91,8 +91,30 @@ app.teardown_appcontext(close_db)
 init_oauth(app)
 
 
+def _origin(url):
+    match = re.match(r'^(https?://[^/]+)', url or '')
+    return match.group(1) if match else ''
+
+
+# Content-Security-Policy: csak saját és a jsDelivr CDN szkriptjei futhatnak; a képek a
+# saját szerverről vagy a DATA_MODE (Cloudflare R2) címről jöhetnek.
+CONTENT_SECURITY_POLICY = '; '.join([
+    "default-src 'self'",
+    "script-src 'self' https://cdn.jsdelivr.net",
+    "style-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'",
+    f"img-src 'self' data: blob: {_origin(DATA_MODE)}".strip(),
+    "font-src 'self' data:",
+    "connect-src 'self'",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    "frame-ancestors 'none'",
+])
+
+
 @app.after_request
 def set_security_headers(response):
+    response.headers.setdefault('Content-Security-Policy', CONTENT_SECURITY_POLICY)
     response.headers.setdefault('X-Content-Type-Options', 'nosniff')
     response.headers.setdefault('X-Frame-Options', 'DENY')
     response.headers.setdefault('Referrer-Policy', 'strict-origin-when-cross-origin')

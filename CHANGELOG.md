@@ -2,6 +2,76 @@
 
 Minden jelentős változás ebben a fájlban szerepel. / All notable changes are documented in this file.
 
+## [1.3.0] – 2026-09-30
+
+### 🇭🇺 Magyar
+
+**Navigáció és megosztható linkek**
+- Hash-alapú útvonalak minden nézethez: `#/battle`, `#/side-by-side?m1=…&m2=…&p=…`, `#/leaderboard`, `#/leaderboard/quality-price`, `#/leaderboard/matrix`, `#/elo-history`, `#/compare?a=…&b=…`. A nézetek linkelhetők, a böngésző Vissza gombja működik, az oldal címe nézetenként változik.
+- Az Arena Battle nézetre visszalépve a korábban látott pár megmarad (nem „ég el” egy új pár).
+- Bejelentkezés után az oldal ugyanarra a nézetre (útvonalra) tér vissza.
+
+**Sötét mód**
+- Világos / sötét / rendszer szerinti téma a navigációs sávban; a választás megmarad, és villanás nélkül töltődik be.
+- Minden felület design tokenekre (CSS változókra) épül; a diagramok (minőség–ár, ELO-történet, összehasonlítás) színei is a témához igazodnak, és témaváltáskor újrarajzolódnak.
+
+**Képnagyító (lightbox)**
+- Bármelyik képre (Battle, Side-by-Side, Összehasonlítás) kattintva teljes képernyős nézet nyílik: görgős és csípéses nagyítás a kurzor felé, húzással mozgatás, dupla kattintás (2,5×), `+`/`−`/`0` billentyűk, `←`/`→` lapozás a képek között, eredeti kép megnyitása új lapon.
+- A Battle-ben a felirat szavazás előtt csak az oldalt mutatja („A oldali kép”), így a nagyító sem árulja el a modellt.
+
+**Összehasonlítás oldal újratervezve**
+- A félrevezető radardiagram helyett egymással szemben álló metrikasávok: Arena (Bradley-Terry) pontszám 95%-os CI-vel, győzelmi arány, meccsek, online ELO; a vezető érték jelölve, adat nélküli modellnél „nincs még adat”.
+- Egymás elleni eredmény döntetlenekkel együtt, egy sávban.
+- Modell-adatlapok teljes (szolgáltató + név) megjelenítéssel, magyar címkékkel; „⇄” gomb a modellek felcseréléséhez.
+- A prompt-sorok billentyűzettel is nyithatók (`aria-expanded`), a képek nagyíthatók; a diagram példánya újratöltéskor megszűnik (nincs memóriaszivárgás).
+
+**Keresőoptimalizálás és megosztás**
+- `meta description`, Open Graph és Twitter kártya (1200×630-as megosztási kép), `canonical`, `theme-color`, SVG favicon és Apple touch ikon.
+
+**Biztonság**
+- `Content-Security-Policy` fejléc: csak saját és jsDelivr szkriptek futhatnak, a képek a saját szerverről vagy a `DATA_MODE` (R2) címről jöhetnek, `frame-ancestors 'none'`.
+- Minden CDN könyvtár fix verzióval és SRI integritás-hash-sel töltődik be: Bootstrap 5.3.8, Chart.js 4.5.1, chartjs-adapter-date-fns 3.0.0 (korábban a Chart.js mindig a legfrissebb, ellenőrizetlen verzióval töltődött).
+
+**Akadálymentesség és apróságok**
+- „Ugrás a tartalomra” link, `<main>` tájékozódási pont, jól látható fókuszkeret, `aria-current` a menüben, nyilakkal bejárható leaderboard fülek.
+- Side-by-Side: a képek közvetlenül a modellnév alatt kezdődnek; egységesebb gombok.
+
+**Tesztek:** új e2e tesztek a mély linkekre, a Vissza gombra, a témaváltásra, a nagyítóra és a biztonsági fejlécekre.
+
+### 🇬🇧 English
+
+**Navigation and shareable links**
+- Hash routes for every view: `#/battle`, `#/side-by-side?m1=…&m2=…&p=…`, `#/leaderboard`, `#/leaderboard/quality-price`, `#/leaderboard/matrix`, `#/elo-history`, `#/compare?a=…&b=…`. Views are linkable, the browser Back button works and the page title follows the view.
+- Returning to Arena Battle keeps the pair you were looking at (no wasted battle).
+- After login you return to the same view/route.
+
+**Dark mode**
+- Light / dark / system theme in the navbar; the choice is remembered and applied without a flash.
+- All surfaces use design tokens (CSS variables); charts (quality–price, ELO history, comparison) follow the theme and redraw on theme change.
+
+**Image lightbox**
+- Clicking any image (Battle, Side-by-Side, Compare) opens a fullscreen viewer: wheel and pinch zoom towards the cursor, drag to pan, double click (2.5×), `+`/`−`/`0` keys, `←`/`→` to switch images, open original in a new tab.
+- In Battle the caption only shows the side ("A oldali kép") before voting, so the viewer never reveals the model.
+
+**Compare page redesigned**
+- The misleading radar chart is replaced by opposing metric bars: Arena (Bradley-Terry) score with 95% CI, win rate, matches, online ELO; the leading value is marked, models without data show "no data yet".
+- Head-to-head result including ties in a single bar.
+- Model cards with full (provider + name) display names and Hungarian tag labels; "⇄" button to swap models.
+- Prompt rows are keyboard accessible (`aria-expanded`), images are zoomable; chart instances are destroyed on reload (no memory leak).
+
+**SEO and sharing**
+- `meta description`, Open Graph and Twitter card (1200×630 share image), `canonical`, `theme-color`, SVG favicon and Apple touch icon.
+
+**Security**
+- `Content-Security-Policy` header: only own and jsDelivr scripts, images only from self or the `DATA_MODE` (R2) origin, `frame-ancestors 'none'`.
+- All CDN libraries are pinned with SRI integrity hashes: Bootstrap 5.3.8, Chart.js 4.5.1, chartjs-adapter-date-fns 3.0.0 (previously Chart.js always loaded the latest, unverified version).
+
+**Accessibility and polish**
+- "Skip to content" link, `<main>` landmark, visible focus outline, `aria-current` in the menu, arrow-key navigation for leaderboard tabs.
+- Side-by-Side: images start right below the model name; more consistent buttons.
+
+**Tests:** new e2e tests for deep links, the Back button, theme switching, the lightbox and security headers.
+
 ## [1.2.0] – 2026-09-30
 
 ### 🇭🇺 Magyar

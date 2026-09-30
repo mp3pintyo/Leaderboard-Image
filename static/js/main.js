@@ -1,90 +1,141 @@
-import { initBattleMode, loadBattleData } from './battle.js';
-import { initSideBySideMode, adjustImageHeight as adjustSbsHeight } from './sideBySide.js';
-import { initLeaderboardMode, loadLeaderboardData } from './leaderboard.js';
-import { initEloHistoryMode, loadEloHistoryData } from './eloHistory.js';
-import { initCompareMode, loadCompareData } from './compare.js';
+import { initBattleMode, ensureBattleLoaded, getBattleCaption } from './battle.js';
+import { initSideBySideMode, adjustImageHeight as adjustSbsHeight, applySideBySideRoute, getSideBySideCaption } from './sideBySide.js';
+import { initLeaderboardMode, loadLeaderboardData, selectLeaderboardView, getLeaderboardView, refreshLeaderboardCharts } from './leaderboard.js';
+import { initEloHistoryMode, loadEloHistoryData, refreshEloHistoryChart } from './eloHistory.js';
+import { initCompareMode, applyCompareRoute, refreshCompareCharts } from './compare.js';
 import { APP_CONFIG } from './config.js';
 import { updateLoginLinks } from './auth.js';
 import { showToast } from './toast.js';
+import { initTheme } from './theme.js';
+import { initLightbox, bindLightbox } from './lightbox.js';
 
-// DOM elemek
-const modes = ['battle', 'side-by-side', 'leaderboard', 'elo-history', 'compare'];
-const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+// Nézetek és címük; az útvonal formája: #/<nézet>[/<alnézet>][?paraméterek]
+const MODES = {
+    battle: 'Arena Battle',
+    'side-by-side': 'Side-by-Side',
+    leaderboard: 'Leaderboard',
+    'elo-history': 'ELO fejlődés',
+    compare: 'Összehasonlítás',
+};
+const DEFAULT_MODE = 'battle';
+const SITE_TITLE = 'AI Képgenerátor Aréna';
+const navLinks = document.querySelectorAll('.navbar-nav .nav-link[data-mode]');
+let currentMode = null;
 
-// Segédfüggvények
+function parseRoute(hash = window.location.hash) {
+    if (!hash.startsWith('#/')) return null;
+    const [path, query = ''] = hash.slice(2).split('?');
+    const [mode, sub = ''] = path.split('/');
+    return { mode: MODES[mode] ? mode : DEFAULT_MODE, sub, params: new URLSearchParams(query) };
+}
+
 function showMode(modeToShow) {
-    modes.forEach(mode => {
+    Object.keys(MODES).forEach((mode) => {
         const element = document.getElementById(`${mode}-mode`);
-        if (element) {
-            if (mode === modeToShow) {
-                element.style.display = mode === 'side-by-side' ? 'flex' : 'block';
-            } else {
-                element.style.display = 'none';
-            }
-        }
+        if (!element) return;
+        element.style.display = mode === modeToShow ? (mode === 'side-by-side' ? 'flex' : 'block') : 'none';
     });
-    
-    navLinks.forEach(link => {
-        if (link.dataset.mode === modeToShow) {
-            link.classList.add('active');
-        } else {
-            link.classList.remove('active');
-        }
+    navLinks.forEach((link) => {
+        const active = link.dataset.mode === modeToShow;
+        link.classList.toggle('active', active);
+        if (active) link.setAttribute('aria-current', 'page');
+        else link.removeAttribute('aria-current');
     });
+    document.title = modeToShow === DEFAULT_MODE ? SITE_TITLE : `${MODES[modeToShow]} – ${SITE_TITLE}`;
+    if (modeToShow === 'side-by-side') setTimeout(adjustSbsHeight, 0);
+}
 
-    if (modeToShow === 'side-by-side') {
-        setTimeout(adjustSbsHeight, 0);
+function closeMobileMenu() {
+    const navbarCollapse = document.getElementById('navbarNav');
+    if (!navbarCollapse) return;
+    const hide = () => {
+        if (window.bootstrap?.Collapse) window.bootstrap.Collapse.getOrCreateInstance(navbarCollapse, { toggle: false }).hide();
+        else navbarCollapse.classList.remove('show');
+        document.querySelector('.navbar-toggler')?.setAttribute('aria-expanded', 'false');
+    };
+    if (navbarCollapse.classList.contains('collapsing')) {
+        navbarCollapse.addEventListener('shown.bs.collapse', hide, { once: true });
+    } else if (navbarCollapse.classList.contains('show')) {
+        hide();
     }
 }
 
-// Inicializáció
-document.addEventListener('DOMContentLoaded', function() {
-    // Modulok inicializálása
+function handleRoute() {
+    const route = parseRoute();
+    if (!route) return; // Nem nézet-útvonal (pl. #main-content): nincs teendő
+    const modeChanged = route.mode !== currentMode;
+    currentMode = route.mode;
+    showMode(route.mode);
+    closeMobileMenu();
+    updateLoginLinks();
+
+    switch (route.mode) {
+    case 'battle':
+        ensureBattleLoaded();
+        break;
+    case 'side-by-side':
+        applySideBySideRoute(route.params);
+        break;
+    case 'leaderboard':
+        if (route.sub && route.sub !== getLeaderboardView()) selectLeaderboardView(route.sub);
+        if (modeChanged) loadLeaderboardData();
+        break;
+    case 'elo-history':
+        if (modeChanged) loadEloHistoryData();
+        break;
+    case 'compare':
+        applyCompareRoute(route.params);
+        break;
+    default:
+        break;
+    }
+    if (modeChanged) window.scrollTo({ top: 0 });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    initTheme();
+    initLightbox();
     initBattleMode();
     initSideBySideMode();
     initLeaderboardMode();
     initEloHistoryMode();
     initCompareMode();
 
-    // Navigáció kezelése
-    navLinks.forEach(link => {
-        if (!link.hasAttribute('data-mode')) return; // Ne kezelje a külső linkeket, mint pl. a GitHub
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const mode = link.dataset.mode;
-            showMode(mode);
+    // Nagyítható képek: a battle-ben a felirat szavazás előtt nem árulja el a modellt
+    bindLightbox(document.querySelectorAll('#battle-mode .arena-image'), getBattleCaption);
+    bindLightbox(document.querySelectorAll('#side-by-side-mode .arena-image'), getSideBySideCaption);
 
-            const navbarCollapse = document.getElementById('navbarNav');
-            if (navbarCollapse?.classList.contains('collapsing') && window.bootstrap?.Collapse) {
-                navbarCollapse.addEventListener('shown.bs.collapse', () => {
-                    window.bootstrap.Collapse.getOrCreateInstance(navbarCollapse).hide();
-                }, { once: true });
-            } else if (navbarCollapse?.classList.contains('show')) {
-                if (window.bootstrap?.Collapse) {
-                    window.bootstrap.Collapse.getOrCreateInstance(navbarCollapse).hide();
-                } else {
-                    navbarCollapse.classList.remove('show');
-                    document.querySelector('.navbar-toggler')?.setAttribute('aria-expanded', 'false');
-                }
-            }
+    // A leaderboard alnézete (fül) is kerüljön az útvonalba, hogy megosztható legyen
+    document.addEventListener('leaderboard:viewchange', (event) => {
+        if (currentMode !== 'leaderboard') return;
+        const view = event.detail.view;
+        const hash = view === 'ranking' ? '#/leaderboard' : `#/leaderboard/${view}`;
+        if (window.location.hash !== hash) history.replaceState(null, '', hash);
+        updateLoginLinks();
+    });
+    document.addEventListener('route:replaced', updateLoginLinks);
 
-            // Az aktuális mód adatainak betöltése
-            if (mode === 'battle') {
-                loadBattleData();
-            } else if (mode === 'leaderboard') {
-                loadLeaderboardData();
-            } else if (mode === 'elo-history') {
-                loadEloHistoryData();
-            }
-        });
+    // Témaváltáskor a vásznon rajzolt diagramok színeit újra kell számolni
+    document.addEventListener('themechange', () => {
+        refreshLeaderboardCharts();
+        refreshEloHistoryChart();
+        refreshCompareCharts();
     });
 
-    updateLoginLinks();
+    // „Ugrás a tartalomra”: fókusz a fő tartalomra az útvonal megváltoztatása nélkül
+    document.querySelector('a[href="#main-content"]')?.addEventListener('click', (event) => {
+        event.preventDefault();
+        const main = document.getElementById('main-content');
+        main.tabIndex = -1;
+        main.focus();
+    });
+
     if (APP_CONFIG.login_error) {
         showToast('A bejelentkezés nem sikerült vagy megszakadt. Próbáld újra!', 'warning');
+        history.replaceState(null, '', `/${window.location.hash}`);
     }
 
-    // Kezdeti mód beállítása
-    showMode('battle');
-    loadBattleData();
+    window.addEventListener('hashchange', handleRoute);
+    if (!parseRoute()) history.replaceState(null, '', `#/${DEFAULT_MODE}`);
+    handleRoute();
 });

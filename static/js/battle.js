@@ -139,6 +139,19 @@ function showBattle(next) {
     }
 }
 
+/** Útvonalváltáskor: csak akkor tölt új párt, ha még nincs megjelenített (így nem „ég el” a látott pár). */
+export function ensureBattleLoaded() {
+    if (!current && !busy) loadBattleData();
+}
+
+/** A nagyított kép felirata: szavazás előtt csak az oldal, utána a modell neve. */
+export function getBattleCaption(img) {
+    const slot = img === slots.a.image ? slots.a : slots.b;
+    const side = slot === slots.a ? 'A' : 'B';
+    const name = slot.name.textContent;
+    return name === `Modell ${side}` ? `${side} oldali kép` : `${side}: ${name}`;
+}
+
 export async function loadBattleData() {
     if (busy) return;
     busy = true;

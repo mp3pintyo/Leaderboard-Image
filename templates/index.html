@@ -1,42 +1,72 @@
 <!DOCTYPE html>
-<html lang="hu">
+<html lang="hu" data-bs-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Képgenerátor Aréna</title>    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <title>AI Képgenerátor Aréna</title>
+    <meta name="description" content="Vak A/B szavazás AI képgenerátorok között: Arena Battle, Bradley-Terry rangsor konfidenciaintervallummal, modell-összehasonlítás és minőség–ár térkép.">
+    <meta name="theme-color" content="#212529">
+    <meta name="color-scheme" content="light dark">
+    <link rel="canonical" href="{{ request.url_root }}">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="AI Képgenerátor Aréna">
+    <meta property="og:title" content="AI Képgenerátor Aréna – melyik képgenerátor a legjobb?">
+    <meta property="og:description" content="Vak szavazás AI képgenerátorok között és közösségi rangsor – Nano Banana, GPT Image, Midjourney, Seedream, FLUX és sok más modell.">
+    <meta property="og:url" content="{{ request.url_root }}">
+    <meta property="og:image" content="{{ url_for('static', filename='img/og-image.png', _external=True) }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="hu_HU">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="{{ url_for('static', filename='img/favicon.svg') }}" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='img/apple-touch-icon.png') }}">
+    <script src="{{ url_for('static', filename='js/theme-init.js') }}"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/battle.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/leaderboard.css') }}">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <a class="visually-hidden-focusable position-absolute top-0 start-0 m-2 btn btn-light" href="#main-content">Ugrás a tartalomra</a>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Fő navigáció">
         <div class="container">
-            <a class="navbar-brand" href="#">AI Képgenerátor Aréna</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <a class="navbar-brand" href="#/battle">AI Képgenerátor Aréna</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Menü megnyitása">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#" data-mode="battle">Arena Battle</a>
+                        <a class="nav-link active" href="#/battle" data-mode="battle">Arena Battle</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" data-mode="side-by-side">Side-by-Side</a>
+                        <a class="nav-link" href="#/side-by-side" data-mode="side-by-side">Side-by-Side</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" data-mode="leaderboard">Leaderboard</a>
+                        <a class="nav-link" href="#/leaderboard" data-mode="leaderboard">Leaderboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" data-mode="elo-history">ELO Fejlődés</a>
+                        <a class="nav-link" href="#/elo-history" data-mode="elo-history">ELO Fejlődés</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" data-mode="compare">Összehasonlítás</a>
+                        <a class="nav-link" href="#/compare" data-mode="compare">Összehasonlítás</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="https://github.com/mp3pintyo/Leaderboard-Image" target="_blank" rel="noopener noreferrer">GitHub</a>
                     </li>
                 </ul>
-                <div class="navbar-nav ms-auto" id="auth-section">
+                <div class="navbar-nav ms-auto align-items-lg-center gap-2" id="auth-section">
+                    <div class="dropdown theme-switch">
+                        <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Téma választása">
+                            <span id="theme-toggle-icon" aria-hidden="true">☀</span> <span class="d-lg-none">Téma</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><button class="dropdown-item" type="button" data-theme-choice="light" aria-pressed="false">☀ Világos</button></li>
+                            <li><button class="dropdown-item" type="button" data-theme-choice="dark" aria-pressed="false">☾ Sötét</button></li>
+                            <li><button class="dropdown-item" type="button" data-theme-choice="auto" aria-pressed="false">◐ Rendszer szerint</button></li>
+                        </ul>
+                    </div>
                     {% if user %}
                     <div class="d-flex align-items-center">
                         <span class="navbar-text text-light me-3">
@@ -93,7 +123,9 @@
         </div>
     </nav>
 
-    <div id="loading-indicator" class="loading-bar" role="progressbar" aria-label="Betöltés"></div>
+    <div id="loading-indicator" class="loading-bar" aria-hidden="true"></div>
+
+    <main id="main-content">
 
     <!-- Arena Battle Mode -->
     <div id="battle-mode" class="container-fluid arena-mode">
@@ -201,7 +233,7 @@
                 </div>
                 <div class="col-md-2 align-self-end d-flex flex-column gap-1">
                     <button id="sbs-load-btn" class="btn btn-primary btn-sm w-100">Betöltés / Új Prompt</button>
-                    <button id="sbs-next-btn" class="btn btn-warning btn-sm w-100">Következő prompt</button>
+                    <button id="sbs-next-btn" class="btn btn-outline-primary btn-sm w-100">Következő prompt →</button>
                 </div>
             </div>
             <div class="row mb-2 justify-content-center flex-shrink-0">
@@ -212,7 +244,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row justify-content-center flex-grow-1 align-items-center overflow-hidden w-100 mx-0">
+            <div class="row justify-content-center flex-grow-1 align-items-stretch overflow-hidden w-100 mx-0">
                 <div id="sbs-model1-img-container" class="col-md-6 h-100 d-flex flex-column text-center px-2">
                     <h4 id="sbs-model1-name" class="flex-shrink-0">Modell 1</h4>
                     <div class="sbs-image-wrapper flex-grow-1 d-flex align-items-center justify-content-center" style="min-height: 0;">
@@ -481,33 +513,38 @@
 
         <!-- Compare Mode -->
         <div id="compare-mode" class="arena-mode" style="display: none;">
-            <h2 class="text-center mb-4">Modellek összehasonlítása</h2>
-            <div class="row mb-4 justify-content-center">
-                <div class="col-md-4">
-                    <label for="compare-model1-select" class="form-label fw-bold text-primary">Modell A:</label>
-                    <select id="compare-model1-select" class="form-select">
-                        {% for model_item in models %}
-                        <option value="{{ model_item.id }}">{{ model_item.display }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <label for="compare-model2-select" class="form-label fw-bold text-success">Modell B:</label>
-                    <select id="compare-model2-select" class="form-select">
-                        {% for model_item in models %}
-                        {% if loop.index == 2 %}
-                        <option value="{{ model_item.id }}" selected>{{ model_item.display }}</option>
-                        {% else %}
-                        <option value="{{ model_item.id }}">{{ model_item.display }}</option>
-                        {% endif %}
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="col-md-2 align-self-end">
-                    <button id="compare-load-btn" class="btn btn-primary w-100">Összehasonlítás</button>
+            <div class="leaderboard-heading text-center">
+                <span class="leaderboard-eyebrow">KÉT MODELL</span>
+                <h2>Összehasonlítás</h2>
+                <p>Adatlap, Arena pontszám, egymás elleni eredmények és promptonkénti képek.</p>
+            </div>
+            <div class="compare-panel">
+                <div class="row g-2 align-items-end">
+                    <div class="col-md compare-model-a">
+                        <label for="compare-model1-select" class="form-label fw-bold" style="color: var(--model-color)">Modell A</label>
+                        <select id="compare-model1-select" class="form-select">
+                            {% for model_item in models %}
+                            <option value="{{ model_item.id }}">{{ model_item.display }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-auto text-center">
+                        <button id="compare-swap-btn" type="button" class="btn btn-outline-secondary" title="Modellek felcserélése" aria-label="Modellek felcserélése">⇄</button>
+                    </div>
+                    <div class="col-md compare-model-b">
+                        <label for="compare-model2-select" class="form-label fw-bold" style="color: var(--model-color)">Modell B</label>
+                        <select id="compare-model2-select" class="form-select">
+                            {% for model_item in models %}
+                            <option value="{{ model_item.id }}"{% if loop.index == 2 %} selected{% endif %}>{{ model_item.display }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-auto">
+                        <button id="compare-load-btn" class="btn btn-primary w-100">Összehasonlítás</button>
+                    </div>
                 </div>
             </div>
-            <div id="compare-result"></div>
+            <div id="compare-result" aria-live="polite"></div>
         </div>
 
         <!-- ELO History Mode -->
@@ -544,6 +581,32 @@
 
     </div>
 
+    </main>
+
+    <!-- Lightbox: teljes képernyős nagyítás -->
+    <div class="modal fade lightbox" id="lightbox" tabindex="-1" aria-labelledby="lightbox-caption" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="lightbox-toolbar">
+                    <span id="lightbox-caption" class="lightbox-caption"></span>
+                    <div class="lightbox-actions">
+                        <button type="button" class="btn btn-sm btn-outline-light" id="lightbox-prev" aria-label="Előző kép">‹</button>
+                        <button type="button" class="btn btn-sm btn-outline-light" id="lightbox-next" aria-label="Következő kép">›</button>
+                        <button type="button" class="btn btn-sm btn-outline-light" id="lightbox-zoom-out" aria-label="Kicsinyítés">−</button>
+                        <button type="button" class="btn btn-sm btn-outline-light" id="lightbox-reset" aria-label="Eredeti méret">1:1</button>
+                        <button type="button" class="btn btn-sm btn-outline-light" id="lightbox-zoom-in" aria-label="Nagyítás">+</button>
+                        <a class="btn btn-sm btn-outline-light" id="lightbox-original" href="#" target="_blank" rel="noopener noreferrer" aria-label="Eredeti kép megnyitása új lapon">↗</a>
+                        <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal" aria-label="Bezárás">✕</button>
+                    </div>
+                </div>
+                <div class="lightbox-stage" id="lightbox-stage">
+                    <img id="lightbox-image" class="lightbox-image" alt="">
+                    <span class="lightbox-hint">Görgő / csípés: nagyítás · húzás: mozgatás · dupla kattintás: 2,5× · ←/→: lapozás · Esc: bezárás</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script type="application/json" id="app-config">{{ {
         'user': user,
         'auth_providers': auth_providers,
@@ -552,9 +615,12 @@
         'csrf_token': csrf_token,
         'login_error': login_error,
     } | tojson }}</script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"
+        integrity="sha384-jb8JQMbMoBUzgWatfe6COACi2ljcDdZQ2OxczGA3bGNeWe+6DChMTBJemed7ZnvJ" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"
+        integrity="sha384-cVMg8E3QFwTvGCDuK+ET4PD341jF3W8nO1auiXfuZNQkzbUUiBGLsIQUE+b1mxws" crossorigin="anonymous"></script>
     <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>

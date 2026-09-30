@@ -1,545 +1,376 @@
 import { createVideoLink } from './videoLink.js';
-import { fetchData } from './api.js';
+import { requestJson } from './api.js';
+import { showToast } from './toast.js';
+import { chartTheme } from './theme.js';
+import { bindLightbox } from './lightbox.js';
 
 // DOM elemek
 const compareModel1Select = document.getElementById('compare-model1-select');
 const compareModel2Select = document.getElementById('compare-model2-select');
 const compareBtn = document.getElementById('compare-load-btn');
+const swapBtn = document.getElementById('compare-swap-btn');
 const compareResultDiv = document.getElementById('compare-result');
 
-let compareChart = null; // Chart.js instance
+let promptChart = null;
+let lastData = null;
+let requestSeq = 0;
 
-function escapeHtml(value) {
-    return String(value ?? '')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
+const TAG_LABELS = {
+    photorealistic: 'fotorealisztikus',
+    artistic: 'művészi',
+    general: 'általános',
+    multimodal: 'multimodális',
+    'text-rendering': 'szövegírás',
+    editing: 'szerkesztés',
+    inpainting: 'inpainting',
+    stylized: 'stilizált',
+    lightweight: 'könnyű',
+    fast: 'gyors',
+    'high-resolution': 'nagy felbontás',
+    'commercial-safe': 'kereskedelmileg biztonságos',
+    flexible: 'rugalmas',
+};
+
+const SPEED_LABELS = { fast: '⚡ Gyors', medium: '⏱ Közepes', slow: '🐢 Lassú' };
+
+function el(tag, options = {}, children = []) {
+    const element = document.createElement(tag);
+    Object.entries(options).forEach(([key, value]) => {
+        if (key === 'className') element.className = value;
+        else if (key === 'text') element.textContent = value;
+        else if (key === 'dataset') Object.assign(element.dataset, value);
+        else element.setAttribute(key, value);
+    });
+    (Array.isArray(children) ? children : [children]).filter(Boolean).forEach((child) => {
+        element.append(child instanceof Node ? child : document.createTextNode(String(child)));
+    });
+    return element;
 }
 
-function sanitizeUrl(url) {
-    if (!url) return null;
-    const value = String(url).trim();
-
-    // Relative URLs
-    if (value.startsWith('/')) return value;
-
-    // Absolute http/https URLs
+function safeHttpUrl(url) {
     try {
-        const parsed = new URL(value, window.location.origin);
-        if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
-            return parsed.href;
-        }
-    } catch (_) {
-        // invalid URL
+        const parsed = new URL(String(url), window.location.origin);
+        return ['http:', 'https:'].includes(parsed.protocol) ? parsed.href : null;
+    } catch {
+        return null;
     }
-
-    return null;
 }
 
-function getTagBadgeClass(tag) {
-    const map = {
-        'photorealistic': 'bg-primary',
-        'artistic': 'bg-info text-dark',
-        'general': 'bg-secondary',
-        'multimodal': 'bg-warning text-dark',
-        'text-rendering': 'bg-success',
-        'editing': 'bg-danger',
-        'inpainting': 'bg-danger',
-        'stylized': 'bg-info text-dark',
-        'lightweight': 'bg-light text-dark',
-        'fast': 'bg-success',
-        'high-resolution': 'bg-primary',
-        'commercial-safe': 'bg-dark',
-        'flexible': 'bg-secondary',
-    };
-    return map[tag] || 'bg-secondary';
-}
-
-function getSpeedBadge(speed) {
-    const map = {
-        'fast': '<span class="badge bg-success">⚡ Gyors</span>',
-        'medium': '<span class="badge bg-warning text-dark">⏱ Közepes</span>',
-        'slow': '<span class="badge bg-danger">🐢 Lassú</span>',
-    };
-    return map[speed] || '<span class="badge bg-secondary">N/A</span>';
+function formatNumber(value, digits = 0) {
+    return Number(value).toLocaleString('hu-HU', { minimumFractionDigits: digits, maximumFractionDigits: digits });
 }
 
 function renderModelCard(model, side) {
-    const tags = (model.tags || [])
-        .map(t => `<span class="badge ${getTagBadgeClass(t)} me-1">${escapeHtml(t)}</span>`)
-        .join('');
-    const openSourceBadge = model.open_source
-        ? '<span class="badge bg-success">Open Source</span>'
-        : '<span class="badge bg-warning text-dark">Zárt forrású</span>';
-    const apiAvailable = model.api_available
-        ? '<span class="badge bg-success">✓ Elérhető</span>'
-        : '<span class="badge bg-danger">✗ Nem elérhető</span>';
-
-    const safeWebsiteHref = sanitizeUrl(model.website);
-    const website = safeWebsiteHref
-        ? `<a href="${escapeHtml(safeWebsiteHref)}" target="_blank" rel="noopener noreferrer" class="text-decoration-none">${escapeHtml(model.website)}</a>`
-        : '<span class="text-muted">N/A</span>';
-
-    return `
-        <div class="card compare-model-card h-100 ${side === 'left' ? 'border-primary' : 'border-success'}">
-            <div class="card-header ${side === 'left' ? 'bg-primary' : 'bg-success'} text-white">
-                <h5 class="mb-0">${escapeHtml(model.name)}</h5>
-            </div>
-            <div class="card-body">
-                <table class="table table-sm table-borderless mb-0">
-                    <tbody>
-                        <tr><td class="fw-bold text-nowrap" style="width:40%">Szolgáltató</td><td>${escapeHtml(model.provider)}</td></tr>
-                        <tr><td class="fw-bold">Típus</td><td>${openSourceBadge}</td></tr>
-                        <tr><td class="fw-bold">Kategória</td><td><span class="badge bg-dark">${escapeHtml(model.type || 'N/A')}</span></td></tr>
-                        <tr><td class="fw-bold">Megjelenés</td><td>${escapeHtml(model.release_date || 'N/A')}</td></tr>
-                        <tr><td class="fw-bold">Max felbontás</td><td>${escapeHtml(model.max_resolution || 'N/A')}</td></tr>
-                        <tr><td class="fw-bold">Árazás</td><td>${escapeHtml(model.pricing || 'N/A')}</td></tr>
-                        <tr><td class="fw-bold">API</td><td>${apiAvailable}</td></tr>
-                        <tr><td class="fw-bold">Sebesség</td><td>${getSpeedBadge(model.speed)}</td></tr>
-                        <tr><td class="fw-bold">Videó</td><td>${createVideoLink(model).outerHTML}</td></tr>
-                        <tr><td class="fw-bold">Weboldal</td><td>${website}</td></tr>
-                        <tr><td class="fw-bold">Címkék</td><td>${tags || '<span class="text-muted">Nincs</span>'}</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    `;
+    const website = safeHttpUrl(model.website);
+    const rows = [
+        ['Szolgáltató', model.provider || 'N/A'],
+        ['Licenc', el('span', { className: `badge ${model.open_source ? 'text-bg-success' : 'text-bg-warning'}`, text: model.open_source ? 'Open Source' : 'Zárt forrású' })],
+        ['Kategória', model.type || 'N/A'],
+        ['Megjelenés', model.release_date || 'N/A'],
+        ['Max felbontás', model.max_resolution || 'N/A'],
+        ['Árazás', model.pricing || 'N/A'],
+        ['API', el('span', { className: `badge ${model.api_available ? 'text-bg-success' : 'text-bg-secondary'}`, text: model.api_available ? 'Elérhető' : 'Nem elérhető' })],
+        ['Sebesség', SPEED_LABELS[model.speed] || 'N/A'],
+        ['Videó', createVideoLink(model)],
+        ['Weboldal', website
+            ? el('a', { href: website, target: '_blank', rel: 'noopener noreferrer', text: website.replace(/^https?:\/\//, '').replace(/\/$/, '') })
+            : 'N/A'],
+        ['Címkék', (model.tags || []).length
+            ? el('span', { className: 'd-flex flex-wrap gap-1' }, model.tags.map((tag) => el('span', { className: 'badge text-bg-light border', text: TAG_LABELS[tag] || tag })))
+            : 'Nincs'],
+    ];
+    const dl = el('dl');
+    rows.forEach(([label, value]) => dl.append(el('dt', { text: label }), el('dd', {}, value)));
+    return el('article', { className: `compare-panel compare-model-card compare-model-${side}` }, [
+        el('h3', { text: model.display }),
+        dl,
+    ]);
 }
 
-function renderStatsOverview(stats) {
+function metricRow(label, a, b, { format, baseline = 0, higherIsBetter = true, noteA = '', noteB = '', missingA = false, missingB = false }) {
+    const max = Math.max(missingA ? 0 : a - baseline, missingB ? 0 : b - baseline, 1);
+    const side = (value, note, cls, leading, missing) => {
+        const bar = el('span', { className: 'compare-metric-bar', 'aria-hidden': 'true' },
+            missing ? null : el('span', { className: 'compare-metric-fill', style: `width: ${Math.max(2, ((value - baseline) / max) * 100)}%` }));
+        const valueEl = el('span', { className: `compare-metric-value${leading ? ' is-leading' : ''}` },
+            missing ? ['–', el('small', { text: 'nincs még adat' })] : [format(value), note ? el('small', { text: note }) : null]);
+        return el('div', { className: `compare-metric-side ${cls}` }, [valueEl, bar]);
+    };
+    // Adat nélküli modellel nincs értelme „vezetőt” jelölni
+    const comparable = !missingA && !missingB;
+    const aLeads = comparable && (higherIsBetter ? a > b : a < b);
+    const bLeads = comparable && (higherIsBetter ? b > a : b < a);
+    return el('div', { className: 'compare-metric' }, [
+        el('div', { className: 'compare-model-a' }, side(a, noteA, 'side-a', aLeads, missingA)),
+        el('div', { className: 'compare-metric-label', text: label }),
+        el('div', { className: 'compare-model-b' }, side(b, noteB, 'side-b', bLeads, missingB)),
+    ]);
+}
+
+function ciNote(model) {
+    if (model.ci_lower === null || model.ci_lower === undefined) return 'nincs adat';
+    return `95% CI: ${formatNumber(model.ci_lower)}–${formatNumber(model.ci_upper)}${model.preliminary ? ' · előzetes' : ''}`;
+}
+
+function renderStats(stats) {
     const m1 = stats.model1;
     const m2 = stats.model2;
     const h2h = stats.head_to_head;
-    const m1Name = escapeHtml(m1.name);
-    const m2Name = escapeHtml(m2.name);
 
-    // Head-to-head bar percentages
-    let h2hBar = '';
+    const header = el('div', { className: 'compare-metric' }, [
+        el('strong', { className: 'text-end compare-model-a', style: 'color: var(--model-color)', text: m1.display }),
+        el('span', { className: 'compare-metric-label', text: 'vs.' }),
+        el('strong', { className: 'compare-model-b', style: 'color: var(--model-color)', text: m2.display }),
+    ]);
+
+    const noData = { missingA: m1.matches === 0, missingB: m2.matches === 0 };
+    const metrics = [
+        metricRow('Arena pontszám', m1.score, m2.score, { format: (v) => formatNumber(v), baseline: 1000, noteA: ciNote(m1), noteB: ciNote(m2), ...noData }),
+        metricRow('Győzelmi arány', m1.win_rate, m2.win_rate, { format: (v) => `${formatNumber(v, 1)}%`, ...noData }),
+        metricRow('Meccsek', m1.matches, m2.matches, {
+            format: (v) => formatNumber(v),
+            noteA: `${m1.wins} győzelem · ${m1.ties} döntetlen`, noteB: `${m2.wins} győzelem · ${m2.ties} döntetlen`,
+        }),
+        metricRow('Online ELO', m1.elo, m2.elo, { format: (v) => formatNumber(v, 1), baseline: 1000, ...noData }),
+    ];
+
+    let h2hContent;
     if (h2h.total > 0) {
-        const pct1 = Math.round(h2h.model1_wins / h2h.total * 100);
-        const pct2 = 100 - pct1;
-        h2hBar = `
-            <div class="progress" style="height: 30px;">
-                <div class="progress-bar bg-primary" style="width: ${pct1}%">${m1Name}: ${h2h.model1_wins} (${pct1}%)</div>
-                <div class="progress-bar bg-success" style="width: ${pct2}%">${m2Name}: ${h2h.model2_wins} (${pct2}%)</div>
-            </div>
-        `;
+        const pct = (value) => (value / h2h.total) * 100;
+        const segment = (cls, value, text) => value > 0
+            ? el('span', { className: cls, style: `width: ${pct(value)}%`, title: text }, pct(value) >= 12 ? text : '')
+            : null;
+        h2hContent = [
+            el('div', { className: 'compare-h2h', role: 'img', 'aria-label': `${m1.display}: ${h2h.model1_wins} győzelem, döntetlen: ${h2h.ties}, ${m2.display}: ${h2h.model2_wins} győzelem` }, [
+                segment('h2h-a', h2h.model1_wins, `${h2h.model1_wins} (${Math.round(pct(h2h.model1_wins))}%)`),
+                segment('h2h-tie', h2h.ties, `${h2h.ties} döntetlen`),
+                segment('h2h-b', h2h.model2_wins, `${h2h.model2_wins} (${Math.round(pct(h2h.model2_wins))}%)`),
+            ]),
+            el('p', { className: 'small text-body-secondary mt-2 mb-0', text: `${m1.display}: ${h2h.model1_wins} · döntetlen: ${h2h.ties} · ${m2.display}: ${h2h.model2_wins}` }),
+        ];
     } else {
-        h2hBar = '<p class="text-muted text-center">Még nem játszottak egymás ellen</p>';
+        h2hContent = el('p', { className: 'text-body-secondary mb-0', text: 'Még nem kerültek egymás ellen.' });
     }
 
-    return `
-        <div class="card mb-4">
-            <div class="card-header bg-dark text-white"><h5 class="mb-0">📊 Összesített statisztikák</h5></div>
-            <div class="card-body">
-                <div class="row text-center mb-3">
-                    <div class="col-md-6">
-                        <div class="border rounded p-3">
-                            <h6 class="text-primary">${m1Name}</h6>
-                            <div class="display-6 fw-bold text-primary">${m1.elo}</div>
-                            <small class="text-muted">ELO</small>
-                            <div class="mt-2">
-                                <span class="badge bg-primary">${m1.wins} győzelem</span>
-                                <span class="badge bg-secondary">${m1.matches} meccs</span>
-                                <span class="badge bg-info text-dark">${m1.win_rate}% WR</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="border rounded p-3">
-                            <h6 class="text-success">${m2Name}</h6>
-                            <div class="display-6 fw-bold text-success">${m2.elo}</div>
-                            <small class="text-muted">ELO</small>
-                            <div class="mt-2">
-                                <span class="badge bg-success">${m2.wins} győzelem</span>
-                                <span class="badge bg-secondary">${m2.matches} meccs</span>
-                                <span class="badge bg-info text-dark">${m2.win_rate}% WR</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <h6 class="text-center mb-2">⚔️ Egymás elleni eredmények (${h2h.total} meccs)</h6>
-                ${h2hBar}
-            </div>
-        </div>
-    `;
+    return el('section', { className: 'compare-panel' }, [
+        el('h3', { text: 'Összesített statisztikák' }),
+        header,
+        ...metrics,
+        el('h3', { className: 'mt-4', text: `Egymás ellen (${h2h.total} meccs)` }),
+        ...[].concat(h2hContent),
+    ]);
 }
 
-function renderRadarChart(stats, info) {
-    const canvas = document.getElementById('compare-radar-chart');
-    if (!canvas) return;
-    
-    if (compareChart) {
-        compareChart.destroy();
-        compareChart = null;
-    }
-
-    const m1 = stats.model1;
-    const m2 = stats.model2;
-
-    // Normalize to 0-100 for radar display, but keep raw values for tooltips
-    // Use a fixed wide range for ELO so close values look proportionally close
-    const eloMin = 1000;
-    const eloMax = 2200;
-    const maxMatches = Math.max(m1.matches, m2.matches, 1);
-    const maxWins = Math.max(m1.wins, m2.wins, 1);
-
-    function normalize(val, min, max) {
-        if (max === min) return 50;
-        return Math.min(100, Math.max(0, Math.round(((val - min) / (max - min)) * 100)));
-    }
-
-    const labels = ['ELO Rating', 'Győzelmi arány', 'Meccsek száma', 'Győzelmek'];
-
-    // Raw values for tooltip display
-    const raw1 = [m1.elo, m1.win_rate, m1.matches, m1.wins];
-    const raw2 = [m2.elo, m2.win_rate, m2.matches, m2.wins];
-    const units = ['', '%', '', ''];
-
-    const data1 = [
-        normalize(m1.elo, eloMin, eloMax),
-        m1.win_rate,
-        normalize(m1.matches, 0, maxMatches),
-        normalize(m1.wins, 0, maxWins),
-    ];
-
-    const data2 = [
-        normalize(m2.elo, eloMin, eloMax),
-        m2.win_rate,
-        normalize(m2.matches, 0, maxMatches),
-        normalize(m2.wins, 0, maxWins),
-    ];
-
-    compareChart = new Chart(canvas, {
-        type: 'radar',
-        data: {
-            labels: labels,
-            datasets: [
-                {
-                    label: m1.name,
-                    data: data1,
-                    rawData: raw1,
-                    backgroundColor: 'rgba(13, 110, 253, 0.15)',
-                    borderColor: 'rgba(13, 110, 253, 1)',
-                    pointBackgroundColor: 'rgba(13, 110, 253, 1)',
-                    borderWidth: 2,
-                },
-                {
-                    label: m2.name,
-                    data: data2,
-                    rawData: raw2,
-                    backgroundColor: 'rgba(25, 135, 84, 0.15)',
-                    borderColor: 'rgba(25, 135, 84, 1)',
-                    pointBackgroundColor: 'rgba(25, 135, 84, 1)',
-                    borderWidth: 2,
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            scales: {
-                r: {
-                    beginAtZero: true,
-                    max: 100,
-                    ticks: { display: false },
-                    pointLabels: { font: { size: 12 } }
-                }
-            },
-            plugins: {
-                legend: { position: 'top' },
-                tooltip: {
-                    callbacks: {
-                        label: function(ctx) {
-                            const ds = ctx.dataset;
-                            const idx = ctx.dataIndex;
-                            const raw = ds.rawData ? ds.rawData[idx] : ctx.raw;
-                            const unit = units[idx] || '';
-                            return `${ds.label}: ${raw}${unit}`;
-                        }
-                    }
-                }
-            }
-        }
-    });
+function renderPromptChartPanel(stats) {
+    const relevant = stats.prompt_stats.filter((p) => p.model1.matches > 0 || p.model2.matches > 0);
+    if (!relevant.length) return null;
+    return el('section', { className: 'compare-panel' }, [
+        el('h3', { text: 'Győzelmi arány promptonként' }),
+        el('div', { className: 'chart-container', style: `position: relative; height: ${Math.max(260, relevant.length * 34)}px; width: 100%;` },
+            el('canvas', { id: 'compare-bar-chart', role: 'img', 'aria-label': 'A két modell győzelmi aránya promptonként' })),
+    ]);
 }
 
-function renderPromptStats(stats, model1Id, model2Id) {
-    const promptStats = stats.prompt_stats;
-    if (!promptStats || promptStats.length === 0) {
-        return '<p class="text-muted text-center">Nincs prompt szintű adat</p>';
-    }
-
-    const m1Name = escapeHtml(stats.model1.name);
-    const m2Name = escapeHtml(stats.model2.name);
-
-    const rows = promptStats.map(p => {
-        const m1WinPct = p.model1.win_rate;
-        const m2WinPct = p.model2.win_rate;
-        const m1BarColor = m1WinPct >= m2WinPct ? 'bg-primary' : 'bg-primary bg-opacity-50';
-        const m2BarColor = m2WinPct >= m1WinPct ? 'bg-success' : 'bg-success bg-opacity-50';
-
-        const safePromptId = escapeHtml(p.prompt_id);
-        const safePromptText = escapeHtml(p.prompt_text);
-        const safeModel1Id = escapeHtml(model1Id);
-        const safeModel2Id = escapeHtml(model2Id);
-
-        return `
-            <tr class="compare-prompt-row" data-prompt-id="${safePromptId}" data-model1="${safeModel1Id}" data-model2="${safeModel2Id}" data-model1-name="${m1Name}" data-model2-name="${m2Name}" style="cursor:pointer" title="Kattints a képek megtekintéséhez">
-                <td class="text-nowrap"><small>${safePromptId} <span class="compare-prompt-arrow">▶</span></small></td>
-                <td><small class="text-truncate d-inline-block" style="max-width:200px" title="${safePromptText}">${safePromptText}</small></td>
-                <td class="text-center">${p.model1.wins}/${p.model1.matches}</td>
-                <td style="width:80px">
-                    <div class="progress" style="height:18px">
-                        <div class="progress-bar ${m1BarColor}" style="width:${m1WinPct}%"><small>${m1WinPct}%</small></div>
-                    </div>
-                </td>
-                <td class="text-center">${p.model2.wins}/${p.model2.matches}</td>
-                <td style="width:80px">
-                    <div class="progress" style="height:18px">
-                        <div class="progress-bar ${m2BarColor}" style="width:${m2WinPct}%"><small>${m2WinPct}%</small></div>
-                    </div>
-                </td>
-            </tr>
-            <tr class="compare-prompt-images" id="compare-images-${safePromptId}" style="display:none">
-                <td colspan="6" class="p-2 bg-light"></td>
-            </tr>
-        `;
-    }).join('');
-
-    return `
-        <div class="card mb-4">
-            <div class="card-header bg-dark text-white"><h5 class="mb-0">📝 Prompt szintű statisztikák <small class="fw-normal opacity-75">(kattints egy sorra a képek megtekintéséhez)</small></h5></div>
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-sm table-striped table-hover mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th>ID</th>
-                                <th>Prompt</th>
-                                <th class="text-center text-primary">Gy/M</th>
-                                <th class="text-primary">WR%</th>
-                                <th class="text-center text-success">Gy/M</th>
-                                <th class="text-success">WR%</th>
-                            </tr>
-                        </thead>
-                        <tbody>${rows}</tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    `;
-}
-
-function attachPromptRowListeners() {
-    document.querySelectorAll('.compare-prompt-row').forEach(row => {
-        row.addEventListener('click', async function() {
-            const promptId = this.dataset.promptId;
-            const model1Id = this.dataset.model1;
-            const model2Id = this.dataset.model2;
-            const imageRow = document.getElementById(`compare-images-${promptId}`);
-            const arrow = this.querySelector('.compare-prompt-arrow');
-            if (!imageRow) return;
-
-            // Toggle: if already visible, hide and return
-            if (imageRow.style.display !== 'none') {
-                imageRow.style.display = 'none';
-                if (arrow) arrow.textContent = '▶';
-                return;
-            }
-
-            // Show the row
-            imageRow.style.display = '';
-            if (arrow) arrow.textContent = '▼';
-
-            const td = imageRow.querySelector('td');
-
-            // If images already loaded, just show
-            if (td.dataset.loaded === 'true') return;
-
-            // Show loading spinner
-            td.innerHTML = '<div class="text-center py-3"><div class="spinner-border spinner-border-sm" role="status"></div> Képek betöltése...</div>';
-
-            // Fetch both image URLs in parallel
-            const [img1Data, img2Data] = await Promise.all([
-                fetch(`/api/get_image?model=${encodeURIComponent(model1Id)}&prompt_id=${encodeURIComponent(promptId)}`).then(r => r.json()).catch(() => null),
-                fetch(`/api/get_image?model=${encodeURIComponent(model2Id)}&prompt_id=${encodeURIComponent(promptId)}`).then(r => r.json()).catch(() => null),
-            ]);
-
-            const img1Url = img1Data && img1Data.image_url ? sanitizeUrl(img1Data.image_url) : null;
-            const img2Url = img2Data && img2Data.image_url ? sanitizeUrl(img2Data.image_url) : null;
-
-            const img1Html = img1Url
-                ? `<img src="${img1Url}" alt="Model A" class="img-fluid rounded compare-prompt-img compare-border-model1" loading="lazy">`
-                : '<div class="text-muted text-center p-3">Kép nem elérhető</div>';
-            const img2Html = img2Url
-                ? `<img src="${img2Url}" alt="Model B" class="img-fluid rounded compare-prompt-img compare-border-model2" loading="lazy">`
-                : '<div class="text-muted text-center p-3">Kép nem elérhető</div>';
-
-            const safeModel1Name = escapeHtml(this.dataset.model1Name || 'Model 1');
-            const safeModel2Name = escapeHtml(this.dataset.model2Name || 'Model 2');
-
-            td.innerHTML = `
-                <div class="row g-2 justify-content-center">
-                    <div class="col-md-6 text-center">
-                        <div class="small fw-bold text-primary mb-1">${safeModel1Name}</div>
-                        ${img1Html}
-                    </div>
-                    <div class="col-md-6 text-center">
-                        <div class="small fw-bold text-success mb-1">${safeModel2Name}</div>
-                        ${img2Html}
-                    </div>
-                </div>
-            `;
-            td.dataset.loaded = 'true';
-        });
-    });
-}
-
-function renderWinRateBarChart(stats) {
-    const promptStats = stats.prompt_stats;
-    if (!promptStats || promptStats.length === 0) return '';
-
-    // Only show prompts where at least one model has matches
-    const relevantPrompts = promptStats.filter(p => p.model1.matches > 0 || p.model2.matches > 0);
-    if (relevantPrompts.length === 0) return '';
-
-    return `
-        <div class="card mb-4">
-            <div class="card-header bg-dark text-white"><h5 class="mb-0">📈 Győzelmi arány promptonként</h5></div>
-            <div class="card-body">
-                <div class="chart-container" style="position: relative; height:${Math.max(300, relevantPrompts.length * 35)}px; width:100%;">
-                    <canvas id="compare-bar-chart"></canvas>
-                </div>
-            </div>
-        </div>
-    `;
-}
-
-function createWinRateBarChart(stats) {
+function createPromptChart(stats) {
     const canvas = document.getElementById('compare-bar-chart');
-    if (!canvas) return;
+    if (!canvas || typeof window.Chart === 'undefined') return;
+    const relevant = stats.prompt_stats.filter((p) => p.model1.matches > 0 || p.model2.matches > 0);
+    const theme = chartTheme();
+    const styles = getComputedStyle(document.body);
+    const colorA = styles.getPropertyValue('--model-a-color').trim() || '#0d6efd';
+    const colorB = styles.getPropertyValue('--model-b-color').trim() || '#198754';
 
-    const promptStats = stats.prompt_stats.filter(p => p.model1.matches > 0 || p.model2.matches > 0);
-    if (promptStats.length === 0) return;
-
-    const labels = promptStats.map(p => p.prompt_id);
-
-    new Chart(canvas, {
+    promptChart = new window.Chart(canvas, {
         type: 'bar',
         data: {
-            labels: labels,
+            labels: relevant.map((p) => p.prompt_id),
             datasets: [
-                {
-                    label: stats.model1.name + ' WR%',
-                    data: promptStats.map(p => p.model1.win_rate),
-                    backgroundColor: 'rgba(13, 110, 253, 0.7)',
-                    borderColor: 'rgba(13, 110, 253, 1)',
-                    borderWidth: 1,
-                },
-                {
-                    label: stats.model2.name + ' WR%',
-                    data: promptStats.map(p => p.model2.win_rate),
-                    backgroundColor: 'rgba(25, 135, 84, 0.7)',
-                    borderColor: 'rgba(25, 135, 84, 1)',
-                    borderWidth: 1,
-                }
-            ]
+                { label: stats.model1.display, data: relevant.map((p) => p.model1.win_rate), backgroundColor: colorA, borderRadius: 4 },
+                { label: stats.model2.display, data: relevant.map((p) => p.model2.win_rate), backgroundColor: colorB, borderRadius: 4 },
+            ],
         },
         options: {
             indexAxis: 'y',
             responsive: true,
             maintainAspectRatio: false,
+            animation: { duration: theme.reducedMotion ? 0 : 500 },
             scales: {
-                x: {
-                    beginAtZero: true,
-                    max: 100,
-                    title: { display: true, text: 'Győzelmi arány (%)' }
-                },
-                y: {
-                    title: { display: true, text: 'Prompt' }
-                }
+                x: { beginAtZero: true, max: 100, title: { display: true, text: 'Győzelmi arány (%)', color: theme.text }, grid: { color: theme.grid }, ticks: { color: theme.muted } },
+                y: { title: { display: true, text: 'Prompt', color: theme.text }, grid: { color: theme.grid }, ticks: { color: theme.muted } },
             },
             plugins: {
-                legend: { position: 'top' },
+                legend: { position: 'top', labels: { color: theme.text } },
                 tooltip: {
                     callbacks: {
-                        label: function(ctx) {
-                            return `${ctx.dataset.label}: ${ctx.raw}%`;
-                        }
-                    }
-                }
-            }
-        }
+                        title: (items) => {
+                            const prompt = relevant[items[0].dataIndex];
+                            return `${prompt.prompt_id}: ${prompt.prompt_text}`;
+                        },
+                        label: (ctx) => {
+                            const entry = relevant[ctx.dataIndex][ctx.datasetIndex === 0 ? 'model1' : 'model2'];
+                            return `${ctx.dataset.label}: ${ctx.raw}% (${entry.wins} gy. / ${entry.matches} meccs)`;
+                        },
+                    },
+                },
+            },
+        },
     });
 }
 
-async function loadCompareData() {
+function renderPromptTable(stats, model1Id, model2Id) {
+    const table = el('table', { className: 'table table-sm align-middle mb-0 compare-prompt-table' });
+    table.append(el('thead', {}, el('tr', {}, [
+        el('th', { scope: 'col', text: 'Prompt' }),
+        el('th', { scope: 'col', className: 'compare-model-a', style: 'color: var(--model-color)', text: stats.model1.display }),
+        el('th', { scope: 'col', className: 'compare-model-b', style: 'color: var(--model-color)', text: stats.model2.display }),
+    ])));
+    const tbody = el('tbody');
+
+    stats.prompt_stats.forEach((prompt) => {
+        const detailsId = `compare-images-${prompt.prompt_id}`;
+        const toggle = el('button', {
+            type: 'button', className: 'compare-prompt-toggle', 'aria-expanded': 'false', 'aria-controls': detailsId,
+            title: 'Képek megjelenítése',
+        }, [el('span', { className: 'fw-semibold', text: prompt.prompt_id }), el('span', { className: 'small text-body-secondary', text: prompt.prompt_text })]);
+
+        const cell = (entry, side) => el('td', { className: `compare-model-${side} text-nowrap` }, [
+            `${entry.wins}/${entry.matches}`,
+            entry.ties ? el('small', { className: 'text-body-secondary', text: ` (+${entry.ties} d.)` }) : null,
+            el('span', { className: 'compare-mini-bar', 'aria-hidden': 'true' }, el('span', { style: `width: ${entry.win_rate}%` })),
+        ]);
+
+        const row = el('tr', { className: 'compare-prompt-row' }, [el('td', {}, toggle), cell(prompt.model1, 'a'), cell(prompt.model2, 'b')]);
+        const detailsCell = el('td', { colspan: '3' });
+        const detailsRow = el('tr', { id: detailsId, hidden: '' }, detailsCell);
+
+        toggle.addEventListener('click', async () => {
+            const open = toggle.getAttribute('aria-expanded') === 'true';
+            toggle.setAttribute('aria-expanded', String(!open));
+            detailsRow.hidden = open;
+            if (open || detailsCell.dataset.loaded === 'true') return;
+            detailsCell.replaceChildren(el('p', { className: 'text-center py-3 mb-0' }, [
+                el('span', { className: 'spinner-border spinner-border-sm me-2', role: 'status' }), 'Képek betöltése...',
+            ]));
+            const fetchImage = (modelId) => requestJson(`/api/get_image?model=${encodeURIComponent(modelId)}&prompt_id=${encodeURIComponent(prompt.prompt_id)}`)
+                .then((data) => safeHttpUrl(data.image_url)).catch(() => null);
+            const [url1, url2] = await Promise.all([fetchImage(model1Id), fetchImage(model2Id)]);
+            const figure = (url, model, side) => el('figure', { className: `compare-model-${side}` }, [
+                el('figcaption', { text: model.display }),
+                url
+                    ? el('img', { src: url, alt: `${model.display} képe – prompt ${prompt.prompt_id}`, className: 'compare-prompt-img', loading: 'lazy', decoding: 'async' })
+                    : el('p', { className: 'text-body-secondary py-3', text: 'Kép nem elérhető' }),
+            ]);
+            const grid = el('div', { className: 'compare-prompt-images' }, [figure(url1, stats.model1, 'a'), figure(url2, stats.model2, 'b')]);
+            detailsCell.replaceChildren(grid);
+            detailsCell.dataset.loaded = 'true';
+            bindLightbox(grid.querySelectorAll('img'), (img) => `${img.alt}`);
+        });
+
+        tbody.append(row, detailsRow);
+    });
+    table.append(tbody);
+
+    return el('section', { className: 'compare-panel' }, [
+        el('h3', {}, ['Prompt szintű eredmények ', el('small', { className: 'fw-normal text-body-secondary', text: '(kattints egy promptra a képekhez)' })]),
+        el('div', { className: 'table-responsive' }, table),
+    ]);
+}
+
+function destroyCharts() {
+    if (promptChart) {
+        promptChart.destroy();
+        promptChart = null;
+    }
+}
+
+function updateRoute(model1Id, model2Id) {
+    const hash = `#/compare?a=${encodeURIComponent(model1Id)}&b=${encodeURIComponent(model2Id)}`;
+    if (window.location.hash !== hash) history.replaceState(null, '', hash);
+    document.dispatchEvent(new CustomEvent('route:replaced'));
+}
+
+export async function loadCompareData() {
     const model1Id = compareModel1Select.value;
     const model2Id = compareModel2Select.value;
 
     if (model1Id === model2Id) {
-        compareResultDiv.innerHTML = '<div class="alert alert-warning text-center">Kérlek válassz két különböző modellt!</div>';
+        showToast('Válassz két különböző modellt!', 'warning');
         return;
     }
+    updateRoute(model1Id, model2Id);
 
-    compareResultDiv.innerHTML = '<div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>';
-
-    // Fetch model info and stats in parallel
-    const [infoData, statsData] = await Promise.all([
-        fetchData(`/api/model_info?model1=${model1Id}&model2=${model2Id}`),
-        fetchData(`/api/compare_stats?model1=${model1Id}&model2=${model2Id}`)
-    ]);
-
-    if (!infoData || !statsData) {
-        compareResultDiv.innerHTML = '<div class="alert alert-danger">Hiba az adatok betöltése közben.</div>';
-        return;
+    const seq = ++requestSeq;
+    compareBtn.disabled = true;
+    compareResultDiv.setAttribute('aria-busy', 'true');
+    try {
+        const [infoData, statsData] = await Promise.all([
+            requestJson(`/api/model_info?model1=${encodeURIComponent(model1Id)}&model2=${encodeURIComponent(model2Id)}`),
+            requestJson(`/api/compare_stats?model1=${encodeURIComponent(model1Id)}&model2=${encodeURIComponent(model2Id)}`),
+        ]);
+        if (seq !== requestSeq) return;
+        lastData = { infoData, statsData, model1Id, model2Id };
+        render();
+    } catch (error) {
+        if (seq === requestSeq) {
+            compareResultDiv.replaceChildren(el('div', { className: 'alert alert-danger', text: 'Hiba az adatok betöltése közben.' }));
+            showToast(error.message, 'danger');
+        }
+    } finally {
+        if (seq === requestSeq) {
+            compareBtn.disabled = false;
+            compareResultDiv.removeAttribute('aria-busy');
+        }
     }
+}
 
-    const html = `
-        <!-- Model info cards -->
-        <div class="row mb-4">
-            <div class="col-md-6">${renderModelCard(infoData.model1, 'left')}</div>
-            <div class="col-md-6">${renderModelCard(infoData.model2, 'right')}</div>
-        </div>
+function render() {
+    if (!lastData) return;
+    const { infoData, statsData, model1Id, model2Id } = lastData;
+    destroyCharts();
+    compareResultDiv.replaceChildren(
+        el('div', { className: 'row g-3 mb-2' }, [
+            el('div', { className: 'col-md-6' }, renderModelCard(infoData.model1, 'a')),
+            el('div', { className: 'col-md-6' }, renderModelCard(infoData.model2, 'b')),
+        ]),
+        renderStats(statsData),
+        renderPromptChartPanel(statsData) || '',
+        renderPromptTable(statsData, model1Id, model2Id),
+    );
+    createPromptChart(statsData);
+}
 
-        <!-- Stats overview + radar chart -->
-        <div class="row mb-4">
-            <div class="col-lg-7">${renderStatsOverview(statsData)}</div>
-            <div class="col-lg-5">
-                <div class="card h-100">
-                    <div class="card-header bg-dark text-white"><h5 class="mb-0">🎯 Teljesítmény radar</h5></div>
-                    <div class="card-body d-flex align-items-center justify-content-center">
-                        <canvas id="compare-radar-chart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
+/** Téma váltásakor a diagram színeit újra kell számolni. */
+export function refreshCompareCharts() {
+    if (promptChart && lastData) {
+        destroyCharts();
+        createPromptChart(lastData.statsData);
+    }
+}
 
-        <!-- Win rate bar chart per prompt -->
-        ${renderWinRateBarChart(statsData)}
-
-        <!-- Prompt-level stats table -->
-        ${renderPromptStats(statsData, model1Id, model2Id)}
-    `;
-
-    compareResultDiv.innerHTML = html;
-
-    // Create charts and attach listeners after DOM is updated
-    renderRadarChart(statsData, infoData);
-    createWinRateBarChart(statsData);
-    attachPromptRowListeners();
+/** Útvonalból (#/compare?a=...&b=...) érkező modellek beállítása és betöltése. */
+export function applyCompareRoute(params) {
+    const a = params.get('a');
+    const b = params.get('b');
+    const valid = (id) => id && [...compareModel1Select.options].some((option) => option.value === id);
+    if (valid(a) && valid(b) && a !== b) {
+        const changed = compareModel1Select.value !== a || compareModel2Select.value !== b || !lastData;
+        compareModel1Select.value = a;
+        compareModel2Select.value = b;
+        if (changed) loadCompareData();
+    }
 }
 
 export function initCompareMode() {
     compareBtn.addEventListener('click', loadCompareData);
-    
-    // Set second dropdown to a different model by default
-    if (compareModel2Select.options.length > 1) {
+    swapBtn?.addEventListener('click', () => {
+        const first = compareModel1Select.value;
+        compareModel1Select.value = compareModel2Select.value;
+        compareModel2Select.value = first;
+        loadCompareData();
+    });
+
+    // Alapértelmezésben a második legördülő egy másik modellt mutasson
+    if (compareModel2Select.options.length > 1 && compareModel2Select.value === compareModel1Select.value) {
         compareModel2Select.selectedIndex = 1;
     }
 }
-
-export { loadCompareData };

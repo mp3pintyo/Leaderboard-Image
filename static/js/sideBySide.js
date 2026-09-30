@@ -101,6 +101,7 @@ async function loadSideBySide(target = {}) {
             slots[2].image.removeAttribute('src');
             slots[2].name.textContent = 'Modell 3';
         }
+        updateRoute(models, data.prompt_id);
         return true;
     } catch (error) {
         if (seq === requestSeq) showToast(error.message, error.status === 404 ? 'warning' : 'danger');
@@ -112,6 +113,41 @@ async function loadSideBySide(target = {}) {
             setTimeout(adjustImageHeight, 0);
         }
     }
+}
+
+function updateRoute(models, promptId) {
+    if (!window.location.hash.startsWith('#/side-by-side')) return;
+    const params = new URLSearchParams();
+    models.forEach((model, index) => params.set(`m${index + 1}`, model));
+    params.set('p', promptId);
+    const hash = `#/side-by-side?${params}`;
+    if (window.location.hash !== hash) history.replaceState(null, '', hash);
+    document.dispatchEvent(new CustomEvent('route:replaced'));
+}
+
+/** Útvonalból (#/side-by-side?m1=..&m2=..&m3=..&p=..) érkező állapot alkalmazása. */
+export function applySideBySideRoute(params) {
+    const valid = (select, id) => id && [...select.options].some((option) => option.value === id);
+    ['m1', 'm2', 'm3'].forEach((key, index) => {
+        const id = params.get(key);
+        if (valid(selects[index], id)) selects[index].value = id;
+    });
+    if (!params.get('m3') && params.get('m1')) selects[2].value = '';
+    adjustColumnSizes(selects[2].value ? 3 : 2);
+
+    const promptId = params.get('p');
+    if (promptId && promptId !== currentPromptId) {
+        loadSideBySide({ prompt_id: promptId });
+    } else if (!currentPromptId) {
+        loadSideBySide({});
+    } else {
+        setTimeout(adjustImageHeight, 0);
+    }
+}
+
+export function getSideBySideCaption(img) {
+    const slot = slots.find((entry) => entry.image === img);
+    return slot ? slot.name.textContent : 'Kép';
 }
 
 async function handleModelChange() {
