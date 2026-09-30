@@ -158,27 +158,28 @@ def update_available_prompts():
         logger.warning("No valid prompts found in data directory!")
 
 def update_frozen_models(db=None):
-    """Befagyasztja a leaderboard alsó FROZEN_BOTTOM_COUNT modelljét.
+    """Befagyasztja a leaderboard alsó FROZEN_BOTTOM_COUNT modelljét (Bradley-Terry pontszám szerint).
 
     A befagyasztott modellek nem vesznek részt az Arena Battle-ben,
     de továbbra is láthatók a Side-by-Side módban és a Leaderboard-on.
+    Csak olyan modell fagyasztható be, amelynek már van meccse.
     """
     try:
         db = db or get_db()
+        bottom = []
+        if FROZEN_BOTTOM_COUNT and FROZEN_BOTTOM_COUNT > 0:
+            point = get_point_ranking(db)
+            games = (point['wins'] + point['wins'].T).sum(axis=1)
+            played = [m for m in MODEL_IDS if games[MODEL_INDEX[m]] > 0]
+            played.sort(key=lambda m: point['rating'][MODEL_INDEX[m]])
+            bottom = played[:FROZEN_BOTTOM_COUNT]
         with db:
             db.execute("UPDATE model_elo SET frozen = 0")
-            if not FROZEN_BOTTOM_COUNT or FROZEN_BOTTOM_COUNT <= 0:
-                return
-            # Modellek lekérdezése ELO szerint növekvő sorrendben (legrosszabbak elöl)
-            rows = db.execute("SELECT model FROM model_elo ORDER BY elo ASC LIMIT ?", (FROZEN_BOTTOM_COUNT,)).fetchall()
-            db.executemany("UPDATE model_elo SET frozen = 1 WHERE model = ?", [(r['model'],) for r in rows])
-        logger.info("Frozen %d models at the bottom of the leaderboard.", len(rows))
+            db.executemany("UPDATE model_elo SET frozen = 1 WHERE model = ?", [(m,) for m in bottom])
+        if bottom:
+            logger.info("Frozen %d models at the bottom of the leaderboard.", len(bottom))
     except sqlite3.Error:
         logger.exception("Error updating frozen models")
-
-# Befagyasztott modellek frissítése indításkor (a függvény definíciója után)
-with app.app_context():
-    update_frozen_models()
 
 # Manifest cache DATA_MODE-hoz
 _manifest_cache = None
@@ -1089,28 +1090,30 @@ def apply_ranking(rows, rating, ci_lower=None, ci_upper=None):
     return rows
 
 
+def build_ranked_leaderboard(db, model_type='all'):
+    """A rangsor sorai (pontszám, CI, helyezés, statisztikák) a megadott modelltípusra."""
+    stats = get_model_stats(db)
+    elo_data = {row['model']: row for row in db.execute('SELECT model, elo, COALESCE(frozen, 0) AS frozen FROM model_elo')}
+    ranking_data = get_global_ranking(db)
+    rows = []
+    for model_id, model in MODELS.items():
+        if not filter_model_type(model, model_type):
+            continue
+        elo_row = elo_data.get(model_id)
+        rows.append(build_leaderboard_row(
+            model_id, stats.get(model_id),
+            elo_row['elo'] if elo_row else DEFAULT_ELO,
+            bool(elo_row['frozen']) if elo_row else False,
+        ))
+    return apply_ranking(rows, ranking_data['rating'], ranking_data['ci_lower'], ranking_data['ci_upper'])
+
+
 @app.route('/api/leaderboard')
 def get_leaderboard():
     """Leaderboard: Bradley-Terry pontszám 95%-os CI-vel, helyezéssávval, szavazatszámmal.
-    Az online ELO (az ELO-történet grafikon alapja) az `elo` mezőben marad meg."""
+    Az online ELO a felületen már nem jelenik meg; az `elo` mező csak visszafelé kompatibilitás miatt maradt."""
     try:
-        model_type = request.args.get('model_type', 'all')
-        db = get_db()
-        stats = get_model_stats(db)
-        elo_data = {row['model']: row for row in db.execute('SELECT model, elo, COALESCE(frozen, 0) AS frozen FROM model_elo')}
-        ranking_data = get_global_ranking(db)
-
-        rows = []
-        for model_id, model in MODELS.items():
-            if not filter_model_type(model, model_type):
-                continue
-            elo_row = elo_data.get(model_id)
-            rows.append(build_leaderboard_row(
-                model_id, stats.get(model_id),
-                elo_row['elo'] if elo_row else DEFAULT_ELO,
-                bool(elo_row['frozen']) if elo_row else False,
-            ))
-        return jsonify(apply_ranking(rows, ranking_data['rating'], ranking_data['ci_lower'], ranking_data['ci_upper']))
+        return jsonify(build_ranked_leaderboard(get_db(), request.args.get('model_type', 'all')))
     except sqlite3.Error:
         logger.exception("Database error while fetching leaderboard")
         return api_error("Adatbázis hiba a leaderboard lekérésekor.", 500)
@@ -1222,68 +1225,103 @@ def get_personal_leaderboard():
         return api_error("Adatbázis hiba.", 500)
 
 
-ELO_HISTORY_RANGES = {'1w': 7, '2w': 14, '1m': 30, '3m': 90}
-ELO_HISTORY_MAX_POINTS = 160
+HISTORY_RANGES = {'1w': 7, '2w': 14, '1m': 30, '3m': 90}
+HISTORY_MAX_POINTS = 160
+_history_cache = {'key': None, 'data': {}}
 
 
-@app.route('/api/elo_history')
-def get_elo_history():
-    """Az online ELO időbeli alakulása a top N modellre, szerveroldalon ritkítva.
+def compute_score_history(db, range_key):
+    """A Bradley-Terry pontszámok alakulása: az adott időpontig beérkezett összes szavazatból számolva.
+
+    Visszamenőleg is működik, mert minden szavazatnak megvan az időpontja. Az időszakot
+    HISTORY_MAX_POINTS egyenlő részre osztjuk, és minden határpontnál újraillesztjük a modellt
+    (egy illesztés ~1 ms). Az eredményt a szavazatok állapotáig gyorsítótárazzuk.
+    """
+    point = get_point_ranking(db)
+    with _ranking_lock:
+        if _history_cache['key'] != point['key']:
+            _history_cache.update(key=point['key'], data={})
+        cached = _history_cache['data'].get(range_key)
+    if cached is not None:
+        return cached
+
+    votes = []
+    for row in db.execute('SELECT winner, loser, outcome, voted_at FROM votes ORDER BY voted_at, id'):
+        i, j = MODEL_INDEX.get(row['winner']), MODEL_INDEX.get(row['loser'])
+        if i is None or j is None or not row['voted_at']:
+            continue
+        votes.append((i, j, 1.0 if row['outcome'] == OUTCOME_WIN else 0.5, to_iso_utc(row['voted_at'])))
+
+    result = {'times': [], 'ratings': np.zeros((0, len(MODEL_IDS))), 'games': np.zeros((0, len(MODEL_IDS)))}
+    if votes:
+        end = utc_now_naive()
+        first = _parse_iso(votes[0][3])
+        start = end - datetime.timedelta(days=HISTORY_RANGES[range_key]) if range_key in HISTORY_RANGES else first
+        start = max(start, first)
+        span = max((end - start).total_seconds(), 3600.0)
+        boundaries = [start + datetime.timedelta(seconds=span * k / HISTORY_MAX_POINTS)
+                      for k in range(HISTORY_MAX_POINTS + 1)]
+
+        wins = np.zeros((len(MODEL_IDS), len(MODEL_IDS)))
+        times, ratings, games = [], [], []
+        index = 0
+        last_rating = None
+        for boundary in boundaries:
+            boundary_iso = utc_iso_from_datetime(boundary)
+            changed = False
+            while index < len(votes) and votes[index][3] <= boundary_iso:
+                i, j, score, _ts = votes[index]
+                wins[i, j] += score
+                wins[j, i] += 1.0 - score
+                index += 1
+                changed = True
+            if changed or last_rating is None:
+                last_rating = ranking.to_rating(ranking.fit_bradley_terry(wins, BT_PRIOR_GAMES))
+            times.append(boundary_iso)
+            ratings.append(last_rating)
+            games.append((wins + wins.T).sum(axis=1))
+        # Az utolsó pont pontosan a mostani (Leaderboard) pontszám legyen
+        ratings[-1] = point['rating']
+        games[-1] = (point['wins'] + point['wins'].T).sum(axis=1)
+        result = {'times': times, 'ratings': np.array(ratings), 'games': np.array(games)}
+
+    with _ranking_lock:
+        if _history_cache['key'] == point['key']:
+            _history_cache['data'][range_key] = result
+    return result
+
+
+@app.route('/api/history')
+def get_score_history():
+    """A top N modell Leaderboard-pontszámának (Bradley-Terry) időbeli alakulása.
 
     Paraméterek: range (1w, 2w, 1m, 3m, all), top (1-30).
-    Időszakonként (bucket) csak az utolsó értéket adjuk vissza, így a válasz mérete
-    nem nő a szavazatok számával.
+    Egy modell vonala attól az időponttól indul, amikor az első meccsét játszotta.
     """
     try:
         top = max(1, min(int(request.args.get('top', 10)), 30))
     except ValueError:
         top = 10
     range_key = request.args.get('range', 'all')
+    if range_key not in HISTORY_RANGES:
+        range_key = 'all'
     db = get_db()
-    current = [(row['model'], row['elo']) for row in db.execute('SELECT model, elo FROM model_elo ORDER BY elo DESC')
-               if row['model'] in MODELS]
-    selected = [model_id for model_id, _elo in current[:top]]
-    if not selected:
-        return jsonify({"series": [], "models_total": 0})
+    point = get_point_ranking(db)
+    current_games = (point['wins'] + point['wins'].T).sum(axis=1)
+    played = [m for m in MODEL_IDS if current_games[MODEL_INDEX[m]] > 0]
+    played.sort(key=lambda m: -point['rating'][MODEL_INDEX[m]])
+    selected = played[:top]
 
-    end = utc_now_naive()
-    if range_key in ELO_HISTORY_RANGES:
-        start = end - datetime.timedelta(days=ELO_HISTORY_RANGES[range_key])
-    else:
-        first = db.execute('SELECT MIN(timestamp) FROM elo_history').fetchone()[0]
-        start = _parse_iso(first) if first else end
-    span = max((end - start).total_seconds(), 3600.0)
-    bucket_seconds = max(span / ELO_HISTORY_MAX_POINTS, 60.0)
-    start_iso = utc_iso_from_datetime(start)
-    placeholders = ','.join('?' * len(selected))
-
-    series = {model_id: {} for model_id in selected}
-    # A tartomány előtti utolsó érték a vonal kezdőpontja
-    for row in db.execute(f'''
-        SELECT h.model, h.elo FROM elo_history h
-        JOIN (SELECT model, MAX(id) AS id FROM elo_history
-              WHERE timestamp < ? AND model IN ({placeholders}) GROUP BY model) last
-        ON h.id = last.id
-    ''', (start_iso, *selected)):
-        series[row['model']][0] = (start_iso, row['elo'])
-    for row in db.execute(f'''
-        SELECT model, elo, timestamp FROM elo_history
-        WHERE timestamp >= ? AND model IN ({placeholders}) ORDER BY timestamp, id
-    ''', (start_iso, *selected)):
-        timestamp = to_iso_utc(row['timestamp'])
-        bucket = int((_parse_iso(timestamp) - start).total_seconds() // bucket_seconds) + 1
-        series[row['model']][bucket] = (timestamp, row['elo'])
-
-    current_elo = dict(current)
-    now_iso = utc_iso_from_datetime(end)
-    result = []
+    history = compute_score_history(db, range_key)
+    series = []
     for model_id in selected:
-        points = [{"x": ts, "y": round(elo, 1)} for _bucket, (ts, elo) in sorted(series[model_id].items())]
-        if points:
-            # A vonal a mai napig tart
-            points.append({"x": now_iso, "y": round(current_elo[model_id], 1)})
-        result.append({**model_public(model_id), "elo": round(current_elo[model_id], 1), "points": points})
-    return jsonify({"series": result, "models_total": len(current)})
+        index = MODEL_INDEX[model_id]
+        points = [
+            {"x": ts, "y": round(float(history['ratings'][k, index]), 1)}
+            for k, ts in enumerate(history['times']) if history['games'][k, index] > 0
+        ]
+        series.append({**model_public(model_id), "score": round(float(point['rating'][index]), 1), "points": points})
+    return jsonify({"series": series, "models_total": len(played)})
 
 
 @app.route('/api/prompt_ids')
@@ -1389,17 +1427,17 @@ def get_compare_stats():
                 "model2": prompt_entry(m2_prompts.get(prompt_id, empty)),
             })
 
-        ranking_data = get_global_ranking(db)
+        # Pontszám, CI és helyezés ugyanúgy, ahogy a (teljes) Leaderboard mutatja
+        ranked = {row['id']: row for row in build_ranked_leaderboard(db, 'all')}
+        ranked_count = sum(1 for row in ranked.values() if row['position'] is not None)
 
         def global_entry(model_id):
             s = stats.get(model_id, empty)
-            index = MODEL_INDEX[model_id]
-            has_data = s['matches'] > 0
+            row = ranked[model_id]
             return {**model_public(model_id), "elo": round(elos.get(model_id, DEFAULT_ELO), 1),
-                    "score": round(float(ranking_data['rating'][index]), 1),
-                    "ci_lower": round(float(ranking_data['ci_lower'][index]), 1) if has_data else None,
-                    "ci_upper": round(float(ranking_data['ci_upper'][index]), 1) if has_data else None,
-                    "preliminary": s['matches'] < PRELIMINARY_MATCH_THRESHOLD,
+                    "score": row['score'], "ci_lower": row['ci_lower'], "ci_upper": row['ci_upper'],
+                    "position": row['position'], "rank": row['rank'], "rank_worst": row['rank_worst'],
+                    "ranked_models": ranked_count, "preliminary": row['preliminary'],
                     "wins": s['wins'], "ties": s['ties'], "matches": s['matches'], "win_rate": win_rate(s)}
 
         return jsonify({
@@ -1412,6 +1450,11 @@ def get_compare_stats():
     except sqlite3.Error:
         logger.exception("Database error while fetching compare stats")
         return api_error("Adatbázis hiba az összehasonlítás lekérésekor.", 500)
+
+
+# Befagyasztott modellek frissítése indításkor (a rangsor függvényeinek definíciója után)
+with app.app_context():
+    update_frozen_models()
 
 
 if __name__ == '__main__':

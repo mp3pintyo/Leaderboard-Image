@@ -3,14 +3,14 @@ import { colorPalette } from './config.js';
 import { chartTheme } from './theme.js';
 import { showToast } from './toast.js';
 
-const eloHistoryChartCanvas = document.getElementById('eloHistoryChart');
+const historyCanvas = document.getElementById('history-chart');
 const refreshHistoryBtn = document.getElementById('refresh-history-btn');
 const topNSlider = document.getElementById('top-n-slider');
 const topNValue = document.getElementById('top-n-value');
-const emptyMessage = document.getElementById('elo-history-empty');
+const emptyMessage = document.getElementById('history-empty');
 
-let eloHistoryChart = null;
-let eloHistoryRange = 'all';
+let historyChart = null;
+let historyRange = 'all';
 let topNCount = Number(topNSlider?.value) || 10;
 let loadController = null;
 let lastSeries = null;
@@ -29,15 +29,15 @@ function timeUnitFor(range) {
     return 'month';
 }
 
-export async function loadEloHistoryData() {
+export async function loadHistoryData() {
     loadController?.abort();
     loadController = new AbortController();
     refreshHistoryBtn.disabled = true;
     try {
-        const data = await requestJson(`/api/elo_history?range=${eloHistoryRange}&top=${topNCount}`, { signal: loadController.signal });
+        const data = await requestJson(`/api/history?range=${historyRange}&top=${topNCount}`, { signal: loadController.signal });
         if (topNSlider && data.models_total) topNSlider.max = String(Math.min(30, data.models_total));
         lastSeries = data.series;
-        renderEloHistoryChart(data.series);
+        renderHistoryChart(data.series);
     } catch (error) {
         if (error.name === 'AbortError') return;
         showToast(error.message, 'danger');
@@ -57,10 +57,10 @@ function highlightDataset(chart, activeIndex) {
     chart.update('none');
 }
 
-function renderEloHistoryChart(series) {
-    if (eloHistoryChart) {
-        eloHistoryChart.destroy();
-        eloHistoryChart = null;
+function renderHistoryChart(series) {
+    if (historyChart) {
+        historyChart.destroy();
+        historyChart = null;
     }
     const withPoints = series.filter((entry) => entry.points.length > 0);
     emptyMessage.hidden = withPoints.length > 0;
@@ -84,7 +84,7 @@ function renderEloHistoryChart(series) {
         };
     });
 
-    eloHistoryChart = new window.Chart(eloHistoryChartCanvas, {
+    historyChart = new window.Chart(historyCanvas, {
         type: 'line',
         data: { datasets },
         options: {
@@ -106,20 +106,20 @@ function renderEloHistoryChart(series) {
                         title: (items) => items[0]
                             ? new Date(items[0].parsed.x).toLocaleString('hu-HU', { dateStyle: 'medium', timeStyle: 'short' })
                             : '',
-                        label: (ctx) => `${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)} ELO`,
+                        label: (ctx) => `${ctx.dataset.label}: ${ctx.parsed.y.toLocaleString('hu-HU', { maximumFractionDigits: 0 })} pont`,
                     },
                 },
             },
             scales: {
                 x: {
                     type: 'time',
-                    time: { unit: timeUnitFor(eloHistoryRange), tooltipFormat: 'yyyy.MM.dd. HH:mm', displayFormats: { day: 'MM.dd.', week: 'MM.dd.', month: 'yyyy.MM.' } },
+                    time: { unit: timeUnitFor(historyRange), tooltipFormat: 'yyyy.MM.dd. HH:mm', displayFormats: { day: 'MM.dd.', week: 'MM.dd.', month: 'yyyy.MM.' } },
                     title: { display: true, text: 'Időpont', color: theme.text },
                     grid: { color: theme.grid },
                     ticks: { color: theme.muted, maxRotation: 0, autoSkipPadding: 16 },
                 },
                 y: {
-                    title: { display: true, text: 'Online ELO', color: theme.text },
+                    title: { display: true, text: 'Arena pontszám', color: theme.text },
                     grid: { color: theme.grid },
                     ticks: { color: theme.muted },
                 },
@@ -128,16 +128,16 @@ function renderEloHistoryChart(series) {
     });
 }
 
-export function refreshEloHistoryChart() {
-    if (eloHistoryChart && lastSeries) renderEloHistoryChart(lastSeries);
+export function refreshHistoryChart() {
+    if (historyChart && lastSeries) renderHistoryChart(lastSeries);
 }
 
-export function initEloHistoryMode() {
-    refreshHistoryBtn.addEventListener('click', loadEloHistoryData);
-    document.querySelectorAll('input[name="elo-history-range"]').forEach((radio) => {
+export function initHistoryMode() {
+    refreshHistoryBtn.addEventListener('click', loadHistoryData);
+    document.querySelectorAll('input[name="history-range"]').forEach((radio) => {
         radio.addEventListener('change', (event) => {
-            eloHistoryRange = event.target.value;
-            loadEloHistoryData();
+            historyRange = event.target.value;
+            loadHistoryData();
         });
     });
 
@@ -148,7 +148,7 @@ export function initEloHistoryMode() {
         });
         topNSlider.addEventListener('change', (event) => {
             topNCount = Number(event.target.value);
-            loadEloHistoryData();
+            loadHistoryData();
         });
     }
 }

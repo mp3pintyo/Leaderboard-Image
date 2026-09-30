@@ -68,3 +68,21 @@ test('Help page: menu item, section deep link, live stats, no horizontal overflo
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     expect(overflow).toBeLessThanOrEqual(1);
 });
+
+test('Fejlődés: old ELO link redirects, chart uses the leaderboard score', async ({ page }) => {
+    const historyResponse = page.waitForResponse('**/api/history?*');
+    await page.goto('/#/elo-history');
+    await expect(page).toHaveURL(/#\/history$/);
+    await expect(page.locator('#history-mode')).toBeVisible();
+    await expect(page).toHaveTitle(/Fejlődés/);
+    await expect(page.locator('.nav-link[data-mode="history"]')).toHaveClass(/active/);
+    expect((await historyResponse).ok()).toBe(true);
+    await expect(page.locator('body')).not.toContainText('Online ELO');
+});
+
+test('Compare shows rank instead of online ELO', async ({ page }) => {
+    await page.goto('/#/compare?a=model-001&b=model-002');
+    await expect(page.locator('.compare-metric-label', { hasText: 'Helyezés' })).toBeVisible();
+    await expect(page.locator('.compare-metric-label', { hasText: 'Arena pontszám' })).toBeVisible();
+    await expect(page.locator('#compare-result')).not.toContainText('Online ELO');
+});

@@ -47,7 +47,7 @@
                         <a class="nav-link" href="#/leaderboard" data-mode="leaderboard">Leaderboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#/elo-history" data-mode="elo-history">ELO Fejlődés</a>
+                        <a class="nav-link" href="#/history" data-mode="history">Fejlődés</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#/compare" data-mode="compare">Összehasonlítás</a>
@@ -368,11 +368,6 @@
                                 </div>
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input leaderboard-column-toggle" type="checkbox"
-                                        id="leaderboard-column-elo" data-column="elo">
-                                    <label class="form-check-label" for="leaderboard-column-elo">Online ELO</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input leaderboard-column-toggle" type="checkbox"
                                         id="leaderboard-column-release-date" data-column="release_date">
                                     <label class="form-check-label" for="leaderboard-column-release-date">Megjelenés</label>
                                 </div>
@@ -411,7 +406,6 @@
                                 <th scope="col" data-sort="win_rate" aria-sort="none"><button type="button" class="sort-btn" title="A döntetlen fél győzelemnek számít">Győzelmi arány</button></th>
                                 <th scope="col" data-sort="open_source" aria-sort="none"><button type="button" class="sort-btn">Típus</button></th>
                                 <th scope="col" data-column-header="record" data-sort="wins" aria-sort="none" hidden><button type="button" class="sort-btn" title="Győzelem / döntetlen / vereség">Gy / D / V</button></th>
-                                <th scope="col" data-column-header="elo" data-sort="elo" aria-sort="none" hidden><button type="button" class="sort-btn" title="Online (sorrendfüggő) ELO">Online ELO</button></th>
                                 <th scope="col" data-column-header="release_date" data-sort="release_date" aria-sort="none" hidden><button type="button" class="sort-btn">Megjelenés</button></th>
                                 <th scope="col" data-column-header="max_resolution" aria-sort="none" hidden>Max felbontás</th>
                                 <th scope="col" data-column-header="pricing" data-sort="price_per_1000" aria-sort="none" hidden><button type="button" class="sort-btn">Árazás</button></th>
@@ -540,31 +534,31 @@
         </div>
 
 {% include 'help.html' %}
-        <!-- ELO History Mode -->
-        <div id="elo-history-mode" class="arena-mode" style="display: none;">
-            <h2 class="text-center mb-2">Modellek ELO fejlődése</h2>
-            <p class="text-center text-body-secondary mb-3">Az online (szavazatonként frissülő) ELO időbeli alakulása. A rangsor a Leaderboard oldalon Bradley-Terry módszerrel készül.</p>
-            <div class="elo-history-controls">
+        <!-- Fejlődés (a Leaderboard-pontszám időbeli alakulása) -->
+        <div id="history-mode" class="arena-mode" style="display: none;">
+            <h2 class="text-center mb-2">Modellek fejlődése</h2>
+            <p class="text-center text-body-secondary mb-3">A Leaderboard-pontszám (Bradley-Terry) alakulása: minden időpontban az addig beérkezett összes szavazatból számolva. <a href="#/help/fejlodes">Hogyan olvasd?</a></p>
+            <div class="history-controls">
                 <div class="btn-group flex-wrap" role="group" aria-label="Időintervallum szűrő">
-                    <input type="radio" class="btn-check" name="elo-history-range" id="elo-range-1w" value="1w" autocomplete="off">
-                    <label class="btn btn-outline-primary" for="elo-range-1w">1 hét</label>
-                    <input type="radio" class="btn-check" name="elo-history-range" id="elo-range-2w" value="2w" autocomplete="off">
-                    <label class="btn btn-outline-primary" for="elo-range-2w">2 hét</label>
-                    <input type="radio" class="btn-check" name="elo-history-range" id="elo-range-1m" value="1m" autocomplete="off">
-                    <label class="btn btn-outline-primary" for="elo-range-1m">1 hónap</label>
-                    <input type="radio" class="btn-check" name="elo-history-range" id="elo-range-3m" value="3m" autocomplete="off">
-                    <label class="btn btn-outline-primary" for="elo-range-3m">3 hónap</label>
-                    <input type="radio" class="btn-check" name="elo-history-range" id="elo-range-all" value="all" autocomplete="off" checked>
-                    <label class="btn btn-outline-primary" for="elo-range-all">Teljes</label>
+                    <input type="radio" class="btn-check" name="history-range" id="history-range-1w" value="1w" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="history-range-1w">1 hét</label>
+                    <input type="radio" class="btn-check" name="history-range" id="history-range-2w" value="2w" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="history-range-2w">2 hét</label>
+                    <input type="radio" class="btn-check" name="history-range" id="history-range-1m" value="1m" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="history-range-1m">1 hónap</label>
+                    <input type="radio" class="btn-check" name="history-range" id="history-range-3m" value="3m" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="history-range-3m">3 hónap</label>
+                    <input type="radio" class="btn-check" name="history-range" id="history-range-all" value="all" autocomplete="off" checked>
+                    <label class="btn btn-outline-primary" for="history-range-all">Teljes</label>
                 </div>
-                <div class="elo-history-slider">
+                <div class="history-slider">
                     <label for="top-n-slider" class="form-label mb-0">Top modellek: <span id="top-n-value" class="fw-bold">10</span></label>
                     <input type="range" class="form-range" id="top-n-slider" min="1" max="30" value="10" step="1">
                 </div>
             </div>
-            <div class="chart-container elo-history-chart">
-                <canvas id="eloHistoryChart" role="img" aria-label="A top modellek online ELO pontszámának időbeli változása"></canvas>
-                <p id="elo-history-empty" class="elo-history-empty text-body-secondary" hidden>Ebben az időszakban nincs adat.</p>
+            <div class="chart-container history-chart">
+                <canvas id="history-chart" role="img" aria-label="A top modellek Leaderboard-pontszámának időbeli változása"></canvas>
+                <p id="history-empty" class="history-empty text-body-secondary" hidden>Ebben az időszakban nincs adat.</p>
             </div>
             <p class="text-center text-body-secondary small mt-2">Tipp: vidd az egeret egy modell neve fölé a jelmagyarázatban a kiemeléshez.</p>
             <div class="text-center mt-2">

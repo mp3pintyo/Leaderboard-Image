@@ -107,6 +107,28 @@ function metricRow(label, a, b, { format, baseline = 0, higherIsBetter = true, n
     ]);
 }
 
+/** Helyezés sor: „6. hely”, alatta a lehetséges helyezéssáv; a sáv hossza a helyezéssel arányos. */
+function rankRow(m1, m2) {
+    const side = (model, cls, leading) => {
+        const total = model.ranked_models || 1;
+        const hasRank = model.position !== null && model.position !== undefined;
+        const note = !hasRank ? 'nincs még adat'
+            : model.rank !== model.rank_worst ? `lehetséges: ${model.rank}–${model.rank_worst}. · ${total} modellből`
+                : `${total} modellből`;
+        const valueEl = el('span', { className: `compare-metric-value${leading ? ' is-leading' : ''}` },
+            [hasRank ? `${model.position}. hely` : '–', el('small', { text: note })]);
+        const bar = el('span', { className: 'compare-metric-bar', 'aria-hidden': 'true' },
+            hasRank ? el('span', { className: 'compare-metric-fill', style: `width: ${Math.max(2, ((total - model.position + 1) / total) * 100)}%` }) : null);
+        return el('div', { className: `compare-metric-side ${cls}` }, [valueEl, bar]);
+    };
+    const comparable = m1.position && m2.position;
+    return el('div', { className: 'compare-metric' }, [
+        el('div', { className: 'compare-model-a' }, side(m1, 'side-a', comparable && m1.position < m2.position)),
+        el('div', { className: 'compare-metric-label', text: 'Helyezés' }),
+        el('div', { className: 'compare-model-b' }, side(m2, 'side-b', comparable && m2.position < m1.position)),
+    ]);
+}
+
 function ciNote(model) {
     if (model.ci_lower === null || model.ci_lower === undefined) return 'nincs adat';
     return `95% CI: ${formatNumber(model.ci_lower)}–${formatNumber(model.ci_upper)}${model.preliminary ? ' · előzetes' : ''}`;
@@ -125,13 +147,13 @@ function renderStats(stats) {
 
     const noData = { missingA: m1.matches === 0, missingB: m2.matches === 0 };
     const metrics = [
+        rankRow(m1, m2),
         metricRow('Arena pontszám', m1.score, m2.score, { format: (v) => formatNumber(v), baseline: 1000, noteA: ciNote(m1), noteB: ciNote(m2), ...noData }),
         metricRow('Győzelmi arány', m1.win_rate, m2.win_rate, { format: (v) => `${formatNumber(v, 1)}%`, ...noData }),
         metricRow('Meccsek', m1.matches, m2.matches, {
             format: (v) => formatNumber(v),
             noteA: `${m1.wins} győzelem · ${m1.ties} döntetlen`, noteB: `${m2.wins} győzelem · ${m2.ties} döntetlen`,
         }),
-        metricRow('Online ELO', m1.elo, m2.elo, { format: (v) => formatNumber(v, 1), baseline: 1000, ...noData }),
     ];
 
     let h2hContent;

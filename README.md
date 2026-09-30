@@ -9,7 +9,7 @@ A Képgenerátor Aréna egy webalkalmazás, amelyben AI képgenerátorok ugyanar
 - **Arena Battle:** két névtelen kép ugyanarra a promptra; a látogató szavaz (*A a jobb*, *B a jobb*, *Döntetlen*, *Mindkettő rossz* vagy *Kihagyás*), a modellek neve csak utána derül ki.
 - **Side-by-Side:** 2–3 kiválasztott modell képei egymás mellett, promptonként lapozva.
 - **Leaderboard:** Bradley-Terry rangsor 95%-os konfidenciaintervallummal, minőség–ár térkép és párharc-mátrix.
-- **ELO fejlődés:** az online ELO időbeli alakulása a top modelleknél.
+- **Fejlődés:** a Leaderboard-pontszám időbeli alakulása a top modelleknél (visszamenőleg, a szavazatok időpontja alapján számolva).
 - **Összehasonlítás:** két modell adatlapja, pontszáma, egymás elleni eredménye és promptonkénti képei.
 - **Súgó:** közérthető magyarázat mindenről – szavazás, pontszám, 95% CI, bootstrap eloszlás, helyezéssáv, párosítás, adatkezelés, GYIK és szószedet, élő statisztikával.
 
@@ -86,20 +86,20 @@ Válassz 2–3 modellt; a *Betöltés / Új prompt* véletlen közös promptot t
 
 ![Leaderboard](docs/images/leaderboard.png)
 
-- **Rangsor:** pontszám, 95% CI, helyezéssáv, szavazatszám, győzelmi arány. Kereshető, szolgáltató szerint szűrhető, bármely oszlop szerint rendezhető; opcionális oszlopok: Gy/D/V, online ELO, megjelenés, felbontás, árazás, videó.
+- **Rangsor:** pontszám, 95% CI, helyezés (a helyezéssáv tooltipben), szavazatszám, győzelmi arány. Kereshető, szolgáltató szerint szűrhető, bármely oszlop szerint rendezhető; opcionális oszlopok: Gy/D/V, megjelenés, felbontás, árazás, videó.
 - **Minőség vs. ár:** pontszám és fix API-ár 1 000 képre, logaritmikus ártengely, Pareto élvonal.
 - **Párharcok:** győzelmi arány / meccsszám / várt arány mátrix a top 8–20 modellre.
 - **Saját toplista:** 30 saját szavazat után nyílik meg.
 
-### ELO fejlődés
+### Fejlődés
 
-![ELO Fejlődés](docs/images/elo-history.png)
+![Fejlődés](docs/images/elo-history.png)
 
-Az online ELO alakulása időtengelyen (1 hét – teljes időszak), a top 1–30 modellre. A jelmagyarázat fölé húzott egérrel egy modell kiemelhető.
+A Leaderboard-pontszám (Bradley-Terry) alakulása időtengelyen (1 hét – teljes időszak), a top 1–30 modellre. Minden időpontban az addig beérkezett összes szavazatból számolódik, így visszamenőleg is működik. A jelmagyarázat fölé húzott egérrel egy modell kiemelhető.
 
 ### Összehasonlítás
 
-Két modell adatlapja, Arena pontszáma CI-vel, győzelmi aránya, egymás elleni eredménye (döntetlenekkel), promptonkénti győzelmi aránya és – egy promptra kattintva – a két kép egymás mellett.
+Két modell adatlapja, helyezése (helyezéssávval), Arena pontszáma CI-vel, győzelmi aránya, egymás elleni eredménye (döntetlenekkel), promptonkénti győzelmi aránya és – egy promptra kattintva – a két kép egymás mellett.
 
 ## 📐 Rangsorolási módszertan
 
@@ -111,7 +111,8 @@ Két modell adatlapja, Arena pontszáma CI-vel, győzelmi aránya, egymás ellen
 - **Célzott párosítás:** a pár súlya `(1 + TARGETED_PAIRING_STRENGTH · információ) / (1 + eddigi meccsek)`, ahol az információ a kimenet bizonytalanságából (közeli pontszám) és a két modell CI-szélességéből adódik.
 - **Előzetes:** `PRELIMINARY_MATCH_THRESHOLD` (30) meccs alatt.
 - **Frissítés:** a pontszám minden szavazat után azonnal újraszámolódik (~15 ms); a bootstrap CI legfeljebb 30 másodpercig gyorsítótárazott.
-- Az **online ELO** (K = 32) továbbra is frissül minden szavazatnál – ez adja az ELO-történet grafikont, az opcionális „Online ELO” oszlopot és a befagyasztási logikát.
+- **Fejlődés:** a `/api/history` minden időpontra az addigi szavazatokból illeszti újra a modellt (~160 időpont, ~0,2 s, gyorsítótárazva).
+- Az **online ELO** (K = 32) a háttérben továbbra is frissül és tárolódik (`model_elo`, `elo_history`), de a felületen már nem jelenik meg; a befagyasztás is a Bradley-Terry pontszám alapján működik.
 - A felhasználóknak szóló, részletes magyarázat az alkalmazás **Súgó** menüpontjában található (`templates/help.html`).
 
 ## ⚙️ Konfiguráció (`config.py`)
@@ -126,7 +127,7 @@ Két modell adatlapja, Arena pontszáma CI-vel, győzelmi aránya, egymás ellen
 | `BATTLE_TTL_SECONDS` | 3600 | Ennyi ideig szavazható egy kiadott battle. |
 | `NEW_MODEL_BOOST_THRESHOLD` / `_WEIGHT` | 50 / 20 | Új modellek párjainak extra esélye. |
 | `TARGETED_PAIRING_STRENGTH` | 3.0 | Célzott párosítás: a közeli pontszámú, bizonytalan modellek párjai gyakrabban jönnek (0 = ki). |
-| `FROZEN_BOTTOM_COUNT` | 0 | Az online ELO szerinti alsó N modell kimarad a Battle-ből. |
+| `FROZEN_BOTTOM_COUNT` | 0 | A pontszám szerinti alsó N (már játszott) modell kimarad a Battle-ből. |
 | `BT_BOOTSTRAP_ROUNDS` | 100 | Bootstrap körök a CI-hez. |
 | `BT_PRIOR_GAMES` | 1.0 | Virtuális döntetlenek száma a priorban. |
 | `PRELIMINARY_MATCH_THRESHOLD` | 30 | „Előzetes” jelölés határa. |
@@ -139,7 +140,7 @@ Két modell adatlapja, Arena pontszáma CI-vel, győzelmi aránya, egymás ellen
 | `#/battle` | Arena Battle |
 | `#/side-by-side?m1=model-001&m2=model-002&m3=…&p=003` | Side-by-Side adott modellekkel és prompttal |
 | `#/leaderboard`, `#/leaderboard/quality-price`, `#/leaderboard/matrix` | Leaderboard fülek |
-| `#/elo-history` | ELO fejlődés |
+| `#/history` (a régi `#/elo-history` átirányít) | Fejlődés |
 | `#/compare?a=model-001&b=model-002` | Két modell összehasonlítása |
 | `#/help`, `#/help/<fejezet>` (pl. `#/help/ci`, `#/help/pontszam`) | Súgó, adott fejezetre ugorva |
 
@@ -298,8 +299,8 @@ SQLite, WAL módban. A séma verzióját a `PRAGMA user_version` jelzi; a migrá
 | --- | --- |
 | `votes` | Szavazatok: `prompt_id`, `winner`, `loser`, `outcome` (`win` / `tie` / `both_bad`; döntetlennél winner = bal, loser = jobb), `left_model`, `battle_id`, `user_id`, `voted_at` |
 | `battles` | Kiadott battle-ök: `id` (véletlen token), `session_key`, `user_id`, `prompt_id`, `model_a` (bal), `model_b` (jobb), `issued_at`, `resolved_at`, `outcome` |
-| `model_elo` | Online ELO modellenként, `frozen` jelzővel |
-| `elo_history` | Online ELO minden változása (az ELO-történet grafikonhoz) |
+| `model_elo` | Online ELO modellenként (a felületen nem jelenik meg) és a `frozen` jelző |
+| `elo_history` | Online ELO minden változása (archív adat; a Fejlődés grafikon már a szavazatokból számol) |
 | `users` | OAuth felhasználók (`provider`, `provider_id`, `email`, `name`) |
 
 ## 🔌 API végpontok
@@ -315,8 +316,8 @@ SQLite, WAL módban. A séma verzióját a `PRAGMA user_version` jelzi; a migrá
 | `/api/leaderboard/mine` | GET | Saját toplista (bejelentkezve): `unlocked`, `vote_count`, `min_votes`, `leaderboard`. |
 | `/api/leaderboard/stats` | GET | Összesítők, oldaltorzítás, módszertani paraméterek. |
 | `/api/leaderboard/matrix` | GET | Párharc-mátrix a top N modellre (`top`, `model_type`). |
-| `/api/elo_history` | GET | Ritkított online ELO-történet (`range`: 1w / 2w / 1m / 3m / all, `top`). |
-| `/api/compare_stats` | GET | Két modell statisztikái, egymás elleni és promptonkénti eredmények. |
+| `/api/history` | GET | A Leaderboard-pontszám időbeli alakulása (`range`: 1w / 2w / 1m / 3m / all, `top`). |
+| `/api/compare_stats` | GET | Két modell statisztikái (pontszám, CI, `position`, `rank`, `rank_worst`), egymás elleni és promptonkénti eredmények. |
 | `/api/model_info` | GET | Modell-adatlap(ok). |
 | `/api/prompt_ids`, `/api/prompt_text` | GET | Promptok listája és szövege. |
 | `/api/auth/status` | GET | Bejelentkezési állapot. |

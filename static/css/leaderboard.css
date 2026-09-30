@@ -206,8 +206,8 @@ th[aria-sort="descending"] .sort-btn::after { content: '↓'; opacity: 0.9; }
     white-space: nowrap;
 }
 
-/* --- ELO fejlődés --- */
-.elo-history-controls {
+/* --- Fejlődés --- */
+.history-controls {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -216,11 +216,11 @@ th[aria-sort="descending"] .sort-btn::after { content: '↓'; opacity: 0.9; }
     margin-bottom: 1rem;
 }
 
-.elo-history-slider {
+.history-slider {
     min-width: min(320px, 100%);
 }
 
-.elo-history-chart {
+.history-chart {
     position: relative;
     width: 100%;
     max-width: 1400px;
@@ -229,7 +229,7 @@ th[aria-sort="descending"] .sort-btn::after { content: '↓'; opacity: 0.9; }
     margin: 0 auto;
 }
 
-.elo-history-empty {
+.history-empty {
     position: absolute;
     inset: 0;
     display: grid;
@@ -284,7 +284,7 @@ th[aria-sort="descending"] .sort-btn::after { content: '↓'; opacity: 0.9; }
         min-width: 7rem;
     }
 
-    .elo-history-chart {
+    .history-chart {
         height: 60vh;
         min-height: 320px;
     }

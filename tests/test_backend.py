@@ -270,8 +270,8 @@ def test_stats_matrix_and_history_endpoints():
     matrix = client.get('/api/leaderboard/matrix?top=5').json
     size = len(matrix['models'])
     assert size >= 2 and len(matrix['cells']) == size and matrix['cells'][0][0] is None
-    history = client.get('/api/elo_history?range=all&top=3').json
-    assert len(history['series']) == 3
+    history = client.get('/api/history?range=all&top=3').json
+    assert 2 <= len(history['series']) <= 3
     assert all(p['x'].endswith('Z') for s in history['series'] for p in s['points'])
 
 
@@ -365,3 +365,46 @@ def test_tie_score_change_moves_towards_each_other():
     for side in ('model_a', 'model_b'):
         assert 'score_before' in data[side] and 'score_after' in data[side]
     assert first['model_a']['score_delta'] > 0
+
+
+# --- Fejlődés (Bradley-Terry pontszám időben) és befagyasztás ---
+
+def test_history_ends_at_current_leaderboard_score():
+    client = arena.app.test_client()
+    token = login(client)
+    for choice in ('a', 'b', 'a', 'tie'):
+        vote(client, token, new_battle(client)['battle_id'], choice)
+    history = client.get('/api/history?range=all&top=5').json
+    rows = {r['id']: r for r in client.get('/api/leaderboard').json}
+    assert history['series']
+    for series in history['series']:
+        times = [p['x'] for p in series['points']]
+        assert times == sorted(times)
+        assert abs(series['points'][-1]['y'] - rows[series['id']]['score']) < 0.11
+        assert series['score'] == rows[series['id']]['score']
+    # Csak olyan modell szerepel, amelynek van meccse
+    assert all(rows[s['id']]['matches'] > 0 for s in history['series'])
+    assert client.get('/api/history?range=1w&top=2').status_code == 200
+
+
+def test_frozen_models_follow_leaderboard_score(monkeypatch):
+    client = arena.app.test_client()
+    token = login(client)
+    for _ in range(6):
+        vote(client, token, new_battle(client)['battle_id'], 'a')
+    monkeypatch.setattr(arena, 'FROZEN_BOTTOM_COUNT', 1)
+    with arena.app.app_context():
+        db = arena.get_db()
+        arena.update_frozen_models(db)
+        frozen = [r['model'] for r in db.execute('SELECT model FROM model_elo WHERE frozen = 1')]
+    rows = [r for r in client.get('/api/leaderboard').json if r['matches'] > 0]
+    assert frozen == [min(rows, key=lambda r: r['score'])['id']]
+
+
+def test_compare_stats_contains_rank():
+    client = arena.app.test_client()
+    token = login(client)
+    data = vote(client, token, new_battle(client)['battle_id'], 'a').json
+    stats = client.get(f"/api/compare_stats?model1={data['model_a']['id']}&model2={data['model_b']['id']}").json
+    assert stats['model1']['position'] == 1 and stats['model2']['position'] == 2
+    assert stats['model1']['ranked_models'] == 2

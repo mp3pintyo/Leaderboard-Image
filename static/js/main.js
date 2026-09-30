@@ -1,7 +1,7 @@
 import { initBattleMode, ensureBattleLoaded, getBattleCaption } from './battle.js';
 import { initSideBySideMode, adjustImageHeight as adjustSbsHeight, applySideBySideRoute, getSideBySideCaption } from './sideBySide.js';
 import { initLeaderboardMode, loadLeaderboardData, selectLeaderboardView, getLeaderboardView, refreshLeaderboardCharts } from './leaderboard.js';
-import { initEloHistoryMode, loadEloHistoryData, refreshEloHistoryChart } from './eloHistory.js';
+import { initHistoryMode, loadHistoryData, refreshHistoryChart } from './history.js';
 import { initCompareMode, applyCompareRoute, refreshCompareCharts } from './compare.js';
 import { APP_CONFIG } from './config.js';
 import { updateLoginLinks } from './auth.js';
@@ -15,7 +15,7 @@ const MODES = {
     battle: 'Arena Battle',
     'side-by-side': 'Side-by-Side',
     leaderboard: 'Leaderboard',
-    'elo-history': 'ELO fejlődés',
+    history: 'Fejlődés',
     compare: 'Összehasonlítás',
     help: 'Súgó',
 };
@@ -24,8 +24,16 @@ const SITE_TITLE = 'AI Képgenerátor Aréna';
 const navLinks = document.querySelectorAll('.navbar-nav .nav-link[data-mode]');
 let currentMode = null;
 
+// Régi útvonalak, amelyek új címre költöztek (a megosztott linkek ne romoljanak el)
+const LEGACY_ROUTES = { '#/elo-history': '#/history' };
+
 function parseRoute(hash = window.location.hash) {
     if (!hash.startsWith('#/')) return null;
+    const legacy = LEGACY_ROUTES[hash.split('?')[0]];
+    if (legacy) {
+        history.replaceState(null, '', legacy);
+        return parseRoute(legacy);
+    }
     const [path, query = ''] = hash.slice(2).split('?');
     const [mode, sub = ''] = path.split('/');
     return { mode: MODES[mode] ? mode : DEFAULT_MODE, sub, params: new URLSearchParams(query) };
@@ -82,8 +90,8 @@ function handleRoute() {
         if (route.sub && route.sub !== getLeaderboardView()) selectLeaderboardView(route.sub);
         if (modeChanged) loadLeaderboardData();
         break;
-    case 'elo-history':
-        if (modeChanged) loadEloHistoryData();
+    case 'history':
+        if (modeChanged) loadHistoryData();
         break;
     case 'compare':
         applyCompareRoute(route.params);
@@ -103,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initBattleMode();
     initSideBySideMode();
     initLeaderboardMode();
-    initEloHistoryMode();
+    initHistoryMode();
     initCompareMode();
     initHelp();
 
@@ -124,7 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Témaváltáskor a vásznon rajzolt diagramok színeit újra kell számolni
     document.addEventListener('themechange', () => {
         refreshLeaderboardCharts();
-        refreshEloHistoryChart();
+        refreshHistoryChart();
         refreshCompareCharts();
     });
 

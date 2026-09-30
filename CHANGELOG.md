@@ -2,6 +2,34 @@
 
 Minden jelentős változás ebben a fájlban szerepel. / All notable changes are documented in this file.
 
+## [1.7.0] – 2026-09-30
+
+### 🇭🇺 Magyar
+
+**Mindenhol a Bradley-Terry pontszám – búcsú az online ELO-tól a felületen**
+- **Fejlődés** (korábban „ELO Fejlődés”): a grafikon mostantól a **Leaderboard-pontszám** időbeli alakulását mutatja. Minden időpontra az addig beérkezett összes szavazatból számolódik, ezért visszamenőleg, a legelső szavazattól működik; a vonal utolsó pontja pontosan a mostani pontszám. Egy modell vonala az első meccsétől indul. Új végpont: `/api/history` (~0,2 s számítás, utána gyorsítótárból).
+- Új útvonal: `#/history`; a régi `#/elo-history` linkek automatikusan átirányítanak.
+- **Összehasonlítás:** az „Online ELO” sor helyére a **Helyezés** került, a lehetséges helyezéssávval (pl. „6. hely · lehetséges: 1–17. · 89 modellből”). A `/api/compare_stats` válaszában új mezők: `position`, `rank`, `rank_worst`, `ranked_models`.
+- **Leaderboard:** az „Online ELO” opcionális oszlop megszűnt.
+- **Befagyasztás** (`FROZEN_BOTTOM_COUNT`): a leggyengébb modellek kiválasztása is a pontszám alapján történik, és csak már játszott modell fagyasztható be.
+- Az online ELO a háttérben továbbra is számolódik és tárolódik (`model_elo`, `elo_history`), így semmilyen adat nem veszett el.
+
+**Súgó**
+- Az „Online ELO – miben más?” fejezet helyett rövid „Miért nem ELO?” magyarázat, és új fejezet: **A Fejlődés grafikon** (hogyan készül, miért indul 1500 körül egy új modell, miért mozdulhat egy vonal szavazat nélkül is). Frissített GYIK és szószedet.
+
+### 🇬🇧 English
+
+**The Bradley-Terry score everywhere – online ELO retired from the UI**
+- **Progress** (formerly "ELO history"): the chart now shows the **leaderboard score** over time. For every point in time it is computed from all votes received up to then, so it works retroactively from the very first vote; the last point equals the current score. A model's line starts at its first match. New endpoint: `/api/history` (~0.2 s to compute, cached afterwards).
+- New route: `#/history`; old `#/elo-history` links redirect automatically.
+- **Compare:** the "Online ELO" row is replaced by **Rank** with the plausible rank range (e.g. "6th · possible: 1–17 · of 89 models"). New `/api/compare_stats` fields: `position`, `rank`, `rank_worst`, `ranked_models`.
+- **Leaderboard:** the optional "Online ELO" column was removed.
+- **Freezing** (`FROZEN_BOTTOM_COUNT`): the weakest models are now selected by score, and only models that have played can be frozen.
+- Online ELO is still computed and stored in the background (`model_elo`, `elo_history`), so no data was lost.
+
+**Help**
+- The "Online ELO – how is it different?" section became a short "Why not ELO?" explanation, plus a new section: **The Progress chart** (how it is built, why a new model starts around 1500, why a line can move without new votes). Updated FAQ and glossary.
+
 ## [1.6.0] – 2026-09-30
 
 ### 🇭🇺 Magyar

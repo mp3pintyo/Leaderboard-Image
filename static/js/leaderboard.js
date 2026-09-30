@@ -32,13 +32,13 @@ const matrixMetricRadios = document.querySelectorAll('input[name="matrix-metric"
 const matrixTopSelect = document.getElementById('matrix-top');
 
 const leaderboardColumnsStorageKey = 'leaderboard-visible-columns';
-const optionalColumns = ['record', 'elo', 'release_date', 'max_resolution', 'pricing', 'video_url'];
+const optionalColumns = ['record', 'release_date', 'max_resolution', 'pricing', 'video_url'];
 const BASE_COLUMN_COUNT = 7;
 
 // Rendezés: alapértelmezett irány kulcsonként
 const SORT_DEFAULT_DIRECTION = {
     position: 'asc', display: 'asc', ci_width: 'asc', price_per_1000: 'asc',
-    score: 'desc', matches: 'desc', win_rate: 'desc', open_source: 'desc', wins: 'desc', elo: 'desc', release_date: 'desc',
+    score: 'desc', matches: 'desc', win_rate: 'desc', open_source: 'desc', wins: 'desc', release_date: 'desc',
 };
 
 const state = {
@@ -277,8 +277,6 @@ function renderRows() {
                 tr.appendChild(createCell(createVideoLink(row)));
             } else if (column === 'record') {
                 tr.appendChild(createCell(`${row.wins} / ${row.ties ?? 0} / ${row.losses ?? 0}`, 'text-nowrap'));
-            } else if (column === 'elo') {
-                tr.appendChild(createCell(formatNumber(row.elo, 1)));
             } else {
                 tr.appendChild(createCell(row[column] || 'N/A'));
             }

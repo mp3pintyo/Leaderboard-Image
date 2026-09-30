@@ -15,7 +15,8 @@
                         <li><a href="#/help/dontetlen" data-help-link="dontetlen">Döntetlen és „Mindkettő rossz”</a></li>
                         <li><a href="#/help/pontszam" data-help-link="pontszam">A pontszám (Bradley-Terry)</a></li>
                         <li><a href="#/help/szavazat-utan" data-help-link="szavazat-utan">Mi történik a szavazatod után?</a></li>
-                        <li><a href="#/help/elo" data-help-link="elo">Online ELO – miben más?</a></li>
+                        <li><a href="#/help/elo" data-help-link="elo">Miért nem ELO?</a></li>
+                        <li><a href="#/help/fejlodes" data-help-link="fejlodes">A Fejlődés grafikon</a></li>
                         <li><a href="#/help/ci" data-help-link="ci">95%-os konfidenciaintervallum</a></li>
                         <li><a href="#/help/eloszlas" data-help-link="eloszlas">Honnan jön az intervallum?</a></li>
                         <li><a href="#/help/helyezes" data-help-link="helyezes">Helyezés és helyezéssáv</a></li>
@@ -105,7 +106,7 @@
                         </div>
                         <ul>
                             <li><strong>{{ help_cfg.default_elo }} ≈ átlagos modell.</strong> A skála ugyanolyan, mint a sakkban megszokott ELO: 400 pont különbség kb. 10:1 esélyt jelent.</li>
-                            <li><strong>A sorrend nem számít.</strong> Mindegy, hogy egy szavazat tegnap vagy ma érkezett: a pontszám minden szavazatot egyformán vesz figyelembe (ellentétben az <a href="#/help/elo">online ELO-val</a>).</li>
+                            <li><strong>A sorrend nem számít.</strong> Mindegy, hogy egy szavazat tegnap vagy ma érkezett: a pontszám minden szavazatot egyformán vesz figyelembe (ellentétben a korábban használt <a href="#/help/elo">ELO-val</a>).</li>
                             <li><strong>Óvatosság a kevés adatnál:</strong> minden modell kap egy képzeletbeli döntetlent egy {{ help_cfg.default_elo }}-as ellenféllel. Ez a néhány szavazatos modelleket az átlag felé húzza, hogy 2-3 szerencsés győzelemtől ne ugorjanak az élre.</li>
                             <li>A pontszám <strong>relatív</strong>: ha új, erős modellek jönnek, a régiek pontszáma kicsit csökkenhet anélkül, hogy rosszabbak lettek volna.</li>
                         </ul>
@@ -129,29 +130,39 @@
                     </section>
 
                     <section id="help-elo" class="help-section">
-                        <h3>Online ELO – miben más?</h3>
-                        <p>Az <strong>online ELO</strong> a klasszikus módszer: minden szavazat után azonnal odaad néhány pontot a győztesnek a vesztestől (legfeljebb {{ help_cfg.k_factor }} pontot, attól függően, mennyire volt váratlan az eredmény).</p>
+                        <h3>Miért nem ELO?</h3>
+                        <p>Az oldal korábban a klasszikus <strong>ELO</strong> pontrendszert használta (a sakkból ismert módszert): minden szavazat után néhány pontot adott át a győztesnek a vesztestől. Ma már mindenhol a <a href="#/help/pontszam">Bradley-Terry pontszám</a> látszik – a Leaderboardon, a szavazás után, a Fejlődés grafikonon és az Összehasonlításban is.</p>
                         <div class="help-compare">
                             <div class="help-compare-col">
-                                <h4>Pontszám (Bradley-Terry)</h4>
+                                <h4>ELO (régen)</h4>
                                 <ul>
-                                    <li>Az összes szavazatot egyszerre elemzi.</li>
-                                    <li>Nem függ a szavazatok sorrendjétől.</li>
-                                    <li>Van hozzá megbízhatósági intervallum.</li>
-                                    <li><strong>Ez alapján készül a rangsor.</strong></li>
+                                    <li>Szavazatról szavazatra számol.</li>
+                                    <li><strong>Függ a sorrendtől:</strong> ugyanazokból a szavazatokból más sorrendben akár 40–50 ponttal eltérő eredmény jöhet ki.</li>
+                                    <li>Nincs hozzá megbízhatósági intervallum.</li>
                                 </ul>
                             </div>
                             <div class="help-compare-col">
-                                <h4>Online ELO</h4>
+                                <h4>Pontszám (most)</h4>
                                 <ul>
-                                    <li>Szavazatról szavazatra frissül.</li>
-                                    <li>Függ a sorrendtől: ugyanazokból a szavazatokból más sorrendben akár 40–50 ponttal eltérő eredmény jön ki.</li>
-                                    <li>Jól mutatja az időbeli alakulást.</li>
-                                    <li>Hol látod: <a href="#/elo-history">ELO fejlődés</a> grafikon, a Leaderboard „Online ELO” opcionális oszlopa, az Összehasonlítás oldal.</li>
+                                    <li>Az összes szavazatot egyszerre elemzi.</li>
+                                    <li>Nem függ a sorrendtől.</li>
+                                    <li>Van hozzá <a href="#/help/ci">95%-os intervallum</a> és <a href="#/help/helyezes">helyezéssáv</a>.</li>
                                 </ul>
                             </div>
                         </div>
-                        <p class="text-body-secondary">A két szám hasonló skálán mozog (1500 körül indul), de nem ugyanaz – ezért térhet el kicsit a sorrendjük.</p>
+                        <p class="text-body-secondary">Ugyanezért váltott az LMArena is ELO-ról Bradley-Terry módszerre. A két szám skálája hasonló (1500 körül indul), ezért a régi ELO-értékekkel nagyjából összevethető.</p>
+                    </section>
+
+                    <section id="help-fejlodes" class="help-section">
+                        <h3>A Fejlődés grafikon</h3>
+                        <p>A <a href="#/history">Fejlődés</a> menüpont azt mutatja, hogyan alakult a modellek <strong>Leaderboard-pontszáma</strong> az idő múlásával.</p>
+                        <ul>
+                            <li><strong>Hogyan készül?</strong> Az időszakot sok egyenlő részre osztjuk, és minden időpontra kiszámoljuk a pontszámot <strong>az addig beérkezett összes szavazatból</strong> – vagyis azt, amit a Leaderboard akkor mutatott volna. A vonal utolsó pontja pontosan a mostani pontszám.</li>
+                            <li><strong>Új modell:</strong> a vonala az első meccsétől indul, 1500 körülről. Az első napokban nagyot mozoghat, amíg kevés a szavazata – ez valós bizonytalanság, nem hiba.</li>
+                            <li><strong>Mozgás szavazat nélkül:</strong> a pontszám relatív, ezért egy modell vonala akkor is elmozdulhat kicsit, ha aznap nem kapott szavazatot. Ez akkor történik, ha a korábbi ellenfelei közben erősödtek vagy gyengültek, vagy ha a mezőny átrendeződött.</li>
+                            <li><strong>Vízszintes szakasz:</strong> olyan időszak, amikor nem érkezett szavazat (vagy a modellt érintő változás).</li>
+                            <li>Választható időszak (1 hét – teljes), és hogy a mostani top 1–30 modell közül hány látsszon. A jelmagyarázatban egy modell nevére mutatva kiemelheted a vonalát.</li>
+                        </ul>
                     </section>
 
                     <section id="help-ci" class="help-section">
@@ -245,7 +256,6 @@
                             <dt>Győzelmi arány</dt><dd>Győzelmek aránya; a döntetlen fél győzelemnek számít. Vigyázat: erős ellenfelek ellen nehezebb magas arányt elérni, ezért a pontszám a megbízhatóbb mérce.</dd>
                             <dt>Típus</dt><dd>Open Source (letölthető súlyok) vagy zárt forrású.</dd>
                             <dt>Gy / D / V <small>(opcionális)</small></dt><dd>Győzelmek / döntetlenek (a „mindkettő rossz” is) / vereségek száma.</dd>
-                            <dt>Online ELO <small>(opcionális)</small></dt><dd>A szavazatonként frissülő klasszikus ELO (lásd <a href="#/help/elo">Online ELO</a>).</dd>
                             <dt>Megjelenés, Max felbontás, Árazás, Videó <small>(opcionális)</small></dt><dd>A modell adatlapjából; a Videó a modellről készült YouTube-videóra vagy a csatornára mutat.</dd>
                         </dl>
                         <p>Minden oszlopfejlécre kattintva rendezhetsz (újra kattintva megfordul az irány), a kereső és a szolgáltató-szűrő pedig azonnal szűkíti a listát. Az opcionális oszlopok választását a böngésző megjegyzi.</p>
@@ -311,7 +321,7 @@
                         <h3>A többi nézet és funkció</h3>
                         <dl class="help-dl">
                             <dt>Side-by-Side</dt><dd>2–3 általad választott modell képei egymás mellett ugyanarra a promptra. A „Betöltés / Új prompt” véletlen promptot hoz, a „Következő prompt” sorban lapoz. Itt nincs szavazás.</dd>
-                            <dt>ELO fejlődés</dt><dd>Az online ELO időbeli alakulása a top 1–30 modellnél, választható időszakra. A jelmagyarázatban egy modell nevére mutatva kiemelheted a vonalát.</dd>
+                            <dt>Fejlődés</dt><dd>A Leaderboard-pontszám időbeli alakulása a top 1–30 modellnél, választható időszakra (részletek: <a href="#/help/fejlodes">A Fejlődés grafikon</a>).</dd>
                             <dt>Összehasonlítás</dt><dd>Két modell adatlapja, pontszáma intervallummal, egymás elleni eredménye és promptonkénti győzelmi aránya. Egy promptra kattintva a két kép is megjelenik. A „⇄” gomb felcseréli a modelleket.</dd>
                             <dt>Képnagyító</dt><dd>Bármelyik képre kattintva teljes képernyőn nyílik meg. Görgővel vagy két ujjal nagyíthatsz, húzással mozgathatod, dupla kattintással 2,5×-re ugrasz; <kbd>+</kbd> / <kbd>−</kbd> / <kbd>0</kbd> nagyít, kicsinyít, visszaállít; <kbd>←</kbd> / <kbd>→</kbd> vált a képek között; <kbd>Esc</kbd> bezár. A Battle-ben a felirat szavazás előtt nem árulja el a modellt.</dd>
                             <dt>Megosztható linkek</dt><dd>Minden nézetnek saját címe van (pl. <code>#/leaderboard/matrix</code> vagy <code>#/compare?a=…&amp;b=…</code>), így egy adott nézet vagy összehasonlítás linkje elküldhető. A böngésző Vissza gombja is működik.</dd>
@@ -346,8 +356,8 @@
                             <p>Mert döntetlennek számít, és a döntetlen a két modell pontszámát közelebb hozza egymáshoz: a gyengébbnek tartott kap egy kicsit, az erősebb veszít egy kicsit. Részletek: <a href="#/help/dontetlen">Döntetlen és „Mindkettő rossz”</a>.</p></details>
                         <details class="help-faq"><summary>Miért 1–17 egy modell helyezéssávja?</summary>
                             <p>Mert még kevés meccse van, és/vagy sok modell pontszáma közel van egymáshoz, így a valódi helye még nem biztos. Lásd: <a href="#/help/helyezes">Helyezés és helyezéssáv</a>.</p></details>
-                        <details class="help-faq"><summary>A szavazásom után a modell 1913 → 1915 lett, de az ELO fejlődés grafikonon más szám van. Melyik az igazi?</summary>
-                            <p>A Battle-ben és a Leaderboardon a pontszám (Bradley-Terry) látszik, a grafikonon az online ELO. Mindkettő „igazi”, csak másképp számolnak; a rangsor a pontszám alapján készül. Lásd: <a href="#/help/elo">Online ELO – miben más?</a></p></details>
+                        <details class="help-faq"><summary>Miért mozdult egy modell vonala a Fejlődés grafikonon, pedig nem kapott szavazatot?</summary>
+                            <p>Mert a pontszám relatív: ha a korábbi ellenfelei közben erősödtek vagy gyengültek, az ő pontszáma is igazodik hozzájuk. Lásd: <a href="#/help/fejlodes">A Fejlődés grafikon</a>.</p></details>
                         <details class="help-faq"><summary>Miért kapott egy modell 15 pontot, egy másik csak 2-t ugyanazért a győzelemért?</summary>
                             <p>A kevés szavazatos modellek pontszáma érzékenyebb: egy új vélemény náluk többet számít. Az is számít, mennyire volt meglepő az eredmény – egy gyenge modell győzelme egy erős ellen többet mozdít.</p></details>
                         <details class="help-faq"><summary>Miért látom ugyanazt a modellt gyakran?</summary>
@@ -368,7 +378,7 @@
                             <dt>Prompt</dt><dd>A szöveges utasítás, amelyből a modell a képet készítette. Egy összecsapásban mindkét kép ugyanarra a promptra készült.</dd>
                             <dt>Battle (összecsapás)</dt><dd>Egy pár kép, amelyre szavazni lehet.</dd>
                             <dt>Bradley-Terry modell</dt><dd>Statisztikai módszer, amely páros összehasonlításokból (A vagy B jobb) számol erősséget minden szereplőnek.</dd>
-                            <dt>ELO</dt><dd>A sakkból ismert pontrendszer; minden meccs után pontokat ad át a győztesnek.</dd>
+                            <dt>ELO</dt><dd>A sakkból ismert pontrendszer; minden meccs után pontokat ad át a győztesnek. Az oldal korábban ezt használta (lásd <a href="#/help/elo">Miért nem ELO?</a>).</dd>
                             <dt>Konfidenciaintervallum (CI)</dt><dd>Az a sáv, amelyben egy becsült érték valódi értéke adott (itt 95%) valószínűséggel van.</dd>
                             <dt>Bootstrap</dt><dd>Az adatok ismételt, véletlenszerű újrahúzása, amellyel megbecsülhető egy eredmény bizonytalansága.</dd>
                             <dt>Eloszlás</dt><dd>Az, hogy egy érték milyen gyakran veszi fel a lehetséges értékeit – itt: a bootstrap körökben kapott pontszámok megoszlása.</dd>
