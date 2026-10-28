@@ -290,6 +290,7 @@ az átírt cím.
 - OpenAI: GPT Image 2.5 Sunburst 4k Max
 - OpenAI: GPT Image 2.5 Sunburst 1k Low
 - Alibaba: Qwen-Image-2.1
+- MOSS-Image-SFT
 
 ## 🗄️ Adatbázis
 

@@ -1401,6 +1401,22 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'api_available': True,
         'speed': 'medium',
         'website': 'https://huggingface.co/Qwen/Qwen-Image-2.1', 
+    },
+    'model-090': {
+        'name': 'MOSS-Image-SFT',
+        'filename': 'moss-image-sft',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
+        'open_source': True,
+        'provider': 'OpenMOSS',
+        'release_date': '2026-10-16',
+        'type': 'image-generation',
+        'tags': ['general', 'photorealistic'],
+        'max_resolution': '2048x2048',
+        'pricing': 'Free (Open Source)',
+        'min_api_price_per_image': 0.0,
+        'api_available': True,
+        'speed': 'medium',
+        'website': 'https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT', 
     }
 }
 
