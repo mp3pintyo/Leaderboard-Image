@@ -1417,6 +1417,22 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'api_available': True,
         'speed': 'medium',
         'website': 'https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT', 
+    },
+    'model-091': {
+        'name': 'Bytedance: Seedream 5.5',
+        'filename': 'seedream-5.5',
+        'video_url': 'https://www.youtube.com/@pinterzsoltai',
+        'open_source': False,
+        'provider': 'Bytedance',
+        'release_date': '2026-11-09',
+        'type': 'image-generation',
+        'tags': ['general', 'photorealistic'],
+        'max_resolution': '2048x2048',
+        'pricing': '$0.02-$0.0405/image',
+        'min_api_price_per_image': 0.02,
+        'api_available': True,
+        'speed': 'medium',
+        'website': 'https://seed.bytedance.com/en/blog/more-realistic-images-more-stable-editing-across-100-rounds-introducing-seedream-5-5/?utm_source=chatgpt.com', 
     }
 }
 
