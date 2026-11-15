@@ -260,6 +260,10 @@
       "file": "midjourneyv8alpha.png",
       "key": "img/b496b8c98556af8a7e145928d16a199a7a69ea9b"
     },
+    "moss-image-sft": {
+      "file": "moss-image-sft.png",
+      "key": "img/045df04abbccb657d93f994f99faddf64c86a9d6"
+    },
     "nanobanana-2-4k": {
       "file": "nanobanana-2-4k.png",
       "key": "img/3e6eb0f8cd988ff305cb60b213181b8ad3cc6b5a"
@@ -650,6 +654,10 @@
       "file": "midjourneyv8alpha.png",
       "key": "img/93fa9175b922bd4f2be0af04fbd45572e31003d9"
     },
+    "moss-image-sft": {
+      "file": "moss-image-sft.png",
+      "key": "img/6524b8bd6c28cf4bbb4dc7ce005e5182be5a114a"
+    },
     "nanobanana-2-4k": {
       "file": "nanobanana-2-4k.png",
       "key": "img/93641e754bc80d92c1ae1fd1f9a9b5a1af007d6d"
@@ -1012,6 +1020,10 @@
       "file": "midjourneyv8alpha.png",
       "key": "img/5d3e321a099fe2147f64ec307c7ee4e42473fa6e"
     },
+    "moss-image-sft": {
+      "file": "moss-image-sft.png",
+      "key": "img/d1c3571cd62dd6d074e57cdfa8bd97bfa34abf45"
+    },
     "nanobanana-2-4k": {
       "file": "nanobanana-2-4k.png",
       "key": "img/81522405f30d91f6921d51cf0af0bf8495086570"
@@ -1373,6 +1385,10 @@
     "midjourneyv8alpha": {
       "file": "midjourneyv8alpha.png",
       "key": "img/022960378be560981dd653d7fe2b2d7fb76629db"
+    },
+    "moss-image-sft": {
+      "file": "moss-image-sft.png",
+      "key": "img/337ed811459a4c4342441b38aecc115a9af7ea7c"
     },
     "nanobanana-2-4k": {
       "file": "nanobanana-2-4k.png",
@@ -1740,6 +1756,10 @@
       "file": "midjourneyv8alpha.png",
       "key": "img/64a8219d5017326774e7a7834e86627ae2334992"
     },
+    "moss-image-sft": {
+      "file": "moss-image-sft.png",
+      "key": "img/3b214743a1840630a1d6e2ff35f03d5c431b374a"
+    },
     "nanobanana-2-4k": {
       "file": "nanobanana-2-4k.png",
       "key": "img/5c8f385c522ea779abf4f768fef04d183e4a9e67"
@@ -2098,6 +2118,10 @@
       "file": "midjourneyv8alpha.png",
       "key": "img/c7d956f661ee77a8f90e365bfdc8b2330fdfdbe4"
     },
+    "moss-image-sft": {
+      "file": "moss-image-sft.png",
+      "key": "img/0b2fec95c3e7bb73ad0439ccc64b89078d9c768d"
+    },
     "nanobanana-2-4k": {
       "file": "nanobanana-2-4k.png",
       "key": "img/924b0d313e71e56bd563170d35161c7d400932a7"
@@ -2455,6 +2479,10 @@
     "midjourneyv8alpha": {
       "file": "midjourneyv8alpha.png",
       "key": "img/5e7186ed0b881a4f448e1815995e42ebd515f684"
+    },
+    "moss-image-sft": {
+      "file": "moss-image-sft.png",
+      "key": "img/abc21e37fbd890e1ac21da42f52f0e1231ccd0d9"
     },
     "nanobanana-2-4k": {
       "file": "nanobanana-2-4k.png",
@@ -2818,6 +2846,10 @@
       "file": "midjourneyv8alpha.png",
       "key": "img/b9ee9eb00b4a182f8e12d66b70b26153236bfbf2"
     },
+    "moss-image-sft": {
+      "file": "moss-image-sft.png",
+      "key": "img/f4fa4a4d8143e5ce917680131b6f5f1e3f679d92"
+    },
     "nanobanana-2-4k": {
       "file": "nanobanana-2-4k.png",
       "key": "img/4fba2c4ebfffd11e80f23df4bd19f9ef447443ff"
@@ -3179,6 +3211,10 @@
     "midjourneyv8alpha": {
       "file": "midjourneyv8alpha.png",
       "key": "img/cecc31821cf461f86d6af2bdfe16314789db149a"
+    },
+    "moss-image-sft": {
+      "file": "moss-image-sft.png",
+      "key": "img/320c8001872c521098f03f2978e3522362d576fe"
     },
     "nanobanana-2-4k": {
       "file": "nanobanana-2-4k.png",
@@ -3542,6 +3578,10 @@
       "file": "midjourneyv8alpha.png",
       "key": "img/95d9e2b674bad5968c10593d5bc81c83d57af9bd"
     },
+    "moss-image-sft": {
+      "file": "moss-image-sft.png",
+      "key": "img/bcdab19c0e27565ed24b82439df8f61a3472d99d"
+    },
     "nanobanana-2-4k": {
       "file": "nanobanana-2-4k.png",
       "key": "img/7d46d9530a3a4c15b0ddc235d2c6f9524915cb4d"
@@ -3903,6 +3943,10 @@
     "midjourneyv8alpha": {
       "file": "midjourneyv8alpha.png",
       "key": "img/41ed7eb965aeb469f89a65472cc8de523741ecbe"
+    },
+    "moss-image-sft": {
+      "file": "moss-image-sft.png",
+      "key": "img/fe3f7c1c1cf3ee92f0e2160d021e94a70bacf1c9"
     },
     "nanobanana-2-4k": {
       "file": "nanobanana-2-4k.png",
@@ -4269,6 +4313,10 @@
     "midjourneyv8alpha": {
       "file": "midjourneyv8alpha.png",
       "key": "img/33a58f406c5a946fd65f92f0082c017165898f5a"
+    },
+    "moss-image-sft": {
+      "file": "moss-image-sft.png",
+      "key": "img/7de0fe90edc1e704d130c0e81ad85e8fb809a68e"
     },
     "nanobanana-2-4k": {
       "file": "nanobanana-2-4k.png",
