@@ -1420,7 +1420,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
     },
     'model-091': {
         'name': 'Bytedance: Seedream 5.5',
-        'filename': 'seedream-5.5',
+        'filename': 'seedream-5-5',
         'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': False,
         'provider': 'Bytedance',
