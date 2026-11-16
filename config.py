@@ -1419,7 +1419,7 @@ MODELS: Dict[str, Dict[str, Any]] = {
         'website': 'https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT', 
     },
     'model-091': {
-        'name': 'Bytedance: Seedream 5.5',
+        'name': 'Seedream 5.5',
         'filename': 'seedream-5-5',
         'video_url': 'https://www.youtube.com/@pinterzsoltai',
         'open_source': False,
